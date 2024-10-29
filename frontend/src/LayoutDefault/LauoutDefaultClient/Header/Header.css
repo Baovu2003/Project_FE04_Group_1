@@ -1,0 +1,171 @@
+.header {
+  background-color: #1e1e1e;
+  padding: 15px 50px;
+}
+
+.container-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.desktop-nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.5em;
+  margin: 0 20px;
+}
+
+.desktop-nav a:hover,
+.desktop-nav a.active {
+  color: #d4af37;
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.cart-icon {
+  position: relative;
+  margin-right: 20px;
+  font-size:35px
+}
+
+.cart-count {
+  position: absolute;
+  top: 0px;
+  right: -12px;
+  background-color: #d4af37;
+  border-radius: 50%;
+  padding: 2px 6px;
+  color: #fff;
+  font-size: 0.5em;
+}
+
+.login-link,
+.register-link {
+  text-decoration: none;
+  font-size: 1.2em;
+  margin-right: 20px;
+}
+
+.login-link {
+  color: #ffffff;
+}
+
+.register-link {
+  color: #d4af37;
+  font-weight: bold;
+}
+
+.search-button,
+.mobile-menu-button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.mobile-nav {
+  display: none;
+}
+
+.search-form {
+  margin-top: 10px;
+  display: flex;
+}
+
+.search-form .ant-form-item {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.search-form .ant-input {
+  width: 100%;
+}
+
+.search-form .ant-btn {
+  background-color: #d4af37;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  padding: 10px 20px;
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 15px 20px;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+    background-color: #1e1e1e;
+    padding: 20px;
+  }
+
+  .mobile-nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+  }
+
+  .mobile-nav a:hover,
+  .mobile-nav a.active {
+    color: #d4af37;
+    font-weight: bold;
+  }
+
+  .login-link,
+  .register-link {
+    display: none;
+  }
+}
+@media (max-width: 1200px) {
+  .header {
+    padding: 15px 30px; /* Adjust padding if needed */
+  }
+  .logo{
+    width: 15%;
+  }
+  .logo img{
+    width: 100%;
+  }
+
+  .desktop-nav{
+    margin: 0;
+  }
+  .desktop-nav a {
+    font-size: 1em; /* Make the text smaller */
+    /* margin: 0 15px; Adjust margin if needed */
+  }
+
+  .login-link,
+  .register-link {
+    font-size: 1em; /* Make the login and register links smaller */
+  }
+
+  .search-button,
+  .mobile-menu-button {
+    font-size: 25px; /* Make buttons smaller */
+  }
+
+  .cart-icon {
+    font-size: 30px; /* Make the cart icon smaller */
+  }
+
+  .search-form .ant-input {
+    font-size: 0.9em; /* Adjust input font size */
+  }
+
+  .search-form .ant-btn {
+    font-size: 0.9em; /* Adjust button font size */
+  }
+}
