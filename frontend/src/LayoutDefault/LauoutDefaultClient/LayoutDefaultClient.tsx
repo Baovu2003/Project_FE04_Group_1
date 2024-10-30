@@ -1,23 +1,26 @@
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
 import { Outlet } from 'react-router-dom';
-
+import "./LayoutDefaultClient.css"
 
 function LayoutDefaultClient() {
   return (
     <>
-      <div id="app">
+      <div
+        id="app"
+       
+      >
         <header>
-           <Header/>
+          <Header />
         </header>
 
 
         <main>
-            <Outlet/>         
+          <Outlet />
         </main>
 
         <footer>
-          <Footer/>
+          <Footer />
         </footer>
       </div>
     </>
