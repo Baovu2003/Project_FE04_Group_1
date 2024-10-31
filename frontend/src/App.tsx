@@ -1,6 +1,5 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import './App.css'
+import "./App.css";
 import LayoutDefaultClient from "./LayoutDefault/LauoutDefaultClient/LayoutDefaultClient";
 import Home from "./pages/client/Home/Home";
 import Product from "./pages/client/Product/Product";
@@ -32,9 +31,8 @@ import AccountCreate from "./pages/admin/Accounts/AccountCreate";
 import Permissions from "./pages/admin/Permissions/Permissions";
 import Login from "./pages/admin/Auth/Login";
 import NotFound from "./pages/admin/404NotFound/404NotFound/NotFound";
-
+import 'antd/dist/reset.css';
 function App() {
-
   return (
     <Router>
       <Routes>
@@ -85,7 +83,7 @@ function App() {
         <Route path="/admin/auth/login" element={<Login />} />
       </Routes>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;
