@@ -5,7 +5,7 @@ import "./LayoutDefaultAdmin.css";
 import { getCookie } from "../../Helpers/Cookie.helper";
 import { accountActions } from "../../actions/AccountAction";
 import { useDispatch, useSelector } from "react-redux";
-import { ApiResponse, Role, User } from "../../actions/types";
+import { ApiResponse } from "../../actions/types";
 import { RootState } from "../../store/store";
 import { get } from "../../Helpers/API.helper";
 

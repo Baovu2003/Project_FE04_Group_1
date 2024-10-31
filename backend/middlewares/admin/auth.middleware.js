@@ -1,6 +1,8 @@
 const Account = require("../../models/account.model");
 const Role = require("../../models/roles.model");
 module.exports.requireAuth = async (req, res, next) => {
+  
+  console.log(req);
   console.log(req.headers);
   console.log("Cookies from request:", req.headers.cookie);
 
