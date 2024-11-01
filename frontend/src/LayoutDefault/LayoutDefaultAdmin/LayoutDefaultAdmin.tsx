@@ -15,11 +15,13 @@ const LayoutDefaultAdmin: React.FC = () => {
   const navigate = useNavigate();
   const account = useSelector((state: RootState) => state.AccountReducer);
 
+  console.log(account)
   useEffect(() => {
     const fetchApi = async () => {
       try {
         const accountByToken: ApiResponse = await get(`http://localhost:5000/admin/auth/${token}`);
-        if (accountByToken && accountByToken.user) {
+        console.log(accountByToken)
+        if (accountByToken ) {
           dispatch(accountActions(accountByToken));
         } else {
           throw new Error("User not found in the response.");

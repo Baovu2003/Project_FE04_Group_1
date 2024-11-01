@@ -6,14 +6,14 @@ import { useDispatch } from "react-redux";
 import { accountActions } from "../../../actions/AccountAction";
 import { getCookie } from "../../../Helpers/Cookie.helper";
 import { get, post } from "../../../Helpers/API.helper";
-import { ApiResponse, Role, User } from "../../../actions/types";
+import { Account, ApiResponse, Role } from "../../../actions/types";
 import { showSuccessAlert } from "../../../Helpers/alerts";
 
 // Interface definitions
 
 interface LoginResponse {
   token: string;
-  user: User;
+  accountInAdmin: Account;
   role: Role;
 }
 
@@ -34,10 +34,10 @@ const Login: React.FC = () => {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const accountByToken:ApiResponse  = await get(`http://localhost:5000/admin/auth/${token}`);
-        console.log("accountByToken.user", accountByToken.user);
-        
-        if (accountByToken && accountByToken.user) {
+        const accountByToken: ApiResponse = await get(`http://localhost:5000/admin/auth/${token}`);
+        console.log("accountByToken.account", accountByToken.accountInAdmin);
+
+        if (accountByToken && accountByToken.accountInAdmin) {
           dispatch(accountActions(accountByToken));
           navigate("/admin/dashboard");
         } else {
@@ -48,14 +48,14 @@ const Login: React.FC = () => {
         navigate("/admin/auth/login");
       }
     };
-  
+
     if (token) {
       fetchApi();
     } else {
       navigate("/admin/auth/login");
     }
   }, [token, dispatch, navigate]);
-  
+
 
   const handleSubmit = async (values: LoginFormValues) => {
     try {
@@ -64,21 +64,18 @@ const Login: React.FC = () => {
         password: values.password,
       });
 
+      console.log(data)
       if (data.token) {
-    
+
         showSuccessAlert("Success!", "You have logged in successfully.");
         document.cookie = `token=${data.token}; path=/; max-age=86400`;
 
-        dispatch(
-          accountActions({
-            user: {
-              _id: data.user._id,
-              fullName: data.user.fullName,
-              email: data.user.email,
-            },
-            role: data.role,
-          })
-        );
+        // Dispatch both account and role
+        dispatch(accountActions({
+          accountInAdmin: data.accountInAdmin,
+          role: data.role,
+        }));
+
 
         setTimeout(() => {
           navigate("/admin/dashboard");

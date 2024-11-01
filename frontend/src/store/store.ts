@@ -1,9 +1,10 @@
 import { combineReducers, createStore } from 'redux';
 import AccountReducer from '../reducers/Account.reducer'; // Example import, adjust to your structure
+import UserReducer from '../reducers/User.reducer';
 
 const rootReducer = combineReducers({
-  AccountReducer, // Add all your reducers here
-  // other reducers...
+  AccountReducer,
+  UserReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>; // This creates the RootState type

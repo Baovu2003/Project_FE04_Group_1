@@ -34,10 +34,10 @@ const Permissions: React.FC = () => {
       const data: ApiResponse = await get("http://localhost:5000/admin/roles/permissions");
 
       console.log(data)
-      console.log(data.records)
-      if (data.records && Array.isArray(data.records)) {
-        setPermissions(data.records);
-        const initialPermissions = data.records.map((record: PermissionRecord) => ({
+      console.log(data.recordsPermission)
+      if (data.recordsPermission && Array.isArray(data.recordsPermission)) {
+        setPermissions(data.recordsPermission);
+        const initialPermissions = data.recordsPermission.map((record: PermissionRecord) => ({
           id: record._id,
           permissionsChild: record.permission || [],
         }));
@@ -76,7 +76,7 @@ const Permissions: React.FC = () => {
 
   // Handle form submit
   const handleSubmit = async () => {
-    const isConfirmed = await showConfirmationAlert("Are you sure?", "You want to update the role ?");
+    const isConfirmed = await showConfirmationAlert("Are you sure?", "You want to update the role ?","Yes, update it!");
     if (isConfirmed) {
       try {
         await patch("http://localhost:5000/admin/roles/permissions", updatedPermissions);

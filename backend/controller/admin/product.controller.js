@@ -22,7 +22,7 @@ module.exports.index = async (req, res) => {
 
   res.json({
     pageTitle: "Danh sách sản phẩm",
-    products: products,
+    recordsProduct: products,
   });
 
   // -----------------------END Phần sort--------------------------
@@ -33,6 +33,7 @@ module.exports.changeStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
 
+  console.log(id)
   const updatedBy = {
     account_id: res.locals.user.id,
     updatedAt: new Date(),
@@ -59,7 +60,7 @@ module.exports.changeStatus = async (req, res) => {
 
     res.json({
       message: "Cập nhật trạng thái thành công!",
-      product: updatedProduct, // Send the updated product details
+      recordsProduct: updatedProduct, // Send the updated product details
     });
   } catch (error) {
     console.error("Error updating status:", error);
@@ -112,7 +113,7 @@ module.exports.deleteItem = async (req, res) => {
 
     res.json({
       message: "Deleted sản phẩm thành công!",
-      product: product, // Send the updated product details
+      recordsProduct: product, // Send the updated product details
     });
   } catch (error) {
     console.error("Error updating deleted:", error);
@@ -121,21 +122,6 @@ module.exports.deleteItem = async (req, res) => {
 };
 
 // -------------------------[POST]/admin/producs/create----------------
-module.exports.create = async (req, res) => {
-  let find = {
-    deleted: false,
-  };
-  const category = await ProductCategory.find(find);
-  console.log(category);
-
-  const newCategory = createTreeHelper.tree(category);
-  console.log(newCategory);
-
-  res.render("admin/pages/products/create.pug", {
-    pageTitle: "Thêm mới một sản phẩm",
-    category: newCategory,
-  });
-};
 
 module.exports.createUsePost = async (req, res) => {
   // console.log("req.body:", req.body);
@@ -153,6 +139,8 @@ module.exports.createUsePost = async (req, res) => {
     // Đường dẫn đến file đã upload
     req.body.thumbnail = `/uploads/${req.file.filename}`; // Lưu trữ đường dẫn vào req.body
   }
+
+  console.log("res.locals.user",res.locals.user);
 
   req.body.createdBy = {
     account_id: res.locals.user.id,
@@ -261,7 +249,7 @@ module.exports.detail = async (req, res) => {
     //  res.send("ok")
     res.json({
       pageTitle: "Detail sản phẩm",
-      product: product,
+      recordsProduct: product,
     });
   } catch (error) {
     res.redirect(`admin/products`);

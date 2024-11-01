@@ -1,10 +1,11 @@
 // /redux/reducers/Account.reducer.ts
-import { ApiResponse } from '../actions/types';
 
-const initialState: ApiResponse | null = null; // Adjust initial state as necessary
+import { ApiLoginAdmin } from "../actions/types";
 
-const AccountReducer = (state = initialState, action: { type: string; payload: ApiResponse }) => {
-    console.log("AccountReducer", state, action.payload);
+const initialState: ApiLoginAdmin | null = null; // Adjust initial state as necessary
+
+const AccountReducer = (state = initialState, action: { type: string; payload: ApiLoginAdmin }) => {
+    // console.log("AccountReducer", state, action.payload);
     switch (action.type) {
         case "NEW_ACCOUNT":
             return { ...action.payload }; // Update state based on the payload

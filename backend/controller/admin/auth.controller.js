@@ -7,14 +7,14 @@ module.exports.loginPost = async (req, res) => {
 
   console.log({ email, password });
 
-  const user = await Account.findOne({
+  const accountInAdmin = await Account.findOne({
     email: email,
     deleted: false,
   });
 
-  console.log("user", user);
+  console.log("user", accountInAdmin);
 
-  if (!user) {
+  if (!accountInAdmin) {
     return res.status(404).json({ message: "User not found" });
   }
 
@@ -22,21 +22,21 @@ module.exports.loginPost = async (req, res) => {
   const hashedPassword = md5(password); // Assuming you're hashing the password with md5
   console.log(hashedPassword);
   console.log(md5(password));
-  console.log(user.password);
-  if (user.password !== hashedPassword) {
+  console.log(accountInAdmin.password);
+  if (accountInAdmin.password !== hashedPassword) {
     return res.status(401).json({ message: "Incorrect password" });
   }
-  if (user.status == "inactive") {
+  if (accountInAdmin.status == "inactive") {
     return res.status(401).json({ message: "Tài Khoản đã bị khoá" });
   }
 
   // Continue with login process (e.g., generating JWT token, session, etc.)
-  console.log(user.token);
-  res.cookie("token", user.token);
+  console.log(accountInAdmin.token);
+  res.cookie("token", accountInAdmin.token);
   const role = await Role.findOne({
-    _id: user.role_id,
+    _id: accountInAdmin.role_id,
   }).select("title permission");
-  res.status(200).json({ message: "Login successful", token: user.token, user: user, role:role });
+  res.status(200).json({ message: "Login successful", token: accountInAdmin.token, accountInAdmin: accountInAdmin, role:role });
 };
 
 
@@ -75,17 +75,17 @@ module.exports.verifyTokenByToken = async (req, res) => {
   }
 
   try {
-    const user = await Account.findOne({ token });
+    const accountInAdmin = await Account.findOne({ token });
 
     const role = await Role.findOne({
-      _id: user.role_id,
+      _id: accountInAdmin.role_id,
     }).select("title permission");
-    if (!user) {
+    if (!accountInAdmin) {
       return res.status(401).json({ valid: false, message: "Invalid token." });
     }
 
     // Optionally return user information if needed
-    return res.status(200).json({ valid: true, user,role });
+    return res.status(200).json({ valid: true, accountInAdmin,role });
   } catch (error) {
     console.error("Error verifying token:", error);
     return res.status(500).json({ valid: false, message: "Internal server error." });

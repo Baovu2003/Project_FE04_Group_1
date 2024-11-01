@@ -9,13 +9,11 @@ import {
   Tag,
   InputNumber,
   Button,
-  Carousel,
   Divider,
 } from "antd";
 import {
   ShoppingCartOutlined,
   ThunderboltOutlined,
-  CreditCardOutlined,
 } from "@ant-design/icons";
 import img from "../../../assets/img.png";
 import { Breadcrumb } from "antd";
@@ -25,16 +23,6 @@ const { Title, Text } = Typography;
 
 const ProductDetail: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
-
-  const productImages = [
-    "/placeholder.svg?height=400&width=400",
-    "/placeholder.svg?height=80&width=80",
-    "/placeholder.svg?height=80&width=80",
-    "/placeholder.svg?height=80&width=80",
-    "/placeholder.svg?height=80&width=80",
-    "/placeholder.svg?height=80&width=80",
-  ];
-
   return (
     <Layout>
       <Content style={{ padding: "0 50px", background: "white" }}>

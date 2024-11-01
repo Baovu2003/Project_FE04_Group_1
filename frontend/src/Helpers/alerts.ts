@@ -2,15 +2,15 @@
 import Swal from "sweetalert2";
 
 // Function to show a confirmation alert
-export const showConfirmationAlert = async (title: string, text: string) => {
+export const showConfirmationAlert = async (title: string, text: string,confirmButtonText: string) => {
   const result = await Swal.fire({
     title,
     text,
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#3085d6",
+    confirmButtonColor: "#purple",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, update it!"
+    confirmButtonText
   });
   return result.isConfirmed; // Returns true if confirmed
 };

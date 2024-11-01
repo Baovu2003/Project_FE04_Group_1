@@ -30,7 +30,7 @@
 .cart-icon {
   position: relative;
   margin-right: 20px;
-  font-size:35px
+  font-size: 35px
 }
 
 .cart-count {
@@ -46,19 +46,22 @@
 
 .login-link,
 .register-link {
+  color: #ffffff;
   text-decoration: none;
   font-size: 1.2em;
   margin-right: 20px;
 }
 
-.login-link {
+.login-link:hover,
+.register-link:hover {
   color: #ffffff;
-}
-
-.register-link {
-  color: #d4af37;
   font-weight: bold;
 }
+.user-greeting {
+  color: #ffffff; 
+  font-size: 1em;
+}
+
 
 .search-button,
 .mobile-menu-button {
@@ -67,6 +70,7 @@
   color: #ffffff;
   font-size: 24px;
   cursor: pointer;
+  margin-right: 10px;
 }
 
 .mobile-nav {
@@ -117,55 +121,61 @@
     margin-bottom: 15px;
   }
 
-  .mobile-nav a:hover,
-  .mobile-nav a.active {
-    color: #d4af37;
-    font-weight: bold;
-  }
-
   .login-link,
-  .register-link {
+  .register-link,
+  .logout-button {
     display: none;
   }
 }
+
 @media (max-width: 1200px) {
   .header {
-    padding: 15px 30px; /* Adjust padding if needed */
+    padding: 15px 30px;
+    /* Adjust padding if needed */
   }
-  .logo{
-    width: 15%;
+
+  .logo {
+    width: 25%;
   }
-  .logo img{
+
+  .logo img {
     width: 100%;
   }
 
-  .desktop-nav{
+  .desktop-nav {
     margin: 0;
   }
+
   .desktop-nav a {
-    font-size: 1em; /* Make the text smaller */
+    font-size: 1em;
+    /* Make the text smaller */
     /* margin: 0 15px; Adjust margin if needed */
   }
 
   .login-link,
   .register-link {
-    font-size: 1em; /* Make the login and register links smaller */
+    font-size: 1em;
+    /* Make the login and register links smaller */
   }
 
   .search-button,
   .mobile-menu-button {
-    font-size: 25px; /* Make buttons smaller */
+    font-size: 25px;
+    /* Make buttons smaller */
   }
 
   .cart-icon {
-    font-size: 30px; /* Make the cart icon smaller */
+    font-size: 30px;
+    /* Make the cart icon smaller */
   }
 
   .search-form .ant-input {
-    font-size: 0.9em; /* Adjust input font size */
+    font-size: 0.9em;
+    /* Adjust input font size */
   }
 
   .search-form .ant-btn {
-    font-size: 0.9em; /* Adjust button font size */
+    font-size: 0.9em;
+    /* Adjust button font size */
   }
 }
