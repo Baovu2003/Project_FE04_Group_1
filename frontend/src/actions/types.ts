@@ -33,11 +33,9 @@ export interface ProductCategory {
   _id: string;
   title: string;
   parent_id: string;
-  parent_id: string;
   children?: ProductCategory[];
   description: string;
   thumbnail: string;
-  status: "active" | "inactive";
   status: "active" | "inactive";
   position: number;
   slug: string;
@@ -70,15 +68,6 @@ export interface Account {
   avatar?: string;
   role_id: string;
   status?: string;
-  _id: string;
-  fullName: string;
-  email: string;
-  password?: string;
-  token?: string;
-  phone?: string;
-  avatar?: string;
-  role_id: string;
-  status?: string;
 }
 
 export interface Role {
@@ -90,18 +79,8 @@ export interface Role {
   deleteAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
-  _id: string;
-  title: string;
-  description?: string;
-  permission: string[];
-  deleted: boolean;
-  deleteAt?: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 export interface User {
-  _id: string;
-  fullName: string;
   _id: string;
   fullName: string;
   email: string;
@@ -117,17 +96,7 @@ export interface User {
   updatedAt?: Date;
 }
 
-export interface PermissionRecord {
-  _id: string;
-  title: string;
-  description: string;
-  permission: string[];
-  deleted: boolean;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-// redux/actions/types.ts
+
 export interface PermissionRecord {
   _id: string;
   title: string;
@@ -143,16 +112,9 @@ export interface UserInfo {
   fullname: string;
   phone: string;
   address: string;
-  fullname: string;
-  phone: string;
-  address: string;
 }
 
 export interface Product {
-  product_id: string;
-  quantity: number;
-  price: number;
-  discountPercentage: number;
   product_id: string;
   quantity: number;
   price: number;
@@ -167,29 +129,15 @@ export interface Order {
   products: Product[];
   createdAt?: Date;
   updatedAt?: Date;
-  _id: string;
-  user_id: string;
-  cart_id: string;
-  userInfo: UserInfo[];
-  products: Product[];
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 // redux/actions/types.ts
 export interface CartProduct {
   product_id: string;
   quantity: number;
-  product_id: string;
-  quantity: number;
 }
 
 export interface Cart {
-  _id: string;
-  user_id: string;
-  products: CartProduct[];
-  createdAt?: Date;
-  updatedAt?: Date;
   _id: string;
   user_id: string;
   products: CartProduct[];
