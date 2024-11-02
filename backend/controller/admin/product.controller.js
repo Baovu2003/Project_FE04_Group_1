@@ -33,7 +33,7 @@ module.exports.changeStatus = async (req, res) => {
   const status = req.params.status;
   const id = req.params.id;
 
-  console.log(id)
+  console.log(id);
   const updatedBy = {
     account_id: res.locals.user.id,
     updatedAt: new Date(),
@@ -104,6 +104,7 @@ module.exports.deleteItem = async (req, res) => {
       { _id: id },
       {
         deleted: !product.deleted, // Đảo trạng thái deleted
+        status: "inactive",
         deletedBy: {
           account_id: res.locals.user.id,
           deletedAt: new Date(),
@@ -140,7 +141,7 @@ module.exports.createUsePost = async (req, res) => {
     req.body.thumbnail = `/uploads/${req.file.filename}`; // Lưu trữ đường dẫn vào req.body
   }
 
-  console.log("res.locals.user",res.locals.user);
+  console.log("res.locals.user", res.locals.user);
 
   req.body.createdBy = {
     account_id: res.locals.user.id,
@@ -155,7 +156,6 @@ module.exports.createUsePost = async (req, res) => {
   req.flash("success", "Create products successfully");
   res.redirect(`${systemconfig.prefixAdmin}/products-category`);
 };
-
 
 // -------------------------[PATCH]/admin/producs/edit/:id----------------
 
@@ -215,8 +215,6 @@ module.exports.editPatch = async (req, res) => {
       }
     }
 
-    
-
     await Product.updateOne(
       { _id: req.params.id },
       {
@@ -233,8 +231,6 @@ module.exports.editPatch = async (req, res) => {
   }
 };
 
-
-
 // --------------[GET]: /admin/producs/detail/:id-----------
 module.exports.detail = async (req, res) => {
   try {
@@ -249,7 +245,7 @@ module.exports.detail = async (req, res) => {
     //  res.send("ok")
     res.json({
       pageTitle: "Detail sản phẩm",
-      recordsProduct: product,
+      detailProduct: product,
     });
   } catch (error) {
     res.redirect(`admin/products`);
