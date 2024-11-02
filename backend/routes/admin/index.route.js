@@ -10,6 +10,13 @@ const systemConfig = require("../../config/system")
 module.exports = (app) => {
 
   const PATH_ADMIN =systemConfig.prefixAdmin;
+  // app.use(PATH_ADMIN+"/dashboard", dashboardRoutes);
+  // app.use(PATH_ADMIN+"/products-category",productCategoryRoutes);
+  // app.use(PATH_ADMIN+"/products",productRoutes);
+  // app.use(PATH_ADMIN+"/roles",rolesRoutes);
+  // app.use(PATH_ADMIN+"/accounts",accountRoutes);
+  // app.use(PATH_ADMIN+"/auth", authRoutes);
+
   app.use(PATH_ADMIN+"/dashboard",authMiddleware.requireAuth, dashboardRoutes);
   app.use(PATH_ADMIN+"/products-category", authMiddleware.requireAuth,productCategoryRoutes);
   app.use(PATH_ADMIN+"/products", authMiddleware.requireAuth,productRoutes);

@@ -64,7 +64,7 @@ module.exports.permissions = async (req, res) => {
   };
   const role = await Role.find(find);
   console.log(role);
-  res.json({ records: role });
+  res.json({ recordsPermission: role });
 
   // res.send("Ok")
 };

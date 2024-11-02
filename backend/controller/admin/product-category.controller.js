@@ -12,13 +12,17 @@ module.exports.index = async (req, res) => {
 
   console.log(newRecords);
   res.json({
-    records: newRecords,
+    recordsCategory: newRecords,
   });
 };
 
 module.exports.createUsePost = async (req, res) => {
   console.log(res.locals.role.permission);
   const permission = res.locals.role.permission;
+  const thumbnail = req.file ? req.file.filename : "";
+  console.log("req.body", req.body);
+  console.log(req.file);
+  console.log(thumbnail);
   if (permission.includes("products-category_create")) {
     // Cài đặt vị trí nếu chưa được cung cấp
     if (req.body.position === "") {
@@ -34,18 +38,19 @@ module.exports.createUsePost = async (req, res) => {
       req.body.thumbnail = `/uploads/${req.file.filename}`; // Lưu trữ đường dẫn vào req.body
     }
 
+    console.log(req.body.thumbnail);
     // Tạo danh mục
-    // const category = new ProductCategory(req.body);
-    // console.log(category);
+    const category = new ProductCategory(req.body);
+    console.log(category);
 
-    // await category.save();
+    await category.save();
     req.flash("success", "Create products successfully");
     res.redirect(`${systemconfig.prefixAdmin}/products-category`);
   } else {
     res.json({
-      message: "Error"
-    })
-    return 
+      message: "Error",
+    });
+    return;
   }
 };
 
@@ -67,11 +72,11 @@ module.exports.changeStatus = async (req, res) => {
     }
 
     // Optionally, you can fetch the updated product to send back to the frontend
-    const updatedProduct = await ProductCategory.findById(id);
+    const UpdateProductCategory = await ProductCategory.findById(id);
 
     res.json({
       message: "Cập nhật trạng thái thành công!",
-      records: updatedProduct, // Send the updated product details
+      recordsCategory: UpdateProductCategory, // Send the updated product details
     });
   } catch (error) {
     console.error("Error updating status:", error);
@@ -98,7 +103,7 @@ module.exports.edit = async (req, res) => {
     res.render("admin/pages/products-category/edit.pug", {
       pageTitle: "Edit danh mục sản phẩm",
       product: product,
-      records: newRecords,
+      recordsCategory: newRecords,
     });
   } catch (error) {
     res.redirect(`${systemconfig.prefixAdmin}/products-category`);
@@ -137,12 +142,12 @@ module.exports.detail = async (req, res) => {
       _id: id,
     };
     // const product = await Product.findById(id).exec();
-    const product = await ProductCategory.findOne(find).exec();
-    console.log("productById: ", product);
+    const category = await ProductCategory.findOne(find).exec();
+    console.log("productById: ", category);
     //  res.send("ok")
     res.render("admin/pages/products-category/detail.pug", {
       pageTitle: "Detail sản phẩm",
-      product: product,
+      recordsCategory: category,
     });
   } catch (error) {
     res.redirect(`${systemconfig.prefixAdmin}/products-category`);
@@ -170,10 +175,10 @@ module.exports.deleteItem = async (req, res) => {
 
   try {
     // Tìm sản phẩm trước để lấy trạng thái hiện tại
-    const product = await ProductCategory.findById(id);
+    const category = await ProductCategory.findById(id);
 
-    console.log(product.deleted);
-    if (!product) {
+    console.log(category.deleted);
+    if (!category) {
       req.flash("error", "Product not found");
       return res.redirect("back");
     }
@@ -182,14 +187,14 @@ module.exports.deleteItem = async (req, res) => {
     await ProductCategory.updateOne(
       { _id: id },
       {
-        deleted: !product.deleted, // Đảo trạng thái deleted
-        deleteAt: new Date(), // Cập nhật thời gian xóa
+        deleted: !category.deleted, 
+        deleteAt: new Date(), 
       }
     );
 
     res.json({
       message: "Deleted sản phẩm thành công!",
-      records: product, // Send the updated product details
+      recordsCategory: category, // Send the updated product details
     });
   } catch (error) {
     console.error("Error updating deleted:", error);
