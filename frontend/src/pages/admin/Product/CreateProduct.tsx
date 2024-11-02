@@ -1,11 +1,15 @@
-import React from 'react'
+import React from "react";
 
-function CreateProduct() {
+
+
+const CreateProduct: React.FC = () => {
+ 
+
   return (
     <div>
-      CreateProduct
+      <h1>Create Product</h1>
     </div>
-  )
-}
+  );
+};
 
-export default CreateProduct
+export default CreateProduct;

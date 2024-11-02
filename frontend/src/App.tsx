@@ -11,7 +11,7 @@ import LoginUser from "./pages/client/User/LoginUser";
 import Register from "./pages/client/User/Register";
 import NotFoundClient from "./pages/client/404NotFound/NotFound";
 import LayoutDefaultAdmin from "./LayoutDefault/LayoutDefaultAdmin/LayoutDefaultAdmin";
-import ProtectedRoute from "./pages/admin/ProtectedRoute/ProtectedRoute";
+// import ProtectedRoute from "./pages/admin/ProtectedRoute/ProtectedRoute";
 import Dashboard from "./pages/admin/Dashboard/Dashboard";
 import Allcategory from "./pages/admin/Category/Allcategory";
 import Category from "./pages/admin/Category/Category";
@@ -32,6 +32,8 @@ import Permissions from "./pages/admin/Permissions/Permissions";
 import Login from "./pages/admin/Auth/Login";
 import NotFound from "./pages/admin/404NotFound/404NotFound/NotFound";
 import 'antd/dist/reset.css';
+import DetailCategory from "./pages/admin/Category/DetailCategory";
+import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 function App() {
   return (
     <Router>
@@ -50,10 +52,12 @@ function App() {
 
         {/* Admin Routes */}
         <Route path="/admin" element={<LayoutDefaultAdmin />}>
-          <Route element={<ProtectedRoute />}>
+          {/* <Route element={<ProtectedRoute />}> */}
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="products-category" element={<Allcategory />}>
               <Route index element={<Category />} />
+              <Route path="detail/:id" element={<DetailCategory />} />
+              <Route path="edit/:id" element={<UpdateCategory />} />
               <Route path="create" element={<CreateCategory />} />
             </Route>
 
@@ -79,7 +83,7 @@ function App() {
             <Route path="permissions" element={<Permissions />} />
             <Route path="*" element={<NotFound />} />
           </Route>
-        </Route>
+        {/* </Route> */}
         <Route path="/admin/auth/login" element={<Login />} />
       </Routes>
     </Router>

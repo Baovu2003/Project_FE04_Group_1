@@ -1,14 +1,24 @@
 const ProductCategory = require("../../models/product-category.model");
 const systemconfig = require("../../config/system");
 const createTreeHelper = require("../../helpers/createTree");
+const Account = require("../../models/account.model");
 module.exports.index = async (req, res) => {
   const records = await ProductCategory.find();
-  // console.log(records);
+  console.log(records);
 
   // const newRecords = createTreeHelper.tree(records);
   const newRecords = createTreeHelper.tree(
     records.map((record) => record.toObject({ virtuals: true }))
   );
+  for (const product of newRecords) {
+    const account = await Account.findOne({
+      _id: product.createdBy.account_id,
+    });
+    console.log(account)
+    if (account) {
+      product.accountFullName = account.fullName;
+    }
+  }
 
   console.log(newRecords);
   res.json({
@@ -39,10 +49,15 @@ module.exports.createUsePost = async (req, res) => {
     }
 
     console.log(req.body.thumbnail);
+
+
+    req.body.createdBy = {
+      account_id: res.locals.user.id,
+      createdAt: new Date(),
+    };
     // Tạo danh mục
     const category = new ProductCategory(req.body);
     console.log(category);
-
     await category.save();
     req.flash("success", "Create products successfully");
     res.redirect(`${systemconfig.prefixAdmin}/products-category`);
@@ -126,9 +141,9 @@ module.exports.editUsePost = async (req, res) => {
 
   try {
     await ProductCategory.updateOne({ _id: req.params.id }, req.body);
-    req.flash("success", `Update products-category successfully `);
+   console.log("Success")
   } catch (error) {
-    res.redirect("back");
+    console.log(error)
   }
 
   res.redirect(`${systemconfig.prefixAdmin}/products-category`);
@@ -145,10 +160,10 @@ module.exports.detail = async (req, res) => {
     const category = await ProductCategory.findOne(find).exec();
     console.log("productById: ", category);
     //  res.send("ok")
-    res.render("admin/pages/products-category/detail.pug", {
-      pageTitle: "Detail sản phẩm",
-      recordsCategory: category,
-    });
+    res.json({
+      detailCategory: category,
+    }
+    );
   } catch (error) {
     res.redirect(`${systemconfig.prefixAdmin}/products-category`);
   }

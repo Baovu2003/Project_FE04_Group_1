@@ -1,11 +1,13 @@
-import React from 'react'
+import React from "react";
 
-function CreateCategory() {
+const CreateCategory: React.FC = () => {
+  
+
   return (
     <div>
-      CreateCategory
+      <h1>Thêm mới danh mục sản phẩm</h1>     
     </div>
-  )
-}
+  );
+};
 
-export default CreateCategory
+export default CreateCategory;
