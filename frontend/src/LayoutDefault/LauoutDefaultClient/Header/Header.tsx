@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { ShoppingCartOutlined, SearchOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
 import { Form, Input, Button } from 'antd';
 import logoWhite from '../../../assets/logo_white-7.png';
-
 import './Header.css';
+import { RootState } from '../../../store/store';
+import { useSelector } from 'react-redux';
 
 const Header: React.FC = () => {
   const [isSearchVisible, setSearchVisible] = useState(false);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.UserReducer);
 
   useEffect(() => {
     const handleResize = () => {
@@ -36,6 +39,12 @@ const Header: React.FC = () => {
     setSearchTerm('');
     setSearchVisible(false);
     // Handle search logic here, e.g., redirect to a search results page
+  };
+
+  const handleLogout = () => {
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+    navigate("/");
+    window.location.reload();
   };
 
   return (
@@ -64,19 +73,32 @@ const Header: React.FC = () => {
 
         {/* Icons and Buttons Section */}
         <div className="actions">
-          <div className="cart-icon">
-            <span className="cart-count">0</span>
-            <ShoppingCartOutlined style={{color:"white"}} />
-          </div>
-          <NavLink to="/user/login" className="login-link">
-            Login
-          </NavLink>
-          <NavLink to="/user/register" className="register-link">
-            Register
-          </NavLink>
           <button onClick={toggleSearch} className="search-button">
             <SearchOutlined />
           </button>
+          <div className="cart-icon">
+            <span className="cart-count">0</span>
+            <ShoppingCartOutlined style={{ color: "white" }} />
+          </div>
+
+          {user && user.user._id ? (
+            <>
+              <span className="user-greeting">Hello, {user.user.fullName}!</span> {/* Greeting message */}
+              <Button onClick={handleLogout} className="logout-button">
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <NavLink to="/user/login" className="login-link">
+                Login
+              </NavLink>
+              <NavLink to="/user/register" className="register-link">
+                Register
+              </NavLink>
+            </>
+          )}
+
           {isMobile && (
             <button onClick={toggleMobileMenu} className="mobile-menu-button">
               {isMobileMenuOpen ? <CloseOutlined /> : <MenuOutlined />}
@@ -92,8 +114,20 @@ const Header: React.FC = () => {
           <NavLink to="/listProducts" onClick={toggleMobileMenu}>Products</NavLink>
           <NavLink to="/about" onClick={toggleMobileMenu}>About us</NavLink>
           <NavLink to="/contact" onClick={toggleMobileMenu}>Contact</NavLink>
-          <NavLink to="/user/login" onClick={toggleMobileMenu}>Login</NavLink>
-          <NavLink to="/user/register" onClick={toggleMobileMenu}>Register</NavLink>
+          {user && user.user._id ? (
+            <NavLink to="" onClick={handleLogout}>
+              Logout
+            </NavLink>
+          ) : (
+            <>
+              <NavLink to="/user/login" onClick={toggleMobileMenu}>
+                Login
+              </NavLink>
+              <NavLink to="/user/register" onClick={toggleMobileMenu}>
+                Register
+              </NavLink>
+            </>
+          )}
         </nav>
       )}
 

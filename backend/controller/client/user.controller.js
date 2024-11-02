@@ -34,11 +34,12 @@ module.exports.registerPost = async (req, res) => {
 
 module.exports.loginPost = async (req, res) => {
   console.log(req.body);
-
+  console.log(req.body.email);
   const user = await User.findOne({
     email: req.body.email,
-    deleted: false,
+    // deleted: false,
   });
+  console.log(user);
   if (!user) {
     res.status(500).json({
       message: "Email not exist",
