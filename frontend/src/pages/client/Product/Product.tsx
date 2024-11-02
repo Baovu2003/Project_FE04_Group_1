@@ -17,6 +17,8 @@ import {
   MessageOutlined,
 } from "@ant-design/icons";
 
+import { Breadcrumb } from "antd";
+
 import img from "../../../assets/img.png";
 
 const { Header, Content } = Layout;
@@ -142,6 +144,12 @@ const ProductList: React.FC = () => {
 
   return (
     <Layout>
+      <Breadcrumb style={{ padding: "16px", backgroundColor: "#fff" }}>
+        <Breadcrumb.Item>
+          <a href="/">Home</a>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>Product</Breadcrumb.Item>
+      </Breadcrumb>
       <Header style={{ background: "#fff", padding: "0 20px" }}>
         <Row justify="space-between" align="middle">
           <Col>
