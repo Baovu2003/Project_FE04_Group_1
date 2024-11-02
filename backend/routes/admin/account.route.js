@@ -7,9 +7,6 @@ const storageMulter = require("../../helpers/storageMulter");
 const upload = multer({ storage: storageMulter() }); // Use the storage configuration
 console.log(upload);
 
-
-
-
 router.get("/", controller.index);
 
 router.post("/create", upload.single("avatar"), controller.createPost);

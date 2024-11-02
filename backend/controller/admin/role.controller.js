@@ -6,7 +6,7 @@ module.exports.index = async (req, res) => {
     const roles = await Role.find({ deleted: false });
     res.status(200).json({
       pageTitle: "Trang Nhóm quyền",
-      records: roles,
+      recordsRole: roles,
     });
   } catch (error) {
     res.status(500).json({ message: "Error fetching roles", error });
@@ -37,7 +37,7 @@ module.exports.edit = async (req, res) => {
 
     res.status(200).json({
       pageTitle: "Sửa Nhóm quyền",
-      records: role,
+      recordsRole: role,
     });
   } catch (error) {
     // Log the error and handle other exceptions

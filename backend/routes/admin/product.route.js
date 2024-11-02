@@ -8,6 +8,7 @@ console.log(upload)
 const controller = require("../../controller/admin/product.controller");
 const validate = require("../../validate/admin/productvalidate");
 
+
 router.get("/", controller.index);
 
 router.patch("/change-status/:status/:id", controller.changeStatus);

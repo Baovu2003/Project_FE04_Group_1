@@ -14,7 +14,7 @@ const ProtectedRoute: React.FC = () => {
     //     const checkToken = async () => {
     //         const token = getTokenFromCookies(); // Get token safely
     //         console.log(token);
-            
+
     //         if (!token) {
     //             setIsAuthenticated(false); // No token, not authenticated
     //             return;
@@ -32,9 +32,9 @@ const ProtectedRoute: React.FC = () => {
 
     //     checkToken();
     // }, []); 
-   useEffect(() =>{
-    setIsAuthenticated(true);
-   })
+    useEffect(() => {
+        setIsAuthenticated(true);
+    })
 
     if (isAuthenticated === null) {
         return <div>Loading...</div>;

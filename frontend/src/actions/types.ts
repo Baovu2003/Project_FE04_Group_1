@@ -10,7 +10,7 @@ export interface Product {
   stock: number;
   thumbnail: string;
   status: string;
-  featured: string; // If this is a boolean, consider changing to boolean type
+  featured: string;
   position: number;
   deleted: boolean;
   slug: string;
@@ -20,12 +20,12 @@ export interface Product {
   };
   deletedBy?: {
     account_id: string;
-    deletedAt?: Date; // Marked as optional if it may not always be present
+    deletedAt?: Date;
   };
   updatedBy: {
     account_id: string;
     updatedAt: Date;
-    changes: Record<string, unknown>; // Use Record to allow any shape for changes
+    changes: Record<string, unknown>;
   }[];
 }
 // redux/actions/types.ts
@@ -40,9 +40,23 @@ export interface ProductCategory {
   position: number;
   slug: string;
   deleted: boolean;
-  deleteAt?: Date;
-  createdAt?: Date;
-  updatedAt?: Date;
+
+  createdBy: {
+    account_id: string;
+    createdAt: Date;
+  };
+
+  deletedBy?: {
+    account_id: string;
+    deletedAt: Date;
+  };
+
+  updatedBy?: Array<{
+    account_id: string;
+    updatedAt: Date;
+    changes: object;
+  }>;
+  accountFullName: string;
 }
 export interface Account {
   _id: string;
@@ -74,6 +88,7 @@ export interface User {
   tokenUser?: string;
   phone?: string;
   avatar?: string;
+  address: string;
   status: string;
   deleted: boolean;
   deleteAt?: Date;
@@ -136,11 +151,13 @@ export interface ApiResponse {
   token: string;
   tokenUser: string;
   recordsProduct: Product[];
-  recordsPermission: PermissionRecord[];
   recordsCategory: ProductCategory[];
+  recordsPermission: PermissionRecord[];
+  recordsRole: Role[];
   recordsAccount: Account[];
   detailCategory: ProductCategory;
   detailProduct: Product;
+  status: number;
 }
 
 export interface ApiLoginAdmin {

@@ -240,5 +240,8 @@ const CreateProduct: React.FC = () => {
     </div>
   );
 };
+  );
+};
 
+export default CreateProduct;
 export default CreateProduct;

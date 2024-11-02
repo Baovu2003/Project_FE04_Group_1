@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import { Button, Col, Row, Pagination, FormControl } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { del, get, patch } from "../../../Helpers/API.helper";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store"; // Adjust this import based on your store setup
+import { RootState } from "../../../store/store";
 import { ProductCategory } from "../../../actions/types";
 import { showConfirmationAlert, showSuccessAlert } from "../../../Helpers/alerts";
 
 const Category: React.FC = () => {
   const [categories, setCategories] = useState<ProductCategory[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [searchTerm, setSearchTerm] = useState<string>(""); // Add search term state
+  const itemsPerPage = 1;
   const account = useSelector((state: RootState) => state.AccountReducer);
 
   useEffect(() => {
@@ -18,7 +21,6 @@ const Category: React.FC = () => {
   const fetchCategory = async () => {
     try {
       const data = await get("http://localhost:5000/admin/products-category");
-      console.log("data.records:", data.recordsCategory);
       setCategories(data.recordsCategory);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -32,13 +34,12 @@ const Category: React.FC = () => {
 
     if (isConfirmed) {
       try {
-        const data = await patch(
-          `http://localhost:5000/admin/products-category/change-status/${newStatus}/${productId}`, { status: newStatus }
+        await patch(
+          `http://localhost:5000/admin/products-category/change-status/${newStatus}/${productId}`,
+          { status: newStatus }
         );
-        console.log(data);
         showSuccessAlert("Success", `Trạng thái đã được cập nhật thành "${newStatus}".`);
         fetchCategory();
-
       } catch (error) {
         console.error("Error changing status:", error);
       }
@@ -46,23 +47,19 @@ const Category: React.FC = () => {
   };
 
   const handleDelete = async (productId: string, deleted: string) => {
-    console.log(deleted);
     let isConfirmed;
-    let actionMessage; 
-
+    let actionMessage;
     if (deleted === "active") {
       isConfirmed = await showConfirmationAlert("Are you sure?", "Do you want to Undelete this category?", "Yes Undelete it!");
-      actionMessage = ("Khôi phục thành công"); 
+      actionMessage = "Khôi phục thành công";
     } else {
       isConfirmed = await showConfirmationAlert("Are you sure?", "Do you want to delete this category?", "Yes delete it!");
-      actionMessage = "Xóa thành công"; 
+      actionMessage = "Xóa thành công";
     }
 
     if (isConfirmed) {
       try {
-        await del(
-          `http://localhost:5000/admin/products-category/delete/${productId}`
-        );
+        await del(`http://localhost:5000/admin/products-category/delete/${productId}`);
         showSuccessAlert("Success", actionMessage);
         fetchCategory();
       } catch (error) {
@@ -71,9 +68,24 @@ const Category: React.FC = () => {
     }
   };
 
+  // Function to filter categories and their children based on the search term
+  const filterCategories = (categories: ProductCategory[], searchTerm: string): ProductCategory[] => {
+    return categories
+      .map((category) => {
+        // Recursively filter children
+        const filteredChildren = filterCategories(category.children || [], searchTerm);
+        if (category.title.toLowerCase().includes(searchTerm.toLowerCase()) || filteredChildren.length > 0) {
+          return { ...category, children: filteredChildren };
+        }
+        return null;
+      })
+      .filter((category) => category !== null) as ProductCategory[];
+  };
 
+  console.log(categories)
+  // Render categories (recursive for children)
   const renderTableRows = (records: ProductCategory[], level: number = 1) => {
-    return records.map((item, index) => {
+    return records.map((item, index = 0) => {
       const prefix = Array(level).join("-- ");
       return (
         <React.Fragment key={item._id}>
@@ -86,7 +98,7 @@ const Category: React.FC = () => {
                     ? item.thumbnail.startsWith("http")
                       ? item.thumbnail
                       : `http://localhost:5000${item.thumbnail}`
-                    : "http://localhost:5000/path-to-placeholder-image.png" // Placeholder image URL
+                    : "http://localhost:5000/path-to-placeholder-image.png"
                 }
                 alt={item.title || "Placeholder Image"}
                 width="100px"
@@ -96,33 +108,21 @@ const Category: React.FC = () => {
             <td>
               {prefix} {item.title}
             </td>
-            <td>
-              <input
-                type="number"
-                defaultValue={item.position}
-                min="1"
-                style={{ width: "60px", borderRadius: "5px" }}
-                name="position"
-                readOnly
-              />
+            <td>{item.accountFullName}
+              <br></br>
+              {item.createdBy.createdAt &&
+                new Date(item.createdBy.createdAt).toLocaleString(
+                  "vi-VN"
+                )}
             </td>
             <td>
               {account && account.role.permission.includes("products-category_create") && (
-                <Button
-                  variant={item.status === "active" ? "success" : "danger"}
-                  onClick={() => handleStatusChange(item._id, item.status)}
-                >
+                <Button variant={item.status === "active" ? "success" : "danger"} onClick={() => handleStatusChange(item._id, item.status)}>
                   {item.status === "active" ? "Active" : "Inactive"}
                 </Button>
               )}
             </td>
-            <td>
-              {item.deleted ? (
-                <h6 className="text-danger">Đã xóa</h6>
-              ) : (
-                <h6 className="text-success">Chưa xóa</h6>
-              )}
-            </td>
+            <td>{item.deleted ? <h6 className="text-danger">Đã xóa</h6> : <h6 className="text-success">Chưa xóa</h6>}</td>
             <td>
               <Link to={`detail/${item._id}`} className="btn btn-primary me-2">
                 Detail
@@ -149,6 +149,17 @@ const Category: React.FC = () => {
     });
   };
 
+  // Filter categories based on search term
+  const filteredCategories = filterCategories(categories, searchTerm);
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
+  const paginatedCategories = filteredCategories.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   return (
     <div>
       {account && account.role.permission.includes("products-category_view") && (
@@ -164,6 +175,18 @@ const Category: React.FC = () => {
             </Row>
           )}
 
+          {/* Search input */}
+          <Row>
+            <Col md={12} className="mb-3">
+              <FormControl
+                type="text"
+                placeholder="Search categories..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </Col>
+          </Row>
+
           <form action="" method="POST" data-path={`admin/products-category/delete`} id="form-delete-item">
             <table className="table">
               <thead>
@@ -171,15 +194,24 @@ const Category: React.FC = () => {
                   <th>#</th>
                   <th>Thumbnail</th>
                   <th>Title</th>
-                  <th>Position</th>
+                  <th>Create By</th>
                   <th>Status</th>
                   <th>isDeleted</th>
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody>{renderTableRows(categories)}</tbody>
+              <tbody>{renderTableRows(paginatedCategories)}</tbody>
             </table>
           </form>
+
+          {/* Pagination controls */}
+          <Pagination className="justify-content-center">
+            {[...Array(totalPages)].map((_, pageIndex) => (
+              <Pagination.Item key={pageIndex} active={pageIndex + 1 === currentPage} onClick={() => handlePageChange(pageIndex + 1)}>
+                {pageIndex + 1}
+              </Pagination.Item>
+            ))}
+          </Pagination>
         </>
       )}
     </div>
