@@ -9,6 +9,7 @@ import About from "./pages/client/About/About";
 import Cart from "./pages/client/Cart/Cart";
 import LoginUser from "./pages/client/User/LoginUser";
 import Register from "./pages/client/User/Register";
+import PassResovery from "./pages/client/User/PassResovery";
 import NotFoundClient from "./pages/client/404NotFound/NotFound";
 import LayoutDefaultAdmin from "./LayoutDefault/LayoutDefaultAdmin/LayoutDefaultAdmin";
 import ProtectedRoute from "./pages/admin/ProtectedRoute/ProtectedRoute";
@@ -47,6 +48,7 @@ function App() {
           <Route path="/user/login" element={<LoginUser />} />
           <Route path="/user/register" element={<Register />} />
           <Route path="/user/profile" element={<Profile />} />
+          <Route path="/user/PassResovery" element={<PassResovery />} />
           <Route path="*" element={<NotFoundClient />} />
         </Route>
 
