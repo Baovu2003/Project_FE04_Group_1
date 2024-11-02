@@ -31,7 +31,8 @@ import AccountCreate from "./pages/admin/Accounts/AccountCreate";
 import Permissions from "./pages/admin/Permissions/Permissions";
 import Login from "./pages/admin/Auth/Login";
 import NotFound from "./pages/admin/404NotFound/404NotFound/NotFound";
-
+import 'antd/dist/reset.css';
+import Profile from "./pages/client/User/UserProfile";
 function App() {
   return (
     <Router>
@@ -45,6 +46,7 @@ function App() {
           <Route path="cart" element={<Cart />} />
           <Route path="/user/login" element={<LoginUser />} />
           <Route path="/user/register" element={<Register />} />
+          <Route path="/user/profile" element={<Profile />} />
           <Route path="*" element={<NotFoundClient />} />
         </Route>
 
