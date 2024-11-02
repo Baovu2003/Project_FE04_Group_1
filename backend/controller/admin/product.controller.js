@@ -32,7 +32,6 @@ module.exports.index = async (req, res) => {
 module.exports.changeStatus = async (req, res) => {
   const { status, id } = req.params;
 
-  console.log(status);
   console.log(id);
   const updatedBy = {
     account_id: res.locals.user.id,
@@ -151,7 +150,7 @@ module.exports.createUsePost = async (req, res) => {
     req.body.thumbnail = `/uploads/${req.file.filename}`; // Lưu trữ đường dẫn vào req.body
   }
 
-  console.log("res.locals.user",res.locals.user);
+  console.log("res.locals.user", res.locals.user);
 
   req.body.createdBy = {
     account_id: res.locals.user.id,
@@ -166,7 +165,6 @@ module.exports.createUsePost = async (req, res) => {
   req.flash("success", "Create products successfully");
   res.redirect(`${systemconfig.prefixAdmin}/products-category`);
 };
-
 
 // -------------------------[PATCH]/admin/producs/edit/:id----------------
 
@@ -226,8 +224,6 @@ module.exports.editPatch = async (req, res) => {
       }
     }
 
-    
-
     await Product.updateOne(
       { _id: req.params.id },
       {
@@ -243,8 +239,6 @@ module.exports.editPatch = async (req, res) => {
     return res.status(500).json({ message: "Error updating product" });
   }
 };
-
-
 
 // --------------[GET]: /admin/producs/detail/:id-----------
 module.exports.detail = async (req, res) => {
