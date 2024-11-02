@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, Rate, Button, Carousel } from 'antd'
 import { LeftOutlined, RightOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import type { CarouselRef } from 'antd/lib/carousel'
-import './flash-sale.css'
+import './featured.css'
 
 interface Product {
   id: number
@@ -15,7 +15,7 @@ interface Product {
   image: string
 }
 
-function FlashSale() {
+function FeaturedProduct() {
   const carouselRef = React.useRef<CarouselRef>(null)
   const [countdown, setCountdown] = React.useState({ hours: 1, minutes: 11, seconds: 40 })
 
@@ -184,4 +184,4 @@ function FlashSale() {
   )
 }
 
-export default FlashSale
+export default FeaturedProduct

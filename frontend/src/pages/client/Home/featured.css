@@ -287,3 +287,59 @@
   .ant-rate-star {
     margin-right: 2px;
   }
+
+  .flash-sale-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.flash-sale-header {
+  background-color: #fff1f0;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flash-sale-text {
+  color: #f5222d;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.carousel-container {
+  position: relative;
+  margin: 0 -8px;
+}
+
+.carousel-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .flash-sale-text {
+    font-size: 20px;
+  }
+  .carousel-arrow-left {
+    left: -8px;
+  }
+  .carousel-arrow-right {
+    right: -8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .flash-sale-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .carousel-arrow {
+    display: none;
+  }
+}
