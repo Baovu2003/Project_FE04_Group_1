@@ -9,6 +9,7 @@ import About from "./pages/client/About/About";
 import Cart from "./pages/client/Cart/Cart";
 import LoginUser from "./pages/client/User/LoginUser";
 import Register from "./pages/client/User/Register";
+import PassResovery from "./pages/client/User/PassResovery";
 import NotFoundClient from "./pages/client/404NotFound/NotFound";
 import LayoutDefaultAdmin from "./LayoutDefault/LayoutDefaultAdmin/LayoutDefaultAdmin";
 // import ProtectedRoute from "./pages/admin/ProtectedRoute/ProtectedRoute";
@@ -32,6 +33,7 @@ import Permissions from "./pages/admin/Permissions/Permissions";
 import Login from "./pages/admin/Auth/Login";
 import NotFound from "./pages/admin/404NotFound/404NotFound/NotFound";
 import 'antd/dist/reset.css';
+import Profile from "./pages/client/User/UserProfile";
 import DetailCategory from "./pages/admin/Category/DetailCategory";
 import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 function App() {
@@ -47,6 +49,8 @@ function App() {
           <Route path="cart" element={<Cart />} />
           <Route path="/user/login" element={<LoginUser />} />
           <Route path="/user/register" element={<Register />} />
+          <Route path="/user/profile" element={<Profile />} />
+          <Route path="/user/PassResovery" element={<PassResovery />} />
           <Route path="*" element={<NotFoundClient />} />
         </Route>
 
