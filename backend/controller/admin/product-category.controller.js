@@ -162,8 +162,7 @@ module.exports.detail = async (req, res) => {
     //  res.send("ok")
     res.json({
       detailCategory: category,
-    }
-    );
+    });
   } catch (error) {
     res.redirect(`${systemconfig.prefixAdmin}/products-category`);
   }
