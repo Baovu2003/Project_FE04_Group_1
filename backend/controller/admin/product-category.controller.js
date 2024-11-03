@@ -1,14 +1,24 @@
 const ProductCategory = require("../../models/product-category.model");
 const systemconfig = require("../../config/system");
 const createTreeHelper = require("../../helpers/createTree");
+const Account = require("../../models/account.model");
 module.exports.index = async (req, res) => {
-  const records = await ProductCategory.find();
-  // console.log(records);
+  const records = await ProductCategory.find({});
+  console.log(records);
 
   // const newRecords = createTreeHelper.tree(records);
   const newRecords = createTreeHelper.tree(
     records.map((record) => record.toObject({ virtuals: true }))
   );
+  for (const product of newRecords) {
+    const account = await Account.findOne({
+      _id: product.createdBy.account_id,
+    });
+    console.log(account);
+    if (account) {
+      product.accountFullName = account.fullName;
+    }
+  }
 
   console.log(newRecords);
   res.json({
@@ -39,10 +49,14 @@ module.exports.createUsePost = async (req, res) => {
     }
 
     console.log(req.body.thumbnail);
+
+    req.body.createdBy = {
+      account_id: res.locals.user.id,
+      createdAt: new Date(),
+    };
     // Tạo danh mục
     const category = new ProductCategory(req.body);
     console.log(category);
-
     await category.save();
     req.flash("success", "Create products successfully");
     res.redirect(`${systemconfig.prefixAdmin}/products-category`);
@@ -59,30 +73,44 @@ module.exports.changeStatus = async (req, res) => {
   const id = req.params.id;
 
   try {
+    // Update the parent category
     const result = await ProductCategory.updateOne(
       { _id: id },
       { status: status }
     );
 
-    // Check if any documents were modified
     if (result.modifiedCount === 0) {
       return res
         .status(404)
         .json({ message: "Product not found or status unchanged." });
     }
 
-    // Optionally, you can fetch the updated product to send back to the frontend
-    const UpdateProductCategory = await ProductCategory.findById(id);
+    // Find child categories and update their status
+    const children = await ProductCategory.find({ parent_id: id }); // Assuming you have a `parentId` field to identify child categories
+    console.log(children);
+    await ProductCategory.updateMany(
+      { parent_id: id },
+      { status: status } // Update status for all children
+    );
+ 
+    // Optionally, fetch the updated parent category to send back
+    const updatedParentCategory = await ProductCategory.findById(id);
+    const updatedChildren = await ProductCategory.find({ parent_id: id });
+    console.log(updatedParentCategory)
+    console.log(updatedChildren)
 
     res.json({
       message: "Cập nhật trạng thái thành công!",
-      recordsCategory: UpdateProductCategory, // Send the updated product details
+      recordsCategory: {
+        recordsCategory: updatedParentCategory,
+      },
     });
   } catch (error) {
     console.error("Error updating status:", error);
     res.status(500).json({ message: "Có lỗi xảy ra khi cập nhật trạng thái." });
   }
 };
+
 module.exports.edit = async (req, res) => {
   try {
     const id = req.params.id;
@@ -126,9 +154,9 @@ module.exports.editUsePost = async (req, res) => {
 
   try {
     await ProductCategory.updateOne({ _id: req.params.id }, req.body);
-    req.flash("success", `Update products-category successfully `);
+    console.log("Success");
   } catch (error) {
-    res.redirect("back");
+    console.log(error);
   }
 
   res.redirect(`${systemconfig.prefixAdmin}/products-category`);
@@ -145,9 +173,8 @@ module.exports.detail = async (req, res) => {
     const category = await ProductCategory.findOne(find).exec();
     console.log("productById: ", category);
     //  res.send("ok")
-    res.render("admin/pages/products-category/detail.pug", {
-      pageTitle: "Detail sản phẩm",
-      recordsCategory: category,
+    res.json({
+      detailCategory: category,
     });
   } catch (error) {
     res.redirect(`${systemconfig.prefixAdmin}/products-category`);
@@ -187,8 +214,9 @@ module.exports.deleteItem = async (req, res) => {
     await ProductCategory.updateOne(
       { _id: id },
       {
-        deleted: !category.deleted, 
-        deleteAt: new Date(), 
+        deleted: !category.deleted,
+        status: "inactive",
+        deleteAt: new Date(),
       }
     );
 

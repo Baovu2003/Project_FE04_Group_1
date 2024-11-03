@@ -19,6 +19,7 @@ export const get = async (url: string): Promise<ApiResponse> => {
   }
 };
 
+
 // Define the POST function
 export const post = async (url: string, data: object): Promise<ApiResponse> => {
   console.log("data in api post",data)

@@ -12,7 +12,7 @@ import Register from "./pages/client/User/Register";
 import PassResovery from "./pages/client/User/PassResovery";
 import NotFoundClient from "./pages/client/404NotFound/NotFound";
 import LayoutDefaultAdmin from "./LayoutDefault/LayoutDefaultAdmin/LayoutDefaultAdmin";
-import ProtectedRoute from "./pages/admin/ProtectedRoute/ProtectedRoute";
+// import ProtectedRoute from "./pages/admin/ProtectedRoute/ProtectedRoute";
 import Dashboard from "./pages/admin/Dashboard/Dashboard";
 import Allcategory from "./pages/admin/Category/Allcategory";
 import Category from "./pages/admin/Category/Category";
@@ -34,6 +34,10 @@ import Login from "./pages/admin/Auth/Login";
 import NotFound from "./pages/admin/404NotFound/404NotFound/NotFound";
 import 'antd/dist/reset.css';
 import Profile from "./pages/client/User/UserProfile";
+import DetailCategory from "./pages/admin/Category/DetailCategory";
+import UpdateCategory from "./pages/admin/Category/UpdateCategory";
+import UpdateAccount from "./pages/admin/Accounts/UpdateAccount";
+import DetailAccount from "./pages/admin/Accounts/DetailAccount";
 function App() {
   return (
     <Router>
@@ -54,10 +58,12 @@ function App() {
 
         {/* Admin Routes */}
         <Route path="/admin" element={<LayoutDefaultAdmin />}>
-          <Route element={<ProtectedRoute />}>
+          {/* <Route element={<ProtectedRoute />}> */}
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="products-category" element={<Allcategory />}>
               <Route index element={<Category />} />
+              <Route path="detail/:id" element={<DetailCategory />} />
+              <Route path="edit/:id" element={<UpdateCategory />} />
               <Route path="create" element={<CreateCategory />} />
             </Route>
 
@@ -77,13 +83,14 @@ function App() {
             <Route path="accounts" element={<Account />}>
               <Route index element={<AccountList />} />
               <Route path="create" element={<AccountCreate />} />
-              {/* <Route path="edit/:id" element={<UpdateRole />} /> */}
+              <Route path="edit/:id" element={<UpdateAccount />} />
+              <Route path="detail/:id" element={<DetailAccount />} />
             </Route>
 
             <Route path="permissions" element={<Permissions />} />
             <Route path="*" element={<NotFound />} />
           </Route>
-        </Route>
+        {/* </Route> */}
         <Route path="/admin/auth/login" element={<Login />} />
       </Routes>
     </Router>
