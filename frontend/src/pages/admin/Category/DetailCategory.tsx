@@ -8,6 +8,7 @@ const { Title, Paragraph } = Typography;
 
 function DetailCategory() {
     const { id } = useParams();
+    console.log(id)
     const [category, setCategory] = useState<ProductCategory | null>(null);
     const [categories, setCategories] = useState<ProductCategory[]>([]);
     const [parentCategory, setParentCategory] = useState<string | null>(null);
@@ -35,6 +36,7 @@ function DetailCategory() {
             try {
                 // Lấy dữ liệu chi tiết danh mục
                 const categoryResponse: ApiResponse = await get(`http://localhost:5000/admin/products-category/detail/${id}`);
+                console.log(categoryResponse)
                 setCategory(categoryResponse.detailCategory);
 
                 // Lấy tất cả danh mục

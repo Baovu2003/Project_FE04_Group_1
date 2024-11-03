@@ -125,9 +125,9 @@ const Category: React.FC = () => {
             </td>
             <td>{item.deleted ? <h6 className="text-danger">Đã xóa</h6> : <h6 className="text-success">Chưa xóa</h6>}</td>
             <td>
-              <Link to={`detail/${item._id}`} className="btn btn-primary me-2">Detail</Link>
+              <Link to={`detail/${item._id}`} className={`btn btn-primary me-2 ${item.deleted ? 'disabled' : ''}`}>Detail</Link>
               {account && account.role.permission.includes("products-category_create") && (
-                <Link to={`edit/${item._id}`} className="btn btn-warning me-2">Update</Link>
+                <Link to={`edit/${item._id}`} className={`btn btn-warning me-2 ${item.deleted ? 'disabled' : ''}`}>Update</Link>
               )}
               {account && account.role.permission.includes("products-category_delete") && (
                 <Button variant={item.deleted ? "success" : "danger"} onClick={() => handleDelete(item._id, item.deleted ? "active" : "deleted")} className="ms-2">
