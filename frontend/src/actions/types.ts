@@ -140,6 +140,7 @@ export interface Cart {
     recordsProduct: Product[];
     recordsPermission: PermissionRecord[]; 
     recordsCategory: ProductCategory[];
+    detailCategory: ProductCategory;
   }
   
   export interface ApiLoginAdmin {

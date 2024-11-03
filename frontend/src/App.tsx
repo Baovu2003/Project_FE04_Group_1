@@ -34,6 +34,8 @@ import Login from "./pages/admin/Auth/Login";
 import NotFound from "./pages/admin/404NotFound/404NotFound/NotFound";
 import 'antd/dist/reset.css';
 import Profile from "./pages/client/User/UserProfile";
+import DetailCategory from "./pages/admin/Category/DetailCategory";
+import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 function App() {
   return (
     <Router>
@@ -58,6 +60,8 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="products-category" element={<Allcategory />}>
               <Route index element={<Category />} />
+              <Route path="detail/:id" element={<DetailCategory />} />
+              <Route path="edit/:id" element={<UpdateCategory />} />
               <Route path="create" element={<CreateCategory />} />
             </Route>
 

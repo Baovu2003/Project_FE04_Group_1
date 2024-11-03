@@ -145,9 +145,8 @@ module.exports.detail = async (req, res) => {
     const category = await ProductCategory.findOne(find).exec();
     console.log("productById: ", category);
     //  res.send("ok")
-    res.render("admin/pages/products-category/detail.pug", {
-      pageTitle: "Detail sản phẩm",
-      recordsCategory: category,
+    res.json({
+      detailCategory: category,
     });
   } catch (error) {
     res.redirect(`${systemconfig.prefixAdmin}/products-category`);
