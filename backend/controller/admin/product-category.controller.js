@@ -203,6 +203,7 @@ module.exports.deleteItem = async (req, res) => {
       { _id: id },
       {
         deleted: !category.deleted, 
+        status: "inactive",
         deleteAt: new Date(), 
       }
     );
