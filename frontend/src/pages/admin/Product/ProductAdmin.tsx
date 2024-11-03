@@ -7,6 +7,7 @@ import {
   Table,
   Form,
   InputGroup,
+  Pagination
 } from "react-bootstrap";
 
 import { useSelector } from "react-redux";
@@ -195,6 +196,7 @@ const ProductList: React.FC = () => {
           <h1 className="text-center mb-4">Product List</h1>
           <Row className="mb-3">
             <Col>
+            <h5>Search</h5>
               <InputGroup>
                 <Form.Control
                   type="text"
@@ -207,6 +209,7 @@ const ProductList: React.FC = () => {
           </Row>
           <Row className="mb-3">
             <Col md={6}>
+            <h5>Filter status</h5>
               <Form.Select value={filterStatus} onChange={handleFilterChange}>
                 <option value="all">All</option>
                 <option value="active">Active</option>
@@ -214,6 +217,7 @@ const ProductList: React.FC = () => {
               </Form.Select>
             </Col>
             <Col md={6}>
+            <h5>Filter deleted</h5>
               <Form.Select
                 value={filterDeleted}
                 onChange={handleDeletedFilterChange}
@@ -225,6 +229,7 @@ const ProductList: React.FC = () => {
             </Col>
           </Row>
 
+          <h5>Sort</h5>
           <Row className="mb-5">
             {/* Phần sort */}
             <Col md={8}>
@@ -289,7 +294,7 @@ const ProductList: React.FC = () => {
                           variant={
                             product.status === "active"
                               ? "success"
-                              : "secondary"
+                              : "danger"
                           }
                           onClick={() =>
                             handleStatusChange(product._id, product.status)
@@ -354,17 +359,13 @@ const ProductList: React.FC = () => {
             </tbody>
           </Table>
 
-          <div className="pagination d-flex justify-content-center">
-            {[...Array(totalPages)].map((_, i) => (
-              <Button
-                key={i}
-                className={`mx-1 ${i + 1 === currentPage ? "active" : ""}`}
-                onClick={() => handlePageChange(i + 1)}
-              >
-                {i + 1}
-              </Button>
+          <Pagination className="justify-content-center">
+            {[...Array(totalPages)].map((_, pageIndex) => (
+              <Pagination.Item key={pageIndex} active={pageIndex + 1 === currentPage} onClick={() => handlePageChange(pageIndex + 1)}>
+                {pageIndex + 1}
+              </Pagination.Item>
             ))}
-          </div>
+          </Pagination>
         </>
       )}
     </Container>

@@ -80,7 +80,7 @@ const CreateCategory: React.FC = () => {
 
     try {
       await post("http://localhost:5000/admin/products-category/create", formData);
-      // Navigate to the category list or another page
+      
       navigate('/admin/products-category');
     } catch (error) {
       console.error("Error creating category:", error);
