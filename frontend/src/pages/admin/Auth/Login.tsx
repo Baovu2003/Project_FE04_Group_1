@@ -6,16 +6,11 @@ import { useDispatch } from "react-redux";
 import { accountActions } from "../../../actions/AccountAction";
 import { getCookie } from "../../../Helpers/Cookie.helper";
 import { get, post } from "../../../Helpers/API.helper";
-import { Account, ApiResponse, Role } from "../../../actions/types";
+import { ApiResponse } from "../../../actions/types";
 import { showSuccessAlert } from "../../../Helpers/alerts";
+import axios from 'axios';
 
 // Interface definitions
-
-interface LoginResponse {
-  token: string;
-  accountInAdmin: Account;
-  role: Role;
-}
 
 interface LoginFormValues {
   username: string;
@@ -34,10 +29,11 @@ const Login: React.FC = () => {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const accountByToken: ApiResponse = await get(`http://localhost:5000/admin/auth/${token}`);
-        console.log("accountByToken.account", accountByToken.accountInAdmin);
+        const accountByToken: ApiResponse | undefined = await get(`http://localhost:5000/admin/auth/${token}`);
 
+        // Check if accountByToken is defined before accessing its properties
         if (accountByToken && accountByToken.accountInAdmin) {
+          console.log("accountByToken.account", accountByToken.accountInAdmin);
           dispatch(accountActions(accountByToken));
           navigate("/admin/dashboard");
         } else {
@@ -57,40 +53,86 @@ const Login: React.FC = () => {
   }, [token, dispatch, navigate]);
 
 
+  // const handleSubmit = async (values: LoginFormValues) => {
+  //   try {
+  //     const data: LoginResponse = await post("http://localhost:5000/admin/auth/loginPost", {
+  //       email: values.username,
+  //       password: values.password,
+  //     });
+
+  //     console.log(data)
+  //     if (data.token) {
+
+  //       showSuccessAlert("Success!", "You have logged in successfully.");
+  //       document.cookie = `token=${data.token}; path=/; max-age=86400`;
+
+  //       // Dispatch both account and role
+  //       dispatch(accountActions({
+  //         accountInAdmin: data.accountInAdmin,
+  //         role: data.role,
+  //       }));
+
+
+  //       setTimeout(() => {
+  //         navigate("/admin/dashboard");
+  //       }, 1000);
+  //     } else {
+  //       throw new Error("Token not received. Login failed.");
+  //     }
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       message.error(error.message);
+  //     } else {
+  //       message.error("An error occurred. Please try again later.");
+  //     }
+  //   }
+  // };
+
   const handleSubmit = async (values: LoginFormValues) => {
     try {
-      const data: LoginResponse = await post("http://localhost:5000/admin/auth/loginPost", {
+      const response: ApiResponse | undefined = await post("http://localhost:5000/admin/auth/loginPost", {
         email: values.username,
         password: values.password,
       });
 
-      console.log(data)
-      if (data.token) {
-
+      console.log(response)
+      // Check if the response is defined and contains success status
+      if (response && response.message) {
+        // Handle successful login
         showSuccessAlert("Success!", "You have logged in successfully.");
-        document.cookie = `token=${data.token}; path=/; max-age=86400`;
+        document.cookie = `token=${response.token}; path=/; max-age=86400`;
 
-        // Dispatch both account and role
         dispatch(accountActions({
-          accountInAdmin: data.accountInAdmin,
-          role: data.role,
+          accountInAdmin: response.accountInAdmin,
+          role: response.role,
         }));
 
-
         setTimeout(() => {
-          navigate("/admin/dashboard");
+          navigate("/admin/dashboard"); // Ensure this line executes
         }, 1000);
-      } else {
-        throw new Error("Token not received. Login failed.");
       }
-    } catch (error) {
-      if (error instanceof Error) {
+      else {
+        // If response indicates failure, throw the error message
+        throw new Error(response?.message || "An error occurred. Please try again later.");
+      }
+    } catch (error: unknown) {
+      
+      // Enhanced error handling
+      if (axios.isAxiosError(error)) {
+        // Handle errors from the backend
+        const backendMessage = error.response?.data?.message || "An error occurred. Please try again later.";
+        message.error(backendMessage); // Display error message from the backend
+      } else if (error instanceof Error) {
+       
         message.error(error.message);
       } else {
-        message.error("An error occurred. Please try again later.");
+        message.error("An unknown error occurred.");
       }
     }
   };
+
+
+
 
   return (
     <div

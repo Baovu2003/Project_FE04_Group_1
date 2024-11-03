@@ -36,6 +36,8 @@ import 'antd/dist/reset.css';
 import Profile from "./pages/client/User/UserProfile";
 import DetailCategory from "./pages/admin/Category/DetailCategory";
 import UpdateCategory from "./pages/admin/Category/UpdateCategory";
+import UpdateAccount from "./pages/admin/Accounts/UpdateAccount";
+import DetailAccount from "./pages/admin/Accounts/DetailAccount";
 function App() {
   return (
     <Router>
@@ -81,7 +83,8 @@ function App() {
             <Route path="accounts" element={<Account />}>
               <Route index element={<AccountList />} />
               <Route path="create" element={<AccountCreate />} />
-              {/* <Route path="edit/:id" element={<UpdateRole />} /> */}
+              <Route path="edit/:id" element={<UpdateAccount />} />
+              <Route path="detail/:id" element={<DetailAccount />} />
             </Route>
 
             <Route path="permissions" element={<Permissions />} />

@@ -67,7 +67,8 @@ export interface Account {
   phone?: string;
   avatar?: string;
   role_id: string;
-  status?: string;
+  status: "active" | "inactive";
+  deleted: boolean;
 }
 
 export interface Role {
@@ -159,7 +160,10 @@ export interface ApiResponse {
   recordsAccount: Account[];
   detailCategory: ProductCategory;
   detailProduct: Product;
+  detailRole: Role;
+  detailAccount: Account;
   status:number
+  message:string
 }
 
 export interface ApiLoginAdmin {
