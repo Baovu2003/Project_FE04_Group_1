@@ -61,7 +61,7 @@ const CreateProduct: React.FC = () => {
 
       setTimeout(() => {
         navigate("/admin/products");
-      }, 2000);
+      }, 1500);
     } catch (error) {
       showErrorAlert("Failed!", "You can again");
       console.error("Submission error:", error);
