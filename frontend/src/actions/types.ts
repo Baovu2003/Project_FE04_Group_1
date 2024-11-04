@@ -162,6 +162,7 @@ export interface ApiResponse {
   detailProduct: Product;
   detailRole: Role;
   detailAccount: Account;
+  detailUser: User;
   status:number
   message:string
 }

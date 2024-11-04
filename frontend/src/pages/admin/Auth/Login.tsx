@@ -116,14 +116,14 @@ const Login: React.FC = () => {
         throw new Error(response?.message || "An error occurred. Please try again later.");
       }
     } catch (error: unknown) {
-      
+
       // Enhanced error handling
       if (axios.isAxiosError(error)) {
         // Handle errors from the backend
         const backendMessage = error.response?.data?.message || "An error occurred. Please try again later.";
         message.error(backendMessage); // Display error message from the backend
       } else if (error instanceof Error) {
-       
+
         message.error(error.message);
       } else {
         message.error("An unknown error occurred.");
@@ -199,6 +199,7 @@ const Login: React.FC = () => {
                 </Button>
               </Form.Item>
             </Form>
+           
           </Col>
         </Row>
       </Card>

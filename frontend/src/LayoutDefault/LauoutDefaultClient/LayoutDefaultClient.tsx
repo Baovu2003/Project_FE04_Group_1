@@ -11,7 +11,7 @@ import { userActions } from '../../actions/UserAction';
 import { useEffect } from 'react';
 
 function LayoutDefaultClient() {
-  const token = getCookie("token"); // Lấy token từ cookie
+  const tokenUser = getCookie("tokenUser"); // Lấy token từ cookie
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.UserReducer);
 
@@ -19,7 +19,7 @@ function LayoutDefaultClient() {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const accountByToken: ApiResponse = await get(`http://localhost:5000/user/${token}`);
+        const accountByToken: ApiResponse = await get(`http://localhost:5000/user/${tokenUser}`);
         if (accountByToken && accountByToken.user) {
           // Nếu API trả về thông tin người dùng, cập nhật vào Redux store
           dispatch(userActions(accountByToken)); // Truyền user vào userActions
@@ -33,10 +33,10 @@ function LayoutDefaultClient() {
     };
 
     // Nếu có token thì mới gọi API để lấy thông tin người dùng
-    if (token) {
+    if (tokenUser) {
       fetchApi();
     }
-  }, [token, dispatch]);
+  }, [tokenUser, dispatch]);
 
 
 

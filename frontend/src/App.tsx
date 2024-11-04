@@ -38,6 +38,9 @@ import DetailCategory from "./pages/admin/Category/DetailCategory";
 import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 import UpdateAccount from "./pages/admin/Accounts/UpdateAccount";
 import DetailAccount from "./pages/admin/Accounts/DetailAccount";
+import ForgotPassword from "./pages/client/User/ForgotPassword";
+import OTPPassword from "./pages/client/User/OTPPassword";
+import ResetPassword from "./pages/client/User/ResetPassword";
 function App() {
   return (
     <Router>
@@ -51,6 +54,9 @@ function App() {
           <Route path="cart" element={<Cart />} />
           <Route path="/user/login" element={<LoginUser />} />
           <Route path="/user/register" element={<Register />} />
+          <Route path="/user/password/forgot" element={<ForgotPassword />} />
+          <Route path="/user/password/otp/:email" element={<OTPPassword />} />
+          <Route path="/user/password/reset" element={<ResetPassword />} />
           <Route path="/user/profile" element={<Profile />} />
           <Route path="/user/PassResovery" element={<PassResovery />} />
           <Route path="*" element={<NotFoundClient />} />
