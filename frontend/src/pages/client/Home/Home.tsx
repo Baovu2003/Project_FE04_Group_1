@@ -6,11 +6,6 @@ import FeaturedProduct from './FeaturedProduct';
 import './home.css';
 import DealerSection from './Dealer';
 
-interface VoucherProps {
-  code: string;
-  amount: string;
-  description: string;
-}
 
 
 function Home() {

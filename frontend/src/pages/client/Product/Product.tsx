@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Row, Col, Typography, Space, Select, Card, Button, Popover, Menu } from 'antd';
+import { Layout, Row, Col, Typography, Space, Select, Card, Button, Popover, Menu, Radio } from 'antd';
+import { Link } from 'react-router-dom';
 import { FilterOutlined, FolderOutlined } from '@ant-design/icons';
 const { Header, Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -50,6 +51,10 @@ const ProductList = () => {
   const [sortOrder, setSortOrder] = useState<string>('default');
   const [openKeys, setOpenKeys] = useState<string[]>([]);
   const [selectedChildCategory, setSelectedChildCategory] = useState<string>('');
+  const [priceRange, setPriceRange] = useState<string>('all');
+  const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
+
+
 
 
   useEffect(() => {
@@ -61,6 +66,7 @@ const ProductList = () => {
         console.log("Products:", data.recordsProduct);
         setCategories(data.recordsCategory);
         setProducts(data.recordsProduct);
+        setOriginalProducts(data.recordsProduct);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -69,20 +75,36 @@ const ProductList = () => {
     fetchData();
   }, []);
 
-  
+
   const handleSortChange = (value: string) => {
     setSortOrder(value);
-    let sortedProducts = [...products];
-    if (value === 'price-asc') {
-      sortedProducts.sort((a, b) => a.price - b.price);
-    } else if (value === 'price-desc') {
-      sortedProducts.sort((a, b) => b.price - a.price);
+    if (value === 'default') {
+      setProducts(originalProducts); // Reset to original products
+    } else {
+      let sortedProducts = [...products];
+      if (value === 'price-asc') {
+        sortedProducts.sort((a, b) => a.price - b.price);
+      } else if (value === 'price-desc') {
+        sortedProducts.sort((a, b) => b.price - a.price);
+      }
+      setProducts(sortedProducts);
     }
-    setProducts(sortedProducts);
   };
 
   const formatPrice = (price: number) =>
     new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+
+  const PriceFilterContent = () => (
+    <Radio.Group
+      onChange={(e) => setPriceRange(e.target.value)}
+      value={priceRange}
+      className="flex flex-col gap-2"
+    >
+      <Radio value="all">Tất cả</Radio>
+      <Radio value="0-30000">0đ - 30.000đ</Radio>
+      <Radio value="30000-100000">31.000đ - 100.000đ</Radio>
+    </Radio.Group>
+  );
 
   const renderCategoryMenu = (categories: Category[]) => {
     return categories.map((category) => {
@@ -130,7 +152,7 @@ const ProductList = () => {
       }
     }
   }, [selectedChildCategory, products]); // Theo dõi khi selectedChildCategory hoặc products thay đổi
-  
+
 
 
   // Helper function to get all category IDs including children
@@ -161,16 +183,30 @@ const ProductList = () => {
   // Filter products
   const filteredProducts = products.filter(product => {
     const productCategoryId = product.product_category_id || '';
+    let matchesCategory = true;
+
+    // Category filter
     if (selectedChildCategory) {
-      return productCategoryId === selectedChildCategory;
-    }
-    if (selectedCategory) {
+      matchesCategory = productCategoryId === selectedChildCategory;
+    } else if (selectedCategory) {
       const selectedCat = findCategoryById(categories, selectedCategory);
-      if (!selectedCat) return false;
-      const validCategoryIds = getAllCategoryIds(selectedCat);
-      return validCategoryIds.includes(productCategoryId);
+      if (!selectedCat) {
+        matchesCategory = false;
+      } else {
+        const validCategoryIds = getAllCategoryIds(selectedCat);
+        matchesCategory = validCategoryIds.includes(productCategoryId);
+      }
     }
-    return true;
+
+    // Price filter
+    let matchesPrice = true;
+    if (priceRange === '0-30000') {
+      matchesPrice = product.price >= 0 && product.price <= 30000;
+    } else if (priceRange === '30000-100000') {
+      matchesPrice = product.price > 30000 && product.price <= 100000;
+    }
+
+    return matchesCategory && matchesPrice && !product.deleted;
   });
 
 
@@ -218,11 +254,13 @@ const ProductList = () => {
             <FilterOutlined />
             <Text strong>TÌM NHANH</Text>
             <Popover
-              content={<div>Price filter content...</div>}
+              content={<PriceFilterContent />}
               title="Lọc giá"
               trigger="click"
             >
-              <Button>Lọc giá ▼</Button>
+              <Button>
+                Lọc giá {priceRange !== 'all' && '✓'} ▼
+              </Button>
             </Popover>
           </Space>
           <Row gutter={[16, 16]}>
@@ -231,42 +269,75 @@ const ProductList = () => {
                 <Col key={product._id} xs={24} sm={12} md={8} lg={6}>
                   <Card
                     cover={
-                      <img
-                        alt={product.title}
-                        src={product.thumbnail || 'http://localhost:5000/path-to-placeholder-image.png'}
-                        className="p-5 h-48 object-cover"
-                      />
+                      <div style={{ height: 200, overflow: 'hidden' }}>
+                        <img
+                          alt={product.title}
+                          src={
+                            product.thumbnail
+                              ? product.thumbnail.startsWith("http")
+                                ? product.thumbnail
+                                : `http://localhost:5000${product.thumbnail}`
+                              : "http://localhost:5000/path-to-placeholder-image.png" // Placeholder image URL
+                          }
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      </div>
                     }
                     bodyStyle={{
                       padding: "20px",
                       backgroundColor: "#FDB813",
                       textAlign: "center",
                       color: "white",
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      height: '100%',
                     }}
                   >
-                    {/* <Text className="text-xs">UỐNG HIGHLANDS tại nhà</Text> */}
-                    <Title level={3} className="text-white my-2">{product.title}</Title>
+                    <Title
+                      level={3}
+                      className="text-white my-2"
+                      style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        whiteSpace: 'normal',
+                        height: '48px',
+                      }}
+                    >
+                      {product.title}
+                    </Title>
+
                     <Text strong>{product.description}</Text>
                     <Title level={4} className="text-white my-2">
                       {formatPrice(product.price)}
                     </Title>
-                    {product.discountPercentage && (
-                      <Text type="danger">{`Discount: ${product.discountPercentage}%`}</Text>
-                    )}
-                    <Space direction="vertical" className="w-full">
-                      <Button
-                        type="primary"
-                        className="bg-white text-[#FDB813] w-full hover:bg-gray-100"
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                      <Text
+                        style={{
+                          color: product.discountPercentage ? '#ff4d4f' : '#888',
+                          fontWeight: 'bold',
+                          fontSize: '14px',
+                          marginBottom: '8px',
+                        }}
                       >
-                        Chọn mua
-                      </Button>
-                    </Space>
+                        {`Discount: ${product.discountPercentage ?? 0}%`}
+                      </Text>
+                      <Link to={`/listProducts/detail/${product.slug}`}>
+                        <Button className="purchase-button">Chọn mua</Button>
+                      </Link>
+                    </div>
                   </Card>
                 </Col>
               )
             ))}
           </Row>
-
         </Content>
       </Layout>
     </Layout>

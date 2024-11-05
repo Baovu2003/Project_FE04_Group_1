@@ -1,28 +1,271 @@
-import React, { useState } from "react";
-import {
-  Layout,
-  Row,
-  Col,
-  Card,
-  Image,
-  Typography,
-  Tag,
-  InputNumber,
-  Button,
-  Divider,
-} from "antd";
-import {
-  ShoppingCartOutlined,
-  ThunderboltOutlined,
-} from "@ant-design/icons";
-import img from "../../../assets/img.png";
-import { Breadcrumb } from "antd";
+// import React, { useState } from "react";
+// import {
+//   Layout,
+//   Row,
+//   Col,
+//   Card,
+//   Image,
+//   Typography,
+//   Tag,
+//   InputNumber,
+//   Button,
+//   Divider,
+// } from "antd";
+// import {
+//   ShoppingCartOutlined,
+//   ThunderboltOutlined,
+// } from "@ant-design/icons";
+// import img from "../../../assets/img.png";
+// import { Breadcrumb } from "antd";
 
-const { Content } = Layout;
+// const { Content } = Layout;
+// const { Title, Text } = Typography;
+
+// const ProductDetail: React.FC = () => {
+//   const [quantity, setQuantity] = useState(1);
+//   return (
+//     <Layout>
+//       <Content style={{ padding: "0 50px", background: "white" }}>
+//         <Breadcrumb style={{ marginTop: "16px" }}>
+//           <Breadcrumb.Item>
+//             <a href="/">Home</a>
+//           </Breadcrumb.Item>
+//           <Breadcrumb.Item>Cà Phê Cappuccino</Breadcrumb.Item>
+//         </Breadcrumb>
+//         <Row gutter={[24, 24]}>
+//           <Col span={10}>
+//             <Card bordered={false}>
+//               <Image src={img} alt="Product" />
+
+//             </Card>
+//           </Col>
+//           <Col span={14}>
+//             <Card bordered={false}>
+//               <Tag color="red">TOP DEAL</Tag>
+//               <Tag color="blue">30 NGÀY ĐỔI TRẢ</Tag>
+//               <Tag color="blue">CHÍNH HÃNG</Tag>
+//               <Text type="secondary">Thương hiệu: Whiskas</Text>
+//               <Title level={3}>Cà Phê Cappuccino</Title>
+//               <Text type="secondary">Đã bán 10</Text>
+//               <Title level={2} style={{ color: "#ff424e" }}>
+//                 144.000đ
+//               </Title>
+//               <Text delete type="secondary">
+//                 161.000đ
+//               </Text>
+//               <Text type="secondary"> -11%</Text>
+
+//               <Divider />
+
+//               <Title level={5}>Thông tin vận chuyển</Title>
+//               <Text>Giao đến Q. Hoàn Kiếm, P. Hàng Trống, Hà Nội</Text>
+//               <Button type="link" style={{ padding: 0 }}>
+//                 Đổi
+//               </Button>
+//               <br />
+//               <Text type="success">
+//                 <ThunderboltOutlined /> Giao siêu tốc 2h
+//               </Text>
+//               <br />
+//               <Text type="success">Trước 10h ngày mai: Miễn phí</Text>
+//               <Text delete type="secondary">
+//                 {" "}
+//                 25.000đ
+//               </Text>
+
+//               <Divider />
+
+//               {/* <Title level={5}>Dịch vụ bổ sung</Title>
+//               <Button icon={<CreditCardOutlined />}>
+//                 Ưu đãi đến 600k với thẻ TikiCard
+//               </ trả sau</Button>
+//               <Divider />Button>
+//               <Button>Mua trước */}
+
+//               <Row align="middle" gutter={16}>
+//                 <Col>
+//                   <Text>Số Lượng</Text>
+//                 </Col>
+//                 <Col>
+//                   <InputNumber
+//                     min={1}
+//                     value={quantity}
+//                     onChange={(value) => setQuantity(value as number)}
+//                   />
+//                 </Col>
+//               </Row>
+
+//               <Row gutter={16} style={{ marginTop: 16 }}>
+//                 <Col span={12}>
+//                   <Button type="primary" block size="large">
+//                     Mua ngay
+//                   </Button>
+//                 </Col>
+//                 <Col span={12}>
+//                   <Button block size="large" icon={<ShoppingCartOutlined />}>
+//                     Thêm vào giỏ
+//                   </Button>
+//                 </Col>
+//               </Row>
+//             </Card>
+//           </Col>
+//         </Row>
+//       </Content>
+//     </Layout>
+//   );
+// };
+// export default ProductDetail;
+
+
+// import React, { useState, useEffect } from 'react';
+// import { useParams } from 'react-router-dom';
+// import { Card, Typography, Space, Button } from 'antd';
+// const { Title, Text } = Typography;
+
+// interface Product {
+//   _id: string;
+//   title: string;
+//   description: string;
+//   price: number;
+//   discountPercentage?: number;
+//   stock: number;
+//   thumbnail: string;
+//   status: string;
+//   featured: string;
+//   slug: string;
+//   createdBy: {
+//     account_id: string;
+//     createdAt: string;
+//   };
+// }
+
+// const ProductDetail: React.FC = () => {
+//   const { slug } = useParams<{ slug: string }>();
+//   const [product, setProduct] = useState<Product | null>(null);
+//   const [loading, setLoading] = useState<boolean>(true);
+
+//   useEffect(() => {
+//     const fetchProduct = async () => {
+//       try {
+//         const response = await fetch(`http://localhost:5000/products/detail/${slug}`);
+//         const data = await response.json();
+//         console.log("Fetched Product Data:", data); // Debugging log
+//         setProduct(data.products);
+//       } catch (error) {
+//         console.error("Error fetching product details:", error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchProduct();
+//   }, [slug]);
+
+//   if (loading) return <div>Loading...</div>;
+//   if (!product) return <div>Product not found.</div>;
+
+//   return (
+//     <Card
+//       style={{ maxWidth: 800, margin: 'auto', marginTop: '20px', padding: '20px' }}
+//       cover={
+//         <img
+//           alt={product.title}
+//           src={
+//             product.thumbnail
+//               ? product.thumbnail.startsWith("http")
+//                 ? product.thumbnail
+//                 : `http://localhost:5000${product.thumbnail}`
+//               : "http://localhost:5000/path-to-placeholder-image.png" // Placeholder image URL
+//           }
+//           style={{ width: '100%', height: '400px', objectFit: 'cover' }}
+//         />
+//       }
+//     >
+//       <Title level={2}>{product.title}</Title>
+//       <Text>{product.description}</Text>
+//       <Title level={4} style={{ marginTop: '16px' }}>
+//         Price: {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
+//       </Title>
+//       <Text strong style={{ color: '#ff4d4f' }}>
+//         {`Discount: ${product.discountPercentage ?? 0}%`}
+//       </Text>
+//       <Space style={{ marginTop: '16px' }}>
+//         <Button type="primary">Purchase</Button>
+//       </Space>
+//     </Card>
+//   );
+// };
+
+// export default ProductDetail;
+
+
+
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { 
+  Card, 
+  Typography, 
+  Space, 
+  Button, 
+  Layout, 
+  Breadcrumb, 
+  Row, 
+  Col, 
+  Tag, 
+  Divider, 
+  InputNumber,
+  Image
+} from 'antd';
+import { ThunderboltOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+
 const { Title, Text } = Typography;
+const { Content } = Layout;
+
+interface Product {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  discountPercentage?: number;
+  stock: number;
+  thumbnail: string;
+  status: string;
+  featured: string;
+  slug: string;
+  createdBy: {
+    account_id: string;
+    createdAt: string;
+  };
+}
 
 const ProductDetail: React.FC = () => {
-  const [quantity, setQuantity] = useState(1);
+  const { slug } = useParams<{ slug: string }>();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [quantity, setQuantity] = useState<number>(1);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/products/detail/${slug}`);
+        const data = await response.json();
+        console.log("Fetched Product Data:", data);
+        setProduct(data.products);
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [slug]);
+
+  if (loading) return <div>Loading...</div>;
+  if (!product) return <div>Product not found.</div>;
+
+  const originalPrice = product.price / (1 - (product.discountPercentage || 0) / 100);
+
   return (
     <Layout>
       <Content style={{ padding: "0 50px", background: "white" }}>
@@ -30,49 +273,42 @@ const ProductDetail: React.FC = () => {
           <Breadcrumb.Item>
             <a href="/">Home</a>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>Cà Phê Cappuccino</Breadcrumb.Item>
+          <Breadcrumb.Item>{product.title}</Breadcrumb.Item>
         </Breadcrumb>
+        
         <Row gutter={[24, 24]}>
           <Col span={10}>
             <Card bordered={false}>
-              <Image src={img} alt="Product" />
-              {/* <div
-                style={{
-                  position: "absolute",
-                  top: 10,
-                  right: 10,
-                  background: "#00a2ae",
-                  color: "white",
-                  padding: "2px 8px",
-                  borderRadius: "50%",
-                }}
-              >
-                x12
-              </div> */}
-              {/* <Carousel autoplay>
-                {productImages.slice(1).map((img, index) => (
-                  <div key={index}>
-                    <Image src={img} alt={`Product ${index + 1}`} width={80} />
-                  </div>
-                ))}
-              </Carousel> */}
+              <Image
+                src={
+                  product.thumbnail
+                    ? product.thumbnail.startsWith("http")
+                      ? product.thumbnail
+                      : `http://localhost:5000${product.thumbnail}`
+                    : "http://localhost:5000/path-to-placeholder-image.png"
+                }
+                alt={product.title}
+              />
             </Card>
           </Col>
+
           <Col span={14}>
             <Card bordered={false}>
               <Tag color="red">TOP DEAL</Tag>
               <Tag color="blue">30 NGÀY ĐỔI TRẢ</Tag>
               <Tag color="blue">CHÍNH HÃNG</Tag>
-              <Text type="secondary">Thương hiệu: Whiskas</Text>
-              <Title level={3}>Cà Phê Cappuccino</Title>
+              
+              <Text type="secondary">Thương hiệu: {product.featured}</Text>
+              <Title level={3}>{product.title}</Title>
               <Text type="secondary">Đã bán 10</Text>
+
               <Title level={2} style={{ color: "#ff424e" }}>
-                144.000đ
+                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
               </Title>
               <Text delete type="secondary">
-                161.000đ
+                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(originalPrice)}
               </Text>
-              <Text type="secondary"> -11%</Text>
+              <Text type="secondary"> -{product.discountPercentage}%</Text>
 
               <Divider />
 
@@ -87,19 +323,9 @@ const ProductDetail: React.FC = () => {
               </Text>
               <br />
               <Text type="success">Trước 10h ngày mai: Miễn phí</Text>
-              <Text delete type="secondary">
-                {" "}
-                25.000đ
-              </Text>
+              <Text delete type="secondary"> 25.000đ</Text>
 
               <Divider />
-
-              {/* <Title level={5}>Dịch vụ bổ sung</Title>
-              <Button icon={<CreditCardOutlined />}>
-                Ưu đãi đến 600k với thẻ TikiCard
-              </ trả sau</Button>
-              <Divider />Button>
-              <Button>Mua trước */}
 
               <Row align="middle" gutter={16}>
                 <Col>
@@ -108,9 +334,13 @@ const ProductDetail: React.FC = () => {
                 <Col>
                   <InputNumber
                     min={1}
+                    max={product.stock}
                     value={quantity}
                     onChange={(value) => setQuantity(value as number)}
                   />
+                </Col>
+                <Col>
+                  <Text type="secondary">{product.stock} sản phẩm có sẵn</Text>
                 </Col>
               </Row>
 
@@ -133,4 +363,6 @@ const ProductDetail: React.FC = () => {
     </Layout>
   );
 };
+
 export default ProductDetail;
+
