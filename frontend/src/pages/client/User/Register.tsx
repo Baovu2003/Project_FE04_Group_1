@@ -1,180 +1,109 @@
 import React from 'react';
-import { Form, Input, Button, Tabs, Card, Row, Col } from 'antd';
-import { CheckCircleOutlined } from '@ant-design/icons';
-import type { TabsProps } from 'antd';
-import placeholder from './placeholder.svg';
+import { Button, Card, Checkbox, Col, Form, Input, Row, Typography } from 'antd';
+import { UserOutlined, MailOutlined, LockOutlined, KeyOutlined } from '@ant-design/icons';
 
-interface FormValues {
-  lastName: string;
-  firstName: string;
-  phone: string;
+const { Title } = Typography;
+
+interface SignupFormData {
+  name: string;
   email: string;
   password: string;
+  confirmPassword: string;
+  subscribe: boolean;
 }
 
-function Register() {
-  const [form] = Form.useForm();
+const App: React.FC = () => {
+  const [form] = Form.useForm<SignupFormData>();
 
-  const onFinish = (values: FormValues) => {
-    console.log('Success:', values);
+  const onFinish = (values: SignupFormData) => {
+    console.log('Form submitted:', values);
   };
 
-  const tabItems: TabsProps['items'] = [
-    {
-      key: 'login',
-      label: 'Đăng nhập',
-      children: <div style={{ padding: '20px' }}>Login form content</div>,
-    },
-    {
-      key: 'register',
-      label: 'Đăng ký',
-      children: (
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={onFinish}
-          className="p-6"
-        >
-          <Form.Item
-            label={<>HỌ<span className="text-red-500">*</span></>}
-            name="lastName"
-            rules={[{ required: true, message: 'Vui lòng nhập họ!' }]}
-          >
-            <Input placeholder="Nhập Họ" />
-          </Form.Item>
-
-          <Form.Item
-            label={<>TÊN<span className="text-red-500">*</span></>}
-            name="firstName"
-            rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}
-          >
-            <Input placeholder="Nhập Tên" />
-          </Form.Item>
-
-          <Form.Item
-            label={<>SỐ ĐIỆN THOẠI<span className="text-red-500">*</span></>}
-            name="phone"
-            rules={[{ required: true, message: 'Vui lòng nhập số điện thoại!' }]}
-          >
-            <Input placeholder="Nhập Số điện thoại" />
-          </Form.Item>
-
-          <Form.Item
-            label={<>EMAIL<span className="text-red-500">*</span></>}
-            name="email"
-            rules={[
-              { required: true, message: 'Vui lòng nhập email!' },
-              { type: 'email', message: 'Email không hợp lệ!' }
-            ]}
-          >
-            <Input placeholder="Nhập Địa chỉ Email" />
-          </Form.Item>
-
-          <Form.Item
-            label={<>MẬT KHẨU<span className="text-red-500">*</span></>}
-            name="password"
-            rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
-          >
-            <Input.Password placeholder="Nhập Mật khẩu" />
-          </Form.Item>
-
-          <Form.Item>
-            <Button type="primary" htmlType="submit" danger block size="large">
-              TẠO TÀI KHOẢN
-            </Button>
-          </Form.Item>
-
-          <div className="text-center my-4 relative">
-            <span className="bg-white px-4 text-gray-500 relative z-10">
-              hoặc đăng nhập qua
-            </span>
-            <div className="absolute top-1/2 left-0 w-full h-px bg-gray-200 -z-0" />
-          </div>
-
-          <Row gutter={16}>
-            <Col span={12}>
-              <Button block icon={<img src="/placeholder.svg" alt="" className="w-5 h-5" />} className="flex items-center justify-center">
-                <span className="text-[#4267B2]">Facebook</span>
-              </Button>
-            </Col>
-            <Col span={12}>
-              <Button block icon={<img src="/placeholder.svg" alt="" className="w-5 h-5" />} className="flex items-center justify-center">
-                <span className="text-[#DB4437]">Google</span>
-              </Button>
-            </Col>
-          </Row>
-        </Form>
-      ),
-    },
-  ];
-
   return (
-    <div className="container mx-auto p-6">
-      <Row gutter={32} className="max-w-5xl mx-auto">
-        <Col xs={24} md={12}>
-          <div className="mb-8">
-            <div className="relative h-80 bg-[#f5f0ff]">
-              <img
-                src={placeholder}
-                alt="Online Shopping"
-                className="w-50 h-50 object-contain"
-              />
-            </div>
+    <div style={{ padding: '20px', display: 'flex', justifyContent: 'center', marginBottom: '200px' }}>
+      <Card style={{ width: '80%', borderRadius: '25px', maxWidth: '800px' }}>
+        <Row gutter={16}>
+          {/* Form Column */}
+          <Col xs={24} lg={12} className="d-flex flex-column align-items-center" >
+            <Title level={1} style={{ textAlign: 'center', fontWeight: 'bold' }}>Sign Up</Title>
             
-            <div className="mt-8">
-              <h2 className="text-xl font-semibold mb-6">QUYỀN LỢI THÀNH VIÊN</h2>
-              <ul className="space-y-4">
-                <li className="flex items-start gap-2">
-                  <CheckCircleOutlined className="text-blue-500 mt-1" />
-                  <span>Mua hàng khắp thế giới cực dễ dàng, nhanh chóng</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircleOutlined className="text-blue-500 mt-1" />
-                  <span>Theo dõi chi tiết đơn hàng, địa chỉ thanh toán dễ dàng</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircleOutlined className="text-blue-500 mt-1" />
-                  <span>Nhận nhiều chương trình ưu đãi hấp dẫn từ chúng tôi</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </Col>
-        
-        <Col xs={24} md={12}>
-          <Card bordered={false} className="shadow-sm">
-            <Tabs
-              defaultActiveKey="register"
-              items={tabItems}
-              className="auth-tabs"
-            />
-          </Card>
-        </Col>
-      </Row>
+            <Form
+              form={form}
+              name="signup"
+              layout="vertical"
+              onFinish={onFinish}
+              style={{ width: '100%' }}
+            >
+              <Form.Item
+                name="name"
+                label="Your Name"
+                rules={[{ required: true, message: 'Please enter your name' }]}
+              >
+                <Input placeholder="Enter your name" prefix={<UserOutlined />} />
+              </Form.Item>
 
-      <style>
-      {`
-        .auth-tabs .ant-tabs-nav::before {
-          border: none;
-        }
-        .auth-tabs .ant-tabs-nav-list {
-          width: 100%;
-        }
-        .auth-tabs .ant-tabs-tab {
-          width: 50%;
-          justify-content: center;
-          margin: 0;
-        }
-        .auth-tabs .ant-tabs-tab-active {
-          border-bottom: 2px solid #dc2626;
-        }
-        .auth-tabs .ant-tabs-ink-bar {
-          background: #dc2626;
-        }
-      `}
-    </style>
+              <Form.Item
+                name="email"
+                label="Your Email"
+                rules={[
+                  { required: true, message: 'Please enter your email' },
+                  { type: 'email', message: 'Enter a valid email' }
+                ]}
+              >
+                <Input placeholder="Enter your email" prefix={<MailOutlined />} />
+              </Form.Item>
+
+              <Form.Item
+                name="password"
+                label="Password"
+                rules={[{ required: true, message: 'Please enter your password' }]}
+              >
+                <Input.Password placeholder="Enter your password" prefix={<LockOutlined />} />
+              </Form.Item>
+
+              <Form.Item
+                name="confirmPassword"
+                label="Repeat your password"
+                dependencies={['password']}
+                rules={[
+                  { required: true, message: 'Please confirm your password' },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('password') === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error('The two passwords do not match'));
+                    }
+                  })
+                ]}
+              >
+                <Input.Password placeholder="Repeat your password" prefix={<KeyOutlined />} />
+              </Form.Item>
+
+              <Form.Item name="subscribe" valuePropName="checked">
+                <Checkbox>Subscribe to our newsletter</Checkbox>
+              </Form.Item>
+
+              <Form.Item>
+                <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+                  Register
+                </Button>
+              </Form.Item>
+            </Form>
+          </Col>
+
+          {/* Image Column */}
+          <Col xs={24} lg={12} className="d-flex align-items-center">
+            <img
+              src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+              alt="Sign up illustration"
+              style={{ width: '100%', borderRadius: '25px' }}
+            />
+          </Col>
+        </Row>
+      </Card>
     </div>
   );
-}
+};
 
-export default Register
+export default App;
