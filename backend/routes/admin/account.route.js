@@ -10,5 +10,5 @@ console.log(upload);
 router.get("/", controller.index);
 
 router.post("/create", upload.single("avatar"), controller.createPost);
-
+router.patch("/change-status/:status/:id", controller.changeStatus);
 module.exports = router;

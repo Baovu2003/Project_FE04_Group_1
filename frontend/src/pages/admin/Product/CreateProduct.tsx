@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { get, post } from "../../../Helpers/API.helper";
 import { ApiResponse, ProductCategory } from "../../../actions/types";
 import { APIADMIN } from "../../../Helpers/APILink";
+import { showErrorAlert, showSuccessAlert } from "../../../Helpers/alerts";
 
 const CreateProduct: React.FC = () => {
   const [title, setTitle] = useState<string>("");
@@ -55,29 +56,33 @@ const CreateProduct: React.FC = () => {
     console.log(selectedCategory);
     try {
       await post(`${APIADMIN}/products/create`, formData);
+      showSuccessAlert("Success!", "Product updated successfully!");
+
 
       setTimeout(() => {
         navigate("/admin/products");
-      }, 2000);
+      }, 1500);
     } catch (error) {
+      showErrorAlert("Failed!", "You can again");
       console.error("Submission error:", error);
     }
   };
 
   const renderSelectTree = (records: ProductCategory[], level: number = 0) => {
-    return records.map((item) => {
-      const prefix = Array(level + 1).join("-- ");
-      return (
-        <React.Fragment key={item._id}>
-          <option value={item._id}>
-            {prefix} {item.title}
-          </option>
-          {item.children &&
-            item.children.length > 0 &&
-            renderSelectTree(item.children, level + 1)}
-        </React.Fragment>
-      );
-    });
+    return records.filter(item => !item.deleted && item.status === "active")
+      .map((item) => {
+        const prefix = Array(level + 1).join("-- ");
+        return (
+          <React.Fragment key={item._id}>
+            <option value={item._id}>
+              {prefix} {item.title}
+            </option>
+            {item.children &&
+              item.children.length > 0 &&
+              renderSelectTree(item.children.filter((child) => !child.deleted && child.status === "active"), level + 1)}
+          </React.Fragment>
+        );
+      });
   };
 
   return (

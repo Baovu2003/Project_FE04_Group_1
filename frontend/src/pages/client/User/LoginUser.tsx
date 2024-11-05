@@ -4,7 +4,7 @@
 import React, { useEffect } from "react";
 import { Form, Input, Button, Checkbox, Card, message, Col, Row } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { getCookie } from "../../../Helpers/Cookie.helper";
 import { get, post } from "../../../Helpers/API.helper";
@@ -30,13 +30,13 @@ const LoginUser: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const token = getCookie("token");
-  console.log("token", token)
+  const tokenUser = getCookie("tokenUser");
+  console.log("tokenUser", tokenUser)
 
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const accountByToken: ApiResponse = await get(`http://localhost:5000/user/${token}`);
+        const accountByToken: ApiResponse = await get(`http://localhost:5000/user/${tokenUser}`);
         console.log("accountByToken.account", accountByToken.user);
 
         if (accountByToken && accountByToken.user) {
@@ -51,12 +51,12 @@ const LoginUser: React.FC = () => {
       }
     };
 
-    if (token) {
+    if (tokenUser) {
       fetchApi();
     } else {
       navigate("/user/login");
     }
-  }, [token, dispatch, navigate]);
+  }, [tokenUser, dispatch, navigate]);
 
 
   const handleSubmit = async (values: LoginFormValues) => {
@@ -69,7 +69,9 @@ const LoginUser: React.FC = () => {
       console.log(data)
       if (data.tokenUser) {
         showSuccessAlert("Success!", "You have logged in successfully.");
-        document.cookie = `token=${data.tokenUser}; path=/; max-age=86400`;
+        document.cookie = `tokenUser=${data.tokenUser}; path=/; max-age=86400`;
+        document.cookie = `token=; path=/; max-age=0`; // Clear token cookie
+
         // Dispatch both account and role
         dispatch(userActions({
           user: data.user,
@@ -156,6 +158,13 @@ const LoginUser: React.FC = () => {
                 </Button>
               </Form.Item>
             </Form>
+            <Link
+              to={`/user/password/forgot`}
+              className={`btn btn-primary me-2 `}
+            >
+              Forgot password
+            </Link>
+
           </Col>
         </Row>
       </Card>
