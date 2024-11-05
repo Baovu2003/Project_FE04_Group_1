@@ -12,7 +12,7 @@ module.exports.cartId = async (req, res, next) => {
   if (!tokenUser) {
     // const cart = new Cart();
     // await cart.save();
-    console.log(cart);
+    // console.log(cart);
   } else {
     try {
       const user = await User.findOne({ tokenUser: tokenUser });
