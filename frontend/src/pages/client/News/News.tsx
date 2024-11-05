@@ -60,7 +60,6 @@ const newsData: NewsItem[] = [
 
 const News: React.FC = () => {
     return (
-
         <div style={{ background: '#f0e6d2', padding: '40px 0' }}>
             <nav aria-label="breadcrumb">
                 <ol style={{ listStyle: 'none', display: 'flex', gap: '5px', fontSize: '14px', color: '#555' }}>
@@ -93,14 +92,24 @@ const News: React.FC = () => {
                             <Card
                                 hoverable
                                 cover={<img alt={item.title} src={item.image} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />}
-                                style={{ background: '#fff9eb' }}
+                                style={{ background: '#fff9eb', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}
+                                bodyStyle={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '300px' }}
                             >
-                                <Title level={4} style={{ color: '#6f4e37' }}>{item.title}</Title>
-                                <Paragraph type="secondary" style={{ color: '#8c7b6b' }}>
+                                <Title level={4} style={{ color: '#6f4e37', fontSize: '16px', margin: '0 0 10px' }}>{item.title}</Title>
+                                <Paragraph
+                                    type="secondary"
+                                    style={{
+                                        color: '#8c7b6b',
+                                        height: '130px',
+                                        overflow: 'hidden',
+                                        textOverflow: 'ellipsis',
+                                        marginBottom: '10px'
+                                    }}
+                                >
                                     {item.description}
                                 </Paragraph>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <span style={{ color: '#a18267' }}>{item.date}</span>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
+                                    <span style={{ color: '#a18267', fontSize: '12px' }}>{item.date}</span>
                                     <Link to={`/news/${item.id}`}>
                                         <Button type="primary" icon={<ReadOutlined />} style={{ background: '#6f4e37', borderColor: '#6f4e37' }}>
                                             Read More
