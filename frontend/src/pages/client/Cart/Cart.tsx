@@ -1,18 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Layout, Card, Row, Col, Button, InputNumber, Typography, Space, Divider, Badge } from 'antd';
-import { DeleteOutlined, PhoneOutlined, FacebookOutlined, ClockCircleOutlined, CheckOutlined } from '@ant-design/icons';
+import { Layout, Card, Row, Col, Button, InputNumber, Typography, Space, Divider, Spin, message } from 'antd';
+import { DeleteOutlined, PhoneOutlined, FacebookOutlined, ClockCircleOutlined, CheckOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { AppDispatch, RootState } from '../../../store/store';
+import { useSelector, useDispatch } from 'react-redux';
+// import { removeFromCart, updateQuantity } from '../../../actions/cartActions';
+import axios from 'axios';
+import { get } from '../../../Helpers/API.helper';
+import { ApiResponse, Product } from '../../../actions/types';
+import { removeItem, setCart, updateQuantity } from '../../../actions/CartAction';
 
 const { Title, Text } = Typography;
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-  brand: string;
-}
 
 const Breadcrumb: React.FC = () => {
   return (
@@ -31,171 +29,258 @@ const Breadcrumb: React.FC = () => {
 };
 
 export default function Cart() {
-  const [cartItems, setCartItems] = React.useState<CartItem[]>([
-    {
-      id: 1,
-      name: 'MUA 2 TẶNG 3 - Combo 2 Cà Phê Rang Xay Truyền Thống Highlands Coffee 1kg Tặng 2 gói 200gr và 1 ly sứ',
-      price: 712000,
-      quantity: 1,
-      image: '/public/Cart_img/combo2coffee.png',
-      brand: 'Highlands Coffee'
-    },
-    {
-      id: 2,
-      name: 'Combo 3 vị cà phê rang xay Highlands Coffee 200g',
-      price: 283500,
-      quantity: 1,
-      image: '/public/Cart_img/combo3coffee.png',
-      brand: 'Highlands Coffee'
-    },
-    {
-      id: 3,
-      name: 'Thùng 48 hộp Cà phê Sữa Highlands Coffee Tetra pack (180ml/hộp)',
-      price: 480000,
-      quantity: 1,
-      image: '/public/Cart_img/48hopcoffee.png',
-      brand: 'Highlands Coffee'
+  const cart = useSelector((state: RootState) => state.cartReducer);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const dispatch: AppDispatch = useDispatch();
+
+  const user = useSelector((state: RootState) => state.UserReducer);
+  console.log(user?.user._id)
+  const user_id = user?.user._id
+  useEffect(() => {
+    // Sử dụng hàm get để gọi API
+    const fetchProducts = async () => {
+      try {
+        const response: ApiResponse = await get('http://localhost:5000/products');
+        setProducts(response.recordsProduct);
+        setLoading(false);
+      } catch (error) {
+        console.error("Lỗi khi lấy sản phẩm:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+  console.log(products)
+
+  // Tính tổng tiền
+  const totalPrice = cart.list.reduce((total, cartItem) => {
+    const product = products.find((p) => p._id === cartItem.product_id);
+    return product ? total + product.price * cartItem.quantity : total;
+  }, 0);
+
+  const handleQuantityChange = async (id: string, quantity: number) => {
+    try {
+      const userId = user_id;
+      const currentItem = cart.list.find((item) => item.product_id === id);
+      if (currentItem) {
+        const diff = quantity - currentItem.quantity;
+        if (diff > 0) {
+          // Call API to increase quantity
+          await axios.put(`http://localhost:5000/cart/increase/${userId}/${id}`);
+        } else if (diff < 0) {
+          // Call API to decrease quantity
+          await axios.put(`http://localhost:5000/cart/decrease/${userId}/${id}`);
+        }
+      }
+      // Update quantity in Redux store
+      dispatch(updateQuantity(id, quantity));
+    } catch (error) {
+      if (error instanceof Error) {
+        message.error(error.message);
+      } else {
+        message.error("An error occurred. Please try again later.");
+      }
     }
-  ]);
-
-  const updateQuantity = (id: number, value: number) => {
-    setCartItems(items =>
-      items.map(item =>
-        item.id === id ? { ...item, quantity: Math.max(1, value) } : item
-      )
-    );
+  };
+  const handleRemoveProduct = async (id: string) => {
+    try {
+      const userId = user_id;
+      await axios.delete(`http://localhost:5000/cart/remove/${userId}/${id}`);
+      // Remove the item from the Redux store
+      dispatch(removeItem(id));
+    } catch (error) {
+      console.error("Lỗi khi xóa sản phẩm:", error);
+    }
+  };
+  const removeAllItems = async () => {
+    try {
+      const userId = user_id;
+      await axios.delete(`http://localhost:5000/cart/clear/${userId}`);
+      // Clear the cart in Redux store
+      dispatch(setCart({
+        list: [],
+        total: 0,
+      }));
+      localStorage.removeItem('cart'); // Clear cart from localStorage
+    } catch (error) {
+      console.error("Lỗi khi xóa toàn bộ giỏ hàng:", error);
+    }
   };
 
-  const removeItem = (id: number) => {
-    setCartItems(items => items.filter(item => item.id !== id));
-  };
-
-  const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <Layout.Content className="container mx-auto py-8 px-4">
       {/* Breadcrumb */}
       <Breadcrumb />
 
-      <Row gutter={[32, 32]}>
-        <Col xs={24} lg={16}>
-          <Card title={<Title level={4}>Giỏ hàng ({cartItems.length} sản phẩm)</Title>}>
-            <Space direction="vertical" size="large" style={{ width: '100%' }}>
-              {cartItems.map(item => (
-                <Card key={item.id} bodyStyle={{ padding: 0 }} className="overflow-hidden">
-                  <Row gutter={[16, 16]} align="middle" className="p-4">
-                    <Col xs={24} sm={8}>
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          width={200}
-                          height={200}
-                          className="rounded-lg object-cover"
-                        />
+      {loading ? (
+        <div className="text-center">
+          <Spin tip="Đang tải sản phẩm..." />
+        </div>
+      ) : (
+
+        <Row gutter={[32, 32]}>
+          <Col xs={24} lg={16}>
+            <Card title={<Title level={4}>Giỏ hàng ({cart.list.length} sản phẩm)</Title>}>
+              {cart.list.length > 0 ? <>
+                <Button onClick={removeAllItems} icon={<DeleteOutlined />}>
+                  Delete All
+                </Button>
+              </> : <>
+                <Button onClick={removeAllItems} icon={<ShoppingCartOutlined />} style={{ marginBottom: 10 }}>
+                  Tiếp tục mua sắm
+                </Button>
+              </>}
+
+              <Space direction="vertical" size="large" style={{ width: '100%' }}>
+                {cart.list.length === 0 ? (
+                  <Row justify="center">
+                    <Col>
+                      <Text>Giỏ hàng của bạn đang trống.</Text>
                     </Col>
-                    <Col xs={24} sm={16}>
-                      <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                        <Text strong>{item.name}</Text>
-                        <Text type="secondary">Thương hiệu: {item.brand}</Text>
-                        <Text strong className="text-lg text-red-600">
-                          {item.price.toLocaleString()}đ
-                        </Text>
-                        <Row justify="space-between" align="middle">
-                          <Space>
-                            <Button 
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              disabled={item.quantity <= 1}
+                  </Row>
+
+                ) : (
+
+                  cart.list.map((cartItem) => {
+                    const product = products.find((p) => p._id === cartItem.product_id);
+                    if (!product) return null; // Nếu không tìm thấy sản phẩm, bỏ qua
+                    return (
+
+                      <Card key={cartItem.product_id} bordered={false} style={{ position: 'relative' }}>
+                        <Row align="middle">
+                          <Col xs={24} lg={6}>
+                            <img
+                              src={
+                                product.thumbnail
+                                  ? product.thumbnail.startsWith("http")
+                                    ? product.thumbnail
+                                    : `http://localhost:5000${product.thumbnail}`
+                                  : "http://localhost:5000/path-to-placeholder-image.png"
+                              }
+                              alt={product.title}
+                              style={{ width: '100px' }} />
+                          </Col>
+
+                          {/* Delete Button positioned at the top-right */}
+                          <Col xs={6} lg={24} style={{ position: 'absolute', top: 10, right: 10 }}>
+                            <Button
+                              type="text"
+                              icon={<DeleteOutlined />}
+                              onClick={() => handleRemoveProduct(cartItem.product_id)}
+                            >
+                              Xóa
+                            </Button>
+                          </Col>
+
+                          <Col xs={6} sm={12} md={16} lg={6}>
+                            <Space direction="vertical">
+                              <Title level={5}>{product.title}</Title>
+                              <Text>Giá: {product.price.toLocaleString()}đ * {cartItem.quantity}</Text>
+                            </Space>
+                          </Col>
+
+                          <Col xs={12} md={8} lg={6}>
+                            <Button
+                              onClick={() => handleQuantityChange(cartItem.product_id, cartItem.quantity - 1)}
+                              disabled={cartItem.quantity <= 1} // Disable if quantity is 1
                             >
                               -
                             </Button>
                             <InputNumber
+                              type="number"
                               min={1}
-                              value={item.quantity}
-                              onChange={(value) => updateQuantity(item.id, value || 1)}
-                              className="w-16 text-center"
+                              max={product.stock} // Set the max value based on the product stock
+                              value={cartItem.quantity}
+                              onChange={(value) => handleQuantityChange(cartItem.product_id, value && value > 0 ? value : 1)}
                             />
-                            <Button 
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            <Button
+                              onClick={() => handleQuantityChange(cartItem.product_id, cartItem.quantity + 1)}
+                              disabled={cartItem.quantity >= product.stock} // Disable if quantity is at stock limit
                             >
                               +
                             </Button>
-                          </Space>
-                          <Button 
-                            type="text" 
-                            danger 
-                            icon={<DeleteOutlined />}
-                            onClick={() => removeItem(item.id)}
-                          >
-                            Xóa
-                          </Button>
+                          </Col>
+
+                          <Col xs={12} sm={8} md={12} lg={6}>
+                            <Row>
+                              <strong style={{ color: 'green', marginRight: "5px" }}>Total: </strong>
+                              <Text strong>{(product.price * cartItem.quantity).toLocaleString()}đ</Text>
+                            </Row>
+                          </Col>
                         </Row>
-                      </Space>
-                    </Col>
+                      </Card>
+
+                    );
+                  })
+                )}
+              </Space>
+            </Card>
+          </Col>
+          <Col xs={24} lg={8}>
+            <Space direction="vertical" size="large" style={{ width: '100%' }}>
+              {/* Thông tin khách hàng */}
+              <Card title={<Title level={4}>Dịch vụ khách hàng</Title>}>
+                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                  <Text>Bạn cần sự hỗ trợ từ chúng tôi? Hãy liên hệ ngay</Text>
+                  <Space>
+                    <PhoneOutlined />
+                    <Text strong>0385 XXX XXX</Text>
+                  </Space>
+                  <Space>
+                    <FacebookOutlined />
+                    <Text strong>Chúng tôi trên Facebook</Text>
+                  </Space>
+                  <Space>
+                    <ClockCircleOutlined />
+                    <Text>Giờ mở cửa (07:00 - 22:00)</Text>
+                  </Space>
+                </Space>
+              </Card>
+
+              {/* Thông tin mua sắm */}
+              <Card title={<Title level={4}>Mua sắm cùng CoffeeKing store</Title>}>
+                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                  <Space>
+                    <CheckOutlined className="text-green-500" />
+                    <Text>Sản phẩm đẹp, thân thiện với môi trường</Text>
+                  </Space>
+                  <Space>
+                    <CheckOutlined className="text-green-500" />
+                    <Text>Không lo về giá</Text>
+                  </Space>
+                  <Space>
+                    <CheckOutlined className="text-green-500" />
+                    <Text>Miễn phí vận chuyển cho đơn hàng từ 1.500.000 VNĐ</Text>
+                  </Space>
+                </Space>
+              </Card>
+
+              {/* Tổng tiền */}
+              <Card>
+                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                  <Row justify="space-between">
+                    <Text>Tạm tính:</Text>
+                    <Text strong>{totalPrice.toLocaleString()}đ</Text>
                   </Row>
-                </Card>
-              ))}
+                  <Divider style={{ margin: '12px 0' }} />
+                  <Row justify="space-between">
+                    <Text strong>Thành tiền:</Text>
+                    <Text strong className="text-xl text-red-600">
+                      {totalPrice.toLocaleString()}đ
+                    </Text>
+                  </Row>
+                  <Button type="primary" size="large" block className="bg-red-600">
+                    THANH TOÁN NGAY
+                  </Button>
+                </Space>
+              </Card>
             </Space>
-          </Card>
-        </Col>
-
-        <Col xs={24} lg={8}>
-          <Space direction="vertical" size="large" style={{ width: '100%' }}>
-            <Card title={<Title level={4}>Dịch vụ khách hàng</Title>}>
-              <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                <Text>Bạn cần sự hỗ trợ từ chúng tôi? Hãy liên hệ ngay</Text>
-                <Space>
-                  <PhoneOutlined />
-                  <Text strong>0917561212</Text>
-                </Space>
-                <Space>
-                  <FacebookOutlined />
-                  <Text strong>Chúng tôi trên Facebook</Text>
-                </Space>
-                <Space>
-                  <ClockCircleOutlined />
-                  <Text>Giờ mở cửa (08:00 - 18:00)</Text>
-                </Space>
-              </Space>
-            </Card>
-
-            <Card title={<Title level={4}>Mua sắm cùng CoffeeKing store</Title>}>
-              <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                <Space>
-                  <CheckOutlined className="text-green-500" />
-                  <Text>Sản phẩm đẹp, thân thiện với môi trường</Text>
-                </Space>
-                <Space>
-                  <CheckOutlined className="text-green-500" />
-                  <Text>Không lo về giá</Text>
-                </Space>
-                <Space>
-                  <CheckOutlined className="text-green-500" />
-                  <Text>Miễn phí vận chuyển cho đơn hàng từ 1.500.000 VNĐ</Text>
-                </Space>
-              </Space>
-            </Card>
-
-            <Card>
-              <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                <Row justify="space-between">
-                  <Text>Tạm tính:</Text>
-                  <Text strong>{total.toLocaleString()}đ</Text>
-                </Row>
-                <Divider style={{ margin: '12px 0' }} />
-                <Row justify="space-between">
-                  <Text strong>Thành tiền:</Text>
-                  <Text strong className="text-xl text-red-600">
-                    {total.toLocaleString()}đ
-                  </Text>
-                </Row>
-                <Button type="primary" size="large" block className="bg-red-600">
-                  THANH TOÁN NGAY
-                </Button>
-              </Space>
-            </Card>
-          </Space>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      )}
     </Layout.Content>
   );
 }

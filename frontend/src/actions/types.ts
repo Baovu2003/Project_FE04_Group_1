@@ -1,5 +1,11 @@
 // redux/actions/types.ts
-
+export interface ApiLoginAdmin {
+  accountInAdmin: Account
+  role: Role;
+}
+export interface ApiLoginUser {
+  user: User;
+}
 export interface Product {
   _id: string;
   title: string;
@@ -132,21 +138,24 @@ export interface Order {
   updatedAt?: Date;
 }
 
-// redux/actions/types.ts
+// export interface Cart {
+//   user_id: string;
+//   products: {
+//     product_id: string;
+//     quantity: number;
+//   };
+// }
+
 export interface CartProduct {
   product_id: string;
   quantity: number;
 }
 
+// Define Cart for ApiResponse
 export interface Cart {
-  _id: string;
   user_id: string;
   products: CartProduct[];
-  createdAt?: Date;
-  updatedAt?: Date;
 }
-
-
 export interface ApiResponse {
   accountInAdmin: Account
   user: User;
@@ -163,14 +172,48 @@ export interface ApiResponse {
   detailRole: Role;
   detailAccount: Account;
   detailUser: User;
+  cart: Cart[];
+  cartItems:Cart
   status:number
-  message:string
+  message:string;
 }
 
-export interface ApiLoginAdmin {
-  accountInAdmin: Account
-  role: Role;
+
+// Define all cart action types
+
+// Define all cart action types
+export const ADD_TO_CART = 'ADD_TO_CART';
+export const UPDATE_QUANTITY = 'UPDATE_QUANTITY';
+export const REMOVE_ITEM = 'REMOVE_ITEM';
+export const CLEAR_CART = 'CLEAR_CART';
+export const  SET_CART = "SET_CART";
+
+export interface AddToCartAction {
+  type: typeof ADD_TO_CART;
+  payload: CartProduct; // Use CartProduct directly
 }
-export interface ApiLoginUser {
-  user: User;
+
+export interface UpdateQuantityAction {
+  type: typeof UPDATE_QUANTITY;
+  payload: { product_id: string; quantity: number }; // Changed to product_id
 }
+
+export interface RemoveItemAction {
+  type: typeof REMOVE_ITEM;
+  payload: { product_id: string }; // Changed to product_id
+}
+
+export interface ClearCartAction {
+  type: typeof CLEAR_CART;
+}
+export interface SetCartAction {
+  type: typeof SET_CART;
+  payload: {
+      list: CartProduct[]; // Your expected structure
+      total: number;       // The total count
+  };
+}
+
+
+// Union type for all cart action types
+export type CartActionTypes = AddToCartAction | UpdateQuantityAction | RemoveItemAction | ClearCartAction|SetCartAction;

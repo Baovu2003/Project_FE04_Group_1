@@ -1,41 +1,35 @@
 const Cart = require("../../models/cart.model");
-const User = require("../../models/user.model"); // Adjust this to your user model's path
+const User = require("../../models/user.model");
 
 module.exports.cartId = async (req, res, next) => {
-  console.log("Cart middleware");
+  if (res.locals.cart) {
+    return next(); // Skip if the cart is already available
+  }
 
-  console.log(req.cookies);
   const tokenUser = req.cookies.tokenUser;
-  console.log("req.cookies.tokenUser", tokenUser);
-
-  // If the tokenUser cookie does not exist, create a new cart
-  if (!tokenUser) {
-    // const cart = new Cart();
-    // await cart.save();
-    // console.log(cart);
-  } else {
+  if (tokenUser) {
     try {
-      const user = await User.findOne({ tokenUser: tokenUser });
-      console.log(user);
+      const user = await User.findOne({ tokenUser });
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      // Find or create a cart for the user
-      let cart = await Cart.findOne({ user_id: user._id });
-      if (!cart) {
-        cart = new Cart({
-          user_id: user._id,
-          products: [], // Initialize with an empty products array
-        });
-        await cart.save();
-      }
 
-      console.log("Cart found or created:", cart);
-      req.cart = cart; // Pass the cart to the next middleware or route handler
+      res.locals.user = user;
+
+      // Use findOneAndUpdate with upsert: true to handle the cart creation atomically
+      const cart = await Cart.findOneAndUpdate(
+        { user_id: user._id },
+        { $setOnInsert: { user_id: user._id, products: [] } }, // Set user_id and empty products array if cart is created
+        { new: true, upsert: true } // Create a new cart if it doesn't exist
+      );
+
+      res.locals.cart = cart;
     } catch (error) {
-      console.error("Error decoding tokenUser or finding user:", error);
-      return res.status(401).json({ message: "Invalid or expired token" });
+      console.error("Error finding or creating cart:", error);
+      return res.status(500).json({ message: "An error occurred" });
     }
+  } else {
+    console.log("No token user");
   }
 
   next();

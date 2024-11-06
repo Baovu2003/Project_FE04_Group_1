@@ -41,6 +41,7 @@ import DetailAccount from "./pages/admin/Accounts/DetailAccount";
 import ForgotPassword from "./pages/client/User/ForgotPassword";
 import OTPPassword from "./pages/client/User/OTPPassword";
 import ResetPassword from "./pages/client/User/ResetPassword";
+import PrivateRouter from "./pages/client/PrivateRouter/PrivateRouter";
 function App() {
   return (
     <Router>
@@ -51,16 +52,23 @@ function App() {
           <Route path="listProducts/detail/:slug" element={<ProductDetail />} />
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<About />} />
-          <Route path="cart" element={<Cart />} />
-          <Route path="/user/login" element={<LoginUser />} />
+          <Route path="cart" element={<PrivateRouter />}>
+            <Route path="" element={<Cart />} />
+          </Route>
+
+          <Route path="user/profile" element={<PrivateRouter />}>
+            <Route path="" element={<Profile />} />
+          </Route>
+         
+       
+          <Route path="/user/PassResovery" element={<PassResovery />} />
+          <Route path="*" element={<NotFoundClient />} />
+        </Route>
+        <Route path="/user/login" element={<LoginUser />} />
           <Route path="/user/register" element={<Register />} />
           <Route path="/user/password/forgot" element={<ForgotPassword />} />
           <Route path="/user/password/otp/:email" element={<OTPPassword />} />
           <Route path="/user/password/reset" element={<ResetPassword />} />
-          <Route path="/user/profile" element={<Profile />} />
-          <Route path="/user/PassResovery" element={<PassResovery />} />
-          <Route path="*" element={<NotFoundClient />} />
-        </Route>
 
         {/* Admin Routes */}
         <Route path="/admin" element={<LayoutDefaultAdmin />}>

@@ -3,6 +3,9 @@ const User = require("../../models/user.model");
 const ForgotPassword = require("../../models/forgot-password.model");
 const generateNumber = require("../../helpers/generateToken");
 const sendMailHelper = require("../../helpers/sendMail");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GG_CLIENT_ID, process.env.GG_CLIENT_SECRET);
+console.log(client)
 module.exports.index = async (req, res) => {
   const user = await User.find({
     deleted: false,
@@ -87,7 +90,48 @@ module.exports.loginPost = async (req, res) => {
     user: user,
   });
 };
+module.exports.googleLoginPost = async (req, res) => {
+  const { token } = req.body;
+  console.log(token)
+  console.log(process.env.GG_CLIENT_ID)
 
+  try {
+    // Verify the Google token
+    console.log("Verifying Google token...");
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    console.log(ticket)
+
+    const payload = ticket.getPayload();
+    console.log(payload); 
+    const email = payload.email;
+    let user = await User.findOne({ email });
+
+    console.log(user)
+    if (!user) {
+      // If user does not exist, create a new user
+      user = new User({
+        email,
+        fullName: payload.name,
+        googleId: payload.sub,
+      });
+      const tokenUser = generateNumber.generateToken();
+      console.log(tokenUser)
+      await user.save();
+    }
+    // Generate a token for the user
+   
+    res.status(200).json({
+      user,
+      tokenUser:user.tokenUser,
+    });
+  } catch (error) {
+    console.error("Error verifying token:", error);
+    res.status(400).json({ error: "Invalid Google Token" });
+  }
+};
 module.exports.forgotpassword = async (req, res) => {
   console.log(req.body);
   const user = await User.findOne({

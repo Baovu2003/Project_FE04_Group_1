@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect } from "react";
 import { Form, Input, Button, Checkbox, Card, message, Col, Row } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
@@ -11,8 +8,9 @@ import { get, post } from "../../../Helpers/API.helper";
 import { ApiResponse, User } from "../../../actions/types";
 import { showSuccessAlert } from "../../../Helpers/alerts";
 import { userActions } from "../../../actions/UserAction";
-
-// Interface definitions
+import { AppDispatch } from "../../../store/store";
+import { setCart } from "../../../actions/CartAction";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 
 interface LoginResponse {
   tokenUser: string;
@@ -27,11 +25,14 @@ interface LoginFormValues {
 
 const LoginUser: React.FC = () => {
   const [form] = Form.useForm<LoginFormValues>();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const dispatch: AppDispatch = useDispatch();
 
   const tokenUser = getCookie("tokenUser");
-  console.log("tokenUser", tokenUser)
+  console.log("tokenUser", tokenUser);
+
+  const googleClientId = import.meta.env.VITE_GG_CLIENT_ID;
+
 
   useEffect(() => {
     const fetchApi = async () => {
@@ -58,7 +59,6 @@ const LoginUser: React.FC = () => {
     }
   }, [tokenUser, dispatch, navigate]);
 
-
   const handleSubmit = async (values: LoginFormValues) => {
     try {
       const data: LoginResponse = await post("http://localhost:5000/user/login", {
@@ -66,17 +66,31 @@ const LoginUser: React.FC = () => {
         password: values.password,
       });
 
-      console.log(data)
+      console.log(data);
       if (data.tokenUser) {
         showSuccessAlert("Success!", "You have logged in successfully.");
         document.cookie = `tokenUser=${data.tokenUser}; path=/; max-age=86400`;
-        document.cookie = `token=; path=/; max-age=0`; // Clear token cookie
 
-        // Dispatch both account and role
         dispatch(userActions({
           user: data.user,
         }));
 
+        const cartResponse: ApiResponse = await get(`http://localhost:5000/cart/${data.user._id}`);
+        console.log(cartResponse);
+        if (cartResponse.cartItems.products) {
+          const total = cartResponse.cartItems.products.reduce((acc, product) => acc + product.quantity, 0);
+          console.log(total);
+
+          localStorage.setItem("cart", JSON.stringify({
+            list: cartResponse.cartItems.products,
+            total: total, // Use the calculated total
+          }));
+
+          dispatch(setCart({
+            list: cartResponse.cartItems.products,
+            total: total,
+          }));
+        }
 
         setTimeout(() => {
           navigate("/");
@@ -92,6 +106,61 @@ const LoginUser: React.FC = () => {
       }
     }
   };
+
+  const handleSuccess = async (credentialResponse: CredentialResponse) => {
+    try {
+      // Send Google ID token to your backend for verification
+      const response = await post("http://localhost:5000/user/google-login", {
+        token: credentialResponse.credential, // Google ID Token
+      });
+      console.log(response)
+
+      if (response.tokenUser) {
+        showSuccessAlert("Success!", "You have logged in with Google.");
+        document.cookie = `tokenUser=${response.tokenUser}; path=/; max-age=86400`;
+
+        dispatch(userActions({
+          user: response.user,
+        }));
+
+        const cartResponse: ApiResponse = await get(`http://localhost:5000/cart/${response.user._id}`);
+        console.log(cartResponse);
+        if (cartResponse.cartItems.products) {
+          const total = cartResponse.cartItems.products.reduce((acc, product) => acc + product.quantity, 0);
+          console.log(total);
+
+          localStorage.setItem("cart", JSON.stringify({
+            list: cartResponse.cartItems.products,
+            total: total, // Use the calculated total
+          }));
+
+          dispatch(setCart({
+            list: cartResponse.cartItems.products,
+            total: total,
+          }));
+        }
+
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      } else {
+        throw new Error("Google login failed.");
+      }
+    } catch (error) {
+      console.error("Google login error:", error);
+      message.error("Google login failed. Please try again.");
+    }
+  };
+
+  const handleError = () => {
+    console.error("Login failed");
+    message.error("An error occurred during login. Please try again.");
+  };
+
+  if (!googleClientId) {
+    console.error('Google Client ID is not defined!');
+    return <div>Error: Google Client ID is not configured.</div>;
+  }
 
   return (
     <div
@@ -158,6 +227,12 @@ const LoginUser: React.FC = () => {
                 </Button>
               </Form.Item>
             </Form>
+
+            <GoogleLogin            
+              onSuccess={handleSuccess}
+              onError={handleError} // No parameters passed here
+            />
+
             <Link
               to={`/user/password/forgot`}
               className={`btn btn-primary me-2 `}

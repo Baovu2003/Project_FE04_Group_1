@@ -19,6 +19,7 @@ module.exports.index = async (req, res) => {
     });
 
     const productCategory = await ProductCategory.find({
+      status: "active",
       deleted: false,
     });
 
@@ -28,8 +29,8 @@ module.exports.index = async (req, res) => {
     );
 
     res.status(200).json({
-      layoutProductsCategory: newproductCategory,
-      products: newProducts,
+      recordsCategory: newproductCategory,
+      recordsProduct: newProducts,
     });
   } catch (error) {
     console.error(error);

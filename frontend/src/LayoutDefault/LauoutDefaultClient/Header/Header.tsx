@@ -1,20 +1,42 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { ShoppingCartOutlined, SearchOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
 import { Form, Input, Button } from 'antd';
 import logoWhite from '../../../assets/logo_white-7.png';
 import './Header.css';
 import { RootState } from '../../../store/store';
 import { useSelector } from 'react-redux';
+import { get } from '../../../Helpers/API.helper';
 
 const Header: React.FC = () => {
   const [isSearchVisible, setSearchVisible] = useState(false);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isMobile, setIsMobile] = useState(false);
+  // const [total, setTotal] = useState(0); // Use state to track total quantity
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.UserReducer);
+  console.log(user?.user._id)
+  console.log("user?.user.tokenUser", user?.user.tokenUser)
+  const cart = useSelector((state: RootState) => state.cartReducer);
+  // const { list = [] } = useSelector((state: RootState) => state.cartReducer || {});
+  // console.log(list)
+  // Thiết lập kiểu dispatch tùy chỉnh
+  console.log(cart)
 
+  useEffect(() => {
+    if (user?.user._id) {
+      const fetchUserCart = async () => {
+        const data = await get(`http://localhost:5000/cart/${user.user._id}`);
+        console.log(data.cartItems)
+        console.log(data.cartItems.products)
+        // const products = data.cartItems.products || [];
+
+      };
+
+      fetchUserCart();
+    }
+  }, [user]);
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -43,6 +65,7 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     document.cookie = "tokenUser=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+    localStorage.removeItem("cart");
     navigate("/");
     window.location.reload();
   };
@@ -77,8 +100,12 @@ const Header: React.FC = () => {
             <SearchOutlined />
           </button>
           <div className="cart-icon">
-            <span className="cart-count">0</span>
-            <ShoppingCartOutlined style={{ color: "white" }} />
+            <Link to="/cart">
+              <span className="cart-count">{cart.total}</span>
+              <ShoppingCartOutlined style={{ color: "white" }} />
+
+            </Link>
+
           </div>
 
           {user && user.user._id ? (
