@@ -29,7 +29,7 @@ module.exports.cartId = async (req, res, next) => {
       return res.status(500).json({ message: "An error occurred" });
     }
   } else {
-    console.log("No token user");
+    // console.log("No token user");
   }
 
   next();

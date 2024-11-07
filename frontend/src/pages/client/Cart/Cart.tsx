@@ -60,22 +60,43 @@ export default function Cart() {
     return product ? total + product.price * cartItem.quantity : total;
   }, 0);
 
+  // const handleQuantityChange = async (id: string, quantity: number) => {
+  //   try {
+  //     const userId = user_id;
+  //     const currentItem = cart.list.find((item) => item.product_id === id);
+  //     if (currentItem) {
+  //       const diff = quantity - currentItem.quantity;
+  //       if (diff > 0) {
+  //         // Call API to increase quantity
+  //         await axios.put(`http://localhost:5000/cart/increase/${userId}/${id}`);
+  //       } else if (diff < 0) {
+  //         // Call API to decrease quantity
+  //         await axios.put(`http://localhost:5000/cart/decrease/${userId}/${id}`);
+  //       }
+  //     }
+  //     // Update quantity in Redux store
+  //     dispatch(updateQuantity(id, quantity));
+  //   } catch (error) {
+  //     if (error instanceof Error) {
+  //       message.error(error.message);
+  //     } else {
+  //       message.error("An error occurred. Please try again later.");
+  //     }
+  //   }
+  // };
   const handleQuantityChange = async (id: string, quantity: number) => {
     try {
       const userId = user_id;
       const currentItem = cart.list.find((item) => item.product_id === id);
-      if (currentItem) {
-        const diff = quantity - currentItem.quantity;
-        if (diff > 0) {
-          // Call API to increase quantity
-          await axios.put(`http://localhost:5000/cart/increase/${userId}/${id}`);
-        } else if (diff < 0) {
-          // Call API to decrease quantity
-          await axios.put(`http://localhost:5000/cart/decrease/${userId}/${id}`);
-        }
+      
+      if (currentItem && quantity !== currentItem.quantity) {
+        // Call API to update quantity directly
+        await axios.put(`http://localhost:5000/cart/update/${userId}/${id}`, { quantity });
+  
+        // Update the quantity in Redux store
+        dispatch(updateQuantity(id, quantity));
+       
       }
-      // Update quantity in Redux store
-      dispatch(updateQuantity(id, quantity));
     } catch (error) {
       if (error instanceof Error) {
         message.error(error.message);

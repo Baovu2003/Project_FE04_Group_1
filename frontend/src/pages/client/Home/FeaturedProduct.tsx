@@ -120,11 +120,11 @@ const FeaturedProduct = () => {
                     <span className="sale-price">
                       {formatPrice(product.price)}
                     </span>
-                    {product.discountPercentage && product.discountPercentage > 0 && (
+                    {product.discountPercentage && product.discountPercentage > 0 ? (
                       <span className="original-price">
                         {formatPrice(product.price * (1 + product.discountPercentage / 100))}
                       </span>
-                    )}
+                    ):<></>}
                   </div>
                   <div className="stock-status text-center">
                     Còn lại: {product.stock}

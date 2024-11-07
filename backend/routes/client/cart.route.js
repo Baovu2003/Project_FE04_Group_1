@@ -6,6 +6,8 @@ const controller = require("../../controller/client/cart.controller")
 router.get("/:userId", controller.getCartByUserId);
 router.post("/add/:userId", controller.addToCart);
 
+router.put("/update/:userId/:productId", controller.updateProductQuantity);
+
 // Tăng số lượng sản phẩm
 router.put("/increase/:userId/:productId", controller.increaseQuantity);
 

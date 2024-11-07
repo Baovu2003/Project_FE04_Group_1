@@ -164,86 +164,86 @@ const LoginUser: React.FC = () => {
 
   return (
     <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        background: '#f0f2f5',
-      }}
-    >
-      <Card style={{ width: 800, padding: '24px' }}>
-        <Row gutter={16}>
-          <Col span={12} className="text-center">
-            <img
-              src="/images/Login.png"
-              alt="Logo"
-              style={{ height: '200px', width: '200px' }}
-            />
-          </Col>
-          <Col span={12}>
-            <h2 style={{ textAlign: 'center', marginBottom: '24px' }}>Sign in</h2>
-            <Form
-              form={form}
-              name="login"
-              onFinish={handleSubmit}
-              initialValues={{ remember: true }}
-              layout="vertical"
+    style={{
+      minHeight: '100vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      background: '#f0f2f5',
+    }}
+  >
+    <Card style={{ width: '100%', maxWidth: 800, padding: '24px' }}>
+      <Row gutter={[16, 16]} align="middle">
+        <Col xs={24} md={12} className="text-center">
+          <img
+            src="/images/Login.png"
+            alt="Logo"
+            style={{ height: '200px', width: '200px', objectFit: 'contain' }}
+          />
+        </Col>
+        <Col xs={24} md={12}>
+          <h2 style={{ textAlign: 'center', marginBottom: '24px' }}>Sign in</h2>
+          <Form
+            form={form}
+            name="login"
+            onFinish={handleSubmit}
+            initialValues={{ remember: true }}
+            layout="vertical"
+          >
+            <Form.Item
+              name="username"
+              rules={[{ required: true, message: "Please input your username!" }]}
             >
-              <Form.Item
-                name="username"
-                rules={[{ required: true, message: "Please input your username!" }]}
+              <Input
+                prefix={<UserOutlined />}
+                placeholder="Username"
+                size="large"
+              />
+            </Form.Item>
+  
+            <Form.Item
+              name="password"
+              rules={[{ required: true, message: "Please input your password!" }]}
+            >
+              <Input.Password
+                prefix={<LockOutlined />}
+                placeholder="Password"
+                size="large"
+              />
+            </Form.Item>
+  
+            <Form.Item name="remember" valuePropName="checked">
+              <Checkbox>Remember me</Checkbox>
+            </Form.Item>
+  
+            <Form.Item>
+              <Button
+                className="btn btn-danger"
+                htmlType="submit"
+                style={{ width: '100%' }}
+                size="large"
               >
-                <Input
-                  prefix={<UserOutlined />}
-                  placeholder="Username"
-                  size="large"
-                />
-              </Form.Item>
-
-              <Form.Item
-                name="password"
-                rules={[{ required: true, message: "Please input your password!" }]}
-              >
-                <Input.Password
-                  prefix={<LockOutlined />}
-                  placeholder="Password"
-                  size="large"
-                />
-              </Form.Item>
-
-              <Form.Item name="remember" valuePropName="checked">
-                <Checkbox>Remember me</Checkbox>
-              </Form.Item>
-
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  style={{ width: '100%' }}
-                  size="large"
-                >
-                  Login
-                </Button>
-              </Form.Item>
-            </Form>
-
-            <GoogleLogin            
+                Login
+              </Button>
+            </Form.Item>
+          </Form>
+  
+          <div className="d-flex justify-content-between mb-3">
+            <Link to={`/user/password/forgot`}>Forgot password</Link>
+            <Link to="/user/register">Chưa có tài khoản: Register</Link>
+          </div>
+  
+          <div className="d-flex mb-2">
+            <GoogleLogin
               onSuccess={handleSuccess}
-              onError={handleError} // No parameters passed here
+              onError={handleError}
             />
-
-            <Link
-              to={`/user/password/forgot`}
-              className={`btn btn-primary me-2 `}
-            >
-              Forgot password
-            </Link>
-
-          </Col>
-        </Row>
-      </Card>
-    </div>
+          </div>
+        </Col>
+      </Row>
+    </Card>
+  </div>
+  
   );
 };
 
