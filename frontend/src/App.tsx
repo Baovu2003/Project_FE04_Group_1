@@ -37,6 +37,7 @@ import Profile from "./pages/client/User/UserProfile";
 import DetailCategory from "./pages/admin/Category/DetailCategory";
 import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 import OrderTable from "./pages/admin/Dashboard/Order";
+import CustomerTable from "./pages/admin/Dashboard/Customer";
 function App() {
   return (
     <Router>
@@ -60,6 +61,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="order" element={<OrderTable />} />
+            <Route path="customer" element={<CustomerTable />} />
             <Route path="products-category" element={<Allcategory />}>
               <Route index element={<Category />} />
               <Route path="detail/:id" element={<DetailCategory />} />
