@@ -100,3 +100,29 @@ module.exports.detail = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+module.exports.getProductByid = async (req, res) => {
+  const {id} = req.params;
+  try {
+    const find = {
+      status: "active",
+      _id: id,
+    };
+
+    const products = await Product.findOne(find);
+    console.log("Found product:", products);
+
+    // Check if the product exists
+    if (!products) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+    console.log("Product Category ID:", products.product_category_id);
+    res.status(200).json({
+      productById: products,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+

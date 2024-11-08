@@ -1,26 +1,26 @@
-
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
-    user_id:String,
-    cart_id: String,
-    userInfo: [
+    user_id: String,
+    userInfo: {
+      email: String,
+      fullname: String,
+      phone: String,
+      address: String,
+    },
+
+    products: [
       {
-        fullname: String,
-        phone: String,
-        address: String
+        product_id: String,
+        quantity: Number,
+        price: Number,
+        discountPercentage: Number,
       },
     ],
-      products: [
-        {
-            product_id: String,
-            quantity: Number,
-            price: Number,
-            discountPercentage: Number
-        }
-      ]
-    
+    paymentMethod: String,
+    status: String,
+    total: Number,
   },
   {
     // B24 phút 44 trở đi

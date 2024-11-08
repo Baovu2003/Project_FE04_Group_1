@@ -1,6 +1,5 @@
 
-import React from 'react';
-import { Carousel, Card, Button, Row, Col, Slider } from 'antd';
+import { Carousel } from 'antd';
 import slider from '../../../assets/images/home/slider.png';
 import FeaturedProduct from './FeaturedProduct';
 import './home.css';

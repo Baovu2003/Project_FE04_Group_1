@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, Rate, Button, Carousel } from 'antd';
+import { Card, Button, Carousel } from 'antd';
 import { LeftOutlined, RightOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import type { CarouselRef } from 'antd/lib/carousel';
 import './featured.css';
@@ -29,18 +29,18 @@ const FeaturedProduct = () => {
       try {
         const response = await fetch('http://localhost:5000/products');
         const data = await response.json();
-        
+
         // Debug logs
         console.log("All products:", data.recordsProduct);
-        
+
         // Filter featured products and log the process
         const featuredProducts = data.recordsProduct.filter((product: Product) => {
           console.log(`Product ${product.title} - featured status:`, product.featured);
           return product.featured === "1" && !product.deleted;
         });
-        
+
         console.log("Filtered featured products:", featuredProducts);
-        
+
         setProducts(featuredProducts);
       } catch (error) {
         console.error("Error fetching featured products:", error);
@@ -70,19 +70,19 @@ const FeaturedProduct = () => {
             ⚡ SẢN PHẨM NỔI BẬT ({products.length})
           </span>
         </div>
-        
+
       </div>
 
       {products.length > 0 ? (
         <div className="carousel-container">
-          <Button 
-            icon={<LeftOutlined />} 
+          <Button
+            icon={<LeftOutlined />}
             className="carousel-arrow carousel-arrow-left"
             shape="circle"
             onClick={() => carouselRef.current?.prev()}
           />
-          <Button 
-            icon={<RightOutlined />} 
+          <Button
+            icon={<RightOutlined />}
             className="carousel-arrow carousel-arrow-right"
             shape="circle"
             onClick={() => carouselRef.current?.next()}
@@ -90,9 +90,9 @@ const FeaturedProduct = () => {
           <Carousel ref={carouselRef} slidesToShow={4} dots={false}>
             {products.map(product => (
               <div key={product._id} className="product-card-wrapper">
-                <Card 
+                <Card
                   cover={
-                    <div className="product-image-container" >
+                    <div className="product-image-container">
                       <img
                         src={
                           product.thumbnail
@@ -105,50 +105,48 @@ const FeaturedProduct = () => {
                         className="product-image"
                         style={{
                           width: '100%',
-                          height: '200px',
+                          height: '300px',
                           objectFit: 'cover'
                         }}
                       />
-                      
                     </div>
                   }
                   className="product-card"
                 >
-                  <h3 className="product-name">
+                  <h3 className="product-name text-center">
                     {product.title}
                   </h3>
-                  <div className="product-price">
+                  <div className="product-price d-flex justify-content-center align-items-center">
                     <span className="sale-price">
                       {formatPrice(product.price)}
                     </span>
-                    {product.discountPercentage && product.discountPercentage > 0 && (
+                    {product.discountPercentage && product.discountPercentage > 0 ? (
                       <span className="original-price">
                         {formatPrice(product.price * (1 + product.discountPercentage / 100))}
                       </span>
-                    )}
+                    ):<></>}
                   </div>
-                  <div className="product-description">
-                    {product.description}
-                  </div>
-                  <div className="stock-status">
+                  <div className="stock-status text-center">
                     Còn lại: {product.stock}
                   </div>
-                  
-                  <Link to={`/listProducts/detail/${product.slug}`}>
-                  <Button 
-                    type="primary" 
-                    danger 
-                    icon={<ShoppingCartOutlined />}
-                    className="buy-button"
-                    disabled={product.stock === 0}
-                  >
-                    {product.stock > 0 ? 'Chọn mua' : 'Hết hàng'}
-                  </Button>
+
+                  <Link to={`/listProducts/detail/${product.slug}`}>             
+                    <Button
+                      type="primary"
+                      danger                  
+                      className="buy-button"
+                      disabled={product.stock === 0}
+                      style={{ margin: '0 auto', display: 'block' }}
+                    >
+                      <ShoppingCartOutlined />
+                      {product.stock > 0 ? 'Chọn mua' : 'Hết hàng'}
+                    </Button>
                   </Link>
                 </Card>
               </div>
             ))}
           </Carousel>
+
         </div>
       ) : (
         <div style={{ textAlign: 'center', padding: '20px' }}>

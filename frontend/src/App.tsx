@@ -38,6 +38,13 @@ import DetailCategory from "./pages/admin/Category/DetailCategory";
 import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 import UpdateAccount from "./pages/admin/Accounts/UpdateAccount";
 import DetailAccount from "./pages/admin/Accounts/DetailAccount";
+import ForgotPassword from "./pages/client/User/ForgotPassword";
+import OTPPassword from "./pages/client/User/OTPPassword";
+import ResetPassword from "./pages/client/User/ResetPassword";
+import PrivateRouter from "./pages/client/PrivateRouter/PrivateRouter";
+import Checkout from "./pages/client/Cart/Checkout";
+import OrderUser from "./pages/client/User/OrderUser";
+import HistoryOrderUser from "./pages/client/User/HistoryOrderUser";
 function App() {
   return (
     <Router>
@@ -48,13 +55,26 @@ function App() {
           <Route path="listProducts/detail/:slug" element={<ProductDetail />} />
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<About />} />
-          <Route path="cart" element={<Cart />} />
-          <Route path="/user/login" element={<LoginUser />} />
-          <Route path="/user/register" element={<Register />} />
-          <Route path="/user/profile" element={<Profile />} />
+          <Route path="cart" element={<PrivateRouter />}>
+            <Route path="" element={<Cart />} />
+            <Route path="checkout" element={<Checkout />} />
+          </Route>
+
+          <Route path="user" element={<PrivateRouter />}>
+            <Route path="profile" element={<Profile />} />
+            <Route path="listOrders" element={<OrderUser />} />
+            <Route path="historyOrder" element={<HistoryOrderUser />} />                      
+          </Route>
+         
+       
           <Route path="/user/PassResovery" element={<PassResovery />} />
           <Route path="*" element={<NotFoundClient />} />
         </Route>
+        <Route path="/user/login" element={<LoginUser />} />
+          <Route path="/user/register" element={<Register />} />
+          <Route path="/user/password/forgot" element={<ForgotPassword />} />
+          <Route path="/user/password/otp/:email" element={<OTPPassword />} />
+          <Route path="/user/password/reset" element={<ResetPassword />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<LayoutDefaultAdmin />}>

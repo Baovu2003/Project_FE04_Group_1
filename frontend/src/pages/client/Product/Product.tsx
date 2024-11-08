@@ -20,12 +20,46 @@ interface Category {
   children?: Category[];
 }
 
+interface Category {
+  _id: string;
+  title: string;
+  parent_id: string;
+  description: string;
+  thumbnail: string;
+  status: string;
+  position: number;
+  deleted: boolean;
+  slug: string;
+  children?: Category[];
+}
+
 interface Product {
   _id: string;
   title: string;
   product_category_id?: string;
   description: string;
+  _id: string;
+  title: string;
+  product_category_id?: string;
+  description: string;
   price: number;
+  discountPercentage?: number;
+  stock: number;
+  thumbnail: string;
+  status: string;
+  featured: string;
+  position: number;
+  deleted: boolean;
+  slug: string;
+  createdBy: {
+    account_id: string;
+    createdAt: string;
+  };
+}
+
+interface ApiResponse {
+  recordsProduct: Product[];
+  recordsCategory: Category[];
   discountPercentage?: number;
   stock: number;
   thumbnail: string;
@@ -225,13 +259,16 @@ const ProductList = () => {
   return (
     <Layout>
       <Header className="bg-white px-5">
+      <Header className="bg-white px-5">
         <Row justify="space-between" align="middle">
           <Col>
+            <Title level={2} className="m-0">Products</Title>
             <Title level={2} className="m-0">Products</Title>
           </Col>
           <Col>
             <Space>
               <Text>Sắp xếp:</Text>
+              <Select defaultValue="default" style={{ width: 160 }} onChange={handleSortChange}>
               <Select defaultValue="default" style={{ width: 160 }} onChange={handleSortChange}>
                 <Option value="default">Mặc định</Option>
                 <Option value="price-asc">Giá tăng dần</Option>
