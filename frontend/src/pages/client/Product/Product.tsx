@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Row, Col, Typography, Space, Select, Card, Button, Popover, Menu, Radio } from 'antd';
+import { Layout, Row, Col, Typography, Space, Select, Card, Button, Popover, Menu, Radio, Pagination } from 'antd';
 import { Link } from 'react-router-dom';
 import { FilterOutlined, FolderOutlined } from '@ant-design/icons';
+import './ProductList.css';
 const { Header, Content, Sider } = Layout;
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -53,7 +54,8 @@ const ProductList = () => {
   const [selectedChildCategory, setSelectedChildCategory] = useState<string>('');
   const [priceRange, setPriceRange] = useState<string>('all');
   const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8);
 
 
 
@@ -209,6 +211,16 @@ const ProductList = () => {
     return matchesCategory && matchesPrice && !product.deleted;
   });
 
+  // Pagination logic
+  const indexOfLastProduct = currentPage * pageSize;
+  const indexOfFirstProduct = indexOfLastProduct - pageSize;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const onPageChange = (page: number, pageSize?: number) => {
+    setCurrentPage(page);
+    if (pageSize) setPageSize(pageSize);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <Layout>
@@ -264,7 +276,7 @@ const ProductList = () => {
             </Popover>
           </Space>
           <Row gutter={[16, 16]}>
-            {filteredProducts.map((product) => (
+            {currentProducts.map((product) => (
               !product.deleted && (
                 <Col key={product._id} xs={24} sm={12} md={8} lg={6}>
                   <Card
@@ -338,6 +350,17 @@ const ProductList = () => {
               )
             ))}
           </Row>
+          <Row justify="center" style={{ marginTop: '2rem' }}>
+          <Pagination
+            current={currentPage}
+            total={filteredProducts.length}
+            pageSize={pageSize}
+            onChange={onPageChange}
+            showSizeChanger
+            showQuickJumper
+            showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+          />
+        </Row>
         </Content>
       </Layout>
     </Layout>
