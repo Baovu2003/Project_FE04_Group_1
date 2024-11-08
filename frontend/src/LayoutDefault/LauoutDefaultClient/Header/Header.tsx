@@ -23,6 +23,15 @@ const Header: React.FC = () => {
   // console.log(list)
   // Thiết lập kiểu dispatch tùy chỉnh
   console.log(cart)
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const handleMouseEnter = () => {
+    setShowDropdown(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowDropdown(false);
+  };
 
   useEffect(() => {
     if (user?.user._id) {
@@ -56,6 +65,7 @@ const Header: React.FC = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleDropdownToggle = () => setShowDropdown(!showDropdown);
   const handleSearchSubmit = (values: { search: string }) => {
     console.log('Searching for:', values.search);
     setSearchTerm('');
@@ -92,6 +102,7 @@ const Header: React.FC = () => {
           <NavLink to="/contact" className={({ isActive }) => isActive ? 'active' : ''}>
             Contact
           </NavLink>
+
         </nav>
 
         {/* Icons and Buttons Section */}
@@ -110,10 +121,27 @@ const Header: React.FC = () => {
 
           {user && user.user._id ? (
             <>
-              <span className="user-greeting">Hello, {user.user.fullName}!</span> {/* Greeting message */}
-              <Button onClick={handleLogout} className="logout-button">
-                Logout
-              </Button>
+
+              <div
+                className="user-greeting-container"
+                onClick={isMobile ? handleDropdownToggle : undefined}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                <span className="user-greeting">
+                  Hello, {user.user.fullName}!
+                </span>
+                {showDropdown && (
+                  <div className="user-dropdown">
+                    <p><Link to="user/listOrders">My Orders</Link></p>
+                    <p><Link to="user/historyOrder">Purchase History</Link></p>
+                    <Button onClick={handleLogout} className="logout-button">
+                      Logout
+                    </Button>
+                  </div>
+                )}
+              </div>
+
             </>
           ) : (
             <>
@@ -142,9 +170,17 @@ const Header: React.FC = () => {
           <NavLink to="/about" onClick={toggleMobileMenu}>About us</NavLink>
           <NavLink to="/contact" onClick={toggleMobileMenu}>Contact</NavLink>
           {user && user.user._id ? (
-            <NavLink to="" onClick={handleLogout}>
-              Logout
-            </NavLink>
+            <>
+              <div >
+                <p><Link to="user/listOrders">My Orders</Link></p>
+                <p><Link to="user/historyOrder">Purchase History</Link></p>
+
+                <NavLink to="" onClick={handleLogout}>
+                  Logout
+                </NavLink>
+              </div>
+            </>
+
           ) : (
             <>
               <NavLink to="/user/login" onClick={toggleMobileMenu}>

@@ -42,6 +42,9 @@ import ForgotPassword from "./pages/client/User/ForgotPassword";
 import OTPPassword from "./pages/client/User/OTPPassword";
 import ResetPassword from "./pages/client/User/ResetPassword";
 import PrivateRouter from "./pages/client/PrivateRouter/PrivateRouter";
+import Checkout from "./pages/client/Cart/Checkout";
+import OrderUser from "./pages/client/User/OrderUser";
+import HistoryOrderUser from "./pages/client/User/HistoryOrderUser";
 function App() {
   return (
     <Router>
@@ -54,10 +57,13 @@ function App() {
           <Route path="about" element={<About />} />
           <Route path="cart" element={<PrivateRouter />}>
             <Route path="" element={<Cart />} />
+            <Route path="checkout" element={<Checkout />} />
           </Route>
 
-          <Route path="user/profile" element={<PrivateRouter />}>
-            <Route path="" element={<Profile />} />
+          <Route path="user" element={<PrivateRouter />}>
+            <Route path="profile" element={<Profile />} />
+            <Route path="listOrders" element={<OrderUser />} />
+            <Route path="historyOrder" element={<HistoryOrderUser />} />                      
           </Route>
          
        

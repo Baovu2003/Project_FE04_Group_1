@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Layout, Card, Row, Col, Button, InputNumber, Typography, Space, Divider, Spin, message } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
+import { Layout, Card, Row, Col, Button, InputNumber, Typography, Space, Divider, Spin, message, Checkbox } from 'antd';
 import { DeleteOutlined, PhoneOutlined, FacebookOutlined, ClockCircleOutlined, CheckOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { AppDispatch, RootState } from '../../../store/store';
 import { useSelector, useDispatch } from 'react-redux';
@@ -34,6 +34,8 @@ export default function Cart() {
   const [loading, setLoading] = useState(true);
   const dispatch: AppDispatch = useDispatch();
 
+  const [selectedItems, setSelectedItems] = useState<string[]>([]); // Trạng thái để lưu các sản phẩm được chọn
+  const navigate = useNavigate(); // Hook điều hướng
   const user = useSelector((state: RootState) => state.UserReducer);
   console.log(user?.user._id)
   const user_id = user?.user._id
@@ -60,42 +62,18 @@ export default function Cart() {
     return product ? total + product.price * cartItem.quantity : total;
   }, 0);
 
-  // const handleQuantityChange = async (id: string, quantity: number) => {
-  //   try {
-  //     const userId = user_id;
-  //     const currentItem = cart.list.find((item) => item.product_id === id);
-  //     if (currentItem) {
-  //       const diff = quantity - currentItem.quantity;
-  //       if (diff > 0) {
-  //         // Call API to increase quantity
-  //         await axios.put(`http://localhost:5000/cart/increase/${userId}/${id}`);
-  //       } else if (diff < 0) {
-  //         // Call API to decrease quantity
-  //         await axios.put(`http://localhost:5000/cart/decrease/${userId}/${id}`);
-  //       }
-  //     }
-  //     // Update quantity in Redux store
-  //     dispatch(updateQuantity(id, quantity));
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       message.error(error.message);
-  //     } else {
-  //       message.error("An error occurred. Please try again later.");
-  //     }
-  //   }
-  // };
   const handleQuantityChange = async (id: string, quantity: number) => {
     try {
       const userId = user_id;
       const currentItem = cart.list.find((item) => item.product_id === id);
-      
+
       if (currentItem && quantity !== currentItem.quantity) {
         // Call API to update quantity directly
         await axios.put(`http://localhost:5000/cart/update/${userId}/${id}`, { quantity });
-  
+
         // Update the quantity in Redux store
         dispatch(updateQuantity(id, quantity));
-       
+
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -129,6 +107,22 @@ export default function Cart() {
       console.error("Lỗi khi xóa toàn bộ giỏ hàng:", error);
     }
   };
+  const handleCheckboxChange = (productId: string) => {
+    setSelectedItems((prevSelectedItems) =>
+      prevSelectedItems.includes(productId)
+        ? prevSelectedItems.filter((id) => id !== productId)
+        : [...prevSelectedItems, productId]
+    );
+  };
+  const handleCheckout = () => {
+    if (selectedItems.length === 0) {
+      message.warning("Vui lòng chọn ít nhất một sản phẩm để thanh toán.");
+      return;
+    }
+    // Điều hướng sang trang thanh toán với danh sách sản phẩm được chọn
+    navigate('checkout', { state: { selectedItems } });
+  };
+  console.log(selectedItems)
 
 
   return (
@@ -172,6 +166,13 @@ export default function Cart() {
 
                       <Card key={cartItem.product_id} bordered={false} style={{ position: 'relative' }}>
                         <Row align="middle">
+                          <Col xs={24}>
+                            <Checkbox
+                              checked={selectedItems.includes(cartItem.product_id)}
+                              onChange={() => handleCheckboxChange(cartItem.product_id)}
+                            >
+                            </Checkbox>
+                          </Col>
                           <Col xs={24} lg={6}>
                             <img
                               src={
@@ -293,8 +294,8 @@ export default function Cart() {
                       {totalPrice.toLocaleString()}đ
                     </Text>
                   </Row>
-                  <Button type="primary" size="large" block className="bg-red-600">
-                    THANH TOÁN NGAY
+                  <Button type="primary" onClick={handleCheckout} disabled={cart.list.length === 0}>
+                   Mua hàng
                   </Button>
                 </Space>
               </Card>

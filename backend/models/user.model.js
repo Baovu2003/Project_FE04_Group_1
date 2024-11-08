@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
     type:String,
     default:"active"
   },
+  address:String,
   deleted: {
     type: Boolean,
     default: false

@@ -16,7 +16,7 @@ export interface Product {
   stock: number;
   thumbnail: string;
   status: string;
-  featured: string; 
+  featured: string;
   position: number;
   deleted: boolean;
   slug: string;
@@ -26,12 +26,12 @@ export interface Product {
   };
   deletedBy?: {
     account_id: string;
-    deletedAt?: Date; 
+    deletedAt?: Date;
   };
   updatedBy: {
     account_id: string;
     updatedAt: Date;
-    changes: Record<string, unknown>; 
+    changes: Record<string, unknown>;
   }[];
 }
 // redux/actions/types.ts
@@ -57,7 +57,7 @@ export interface ProductCategory {
     deletedAt: Date;
   };
 
-  updatedBy?: Array<{ 
+  updatedBy?: Array<{
     account_id: string;
     updatedAt: Date;
     changes: object;
@@ -95,7 +95,7 @@ export interface User {
   tokenUser?: string;
   phone?: string;
   avatar?: string;
-  address:string,
+  address: string,
   status: string;
   deleted: boolean;
   deleteAt?: Date;
@@ -128,24 +128,6 @@ export interface Product {
   discountPercentage: number;
 }
 
-export interface Order {
-  _id: string;
-  user_id: string;
-  cart_id: string;
-  userInfo: UserInfo[];
-  products: Product[];
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-// export interface Cart {
-//   user_id: string;
-//   products: {
-//     product_id: string;
-//     quantity: number;
-//   };
-// }
-
 export interface CartProduct {
   product_id: string;
   quantity: number;
@@ -155,6 +137,40 @@ export interface CartProduct {
 export interface Cart {
   user_id: string;
   products: CartProduct[];
+}
+
+interface Ward {
+  code: string;
+  name: string;
+}
+interface DistrictResponse {
+  code: string;
+  name: string;
+  data: Ward[];
+}
+
+export interface Order {
+  _id: string,
+  user_id: string,
+  userInfo:
+  {
+    email: string,
+    fullname: string,
+    phone: string,
+    address: string,
+  },
+
+  products: [
+    {
+      product_id: string,
+      quantity: number,
+      price: number,
+      discountPercentage: number,
+    },
+  ],
+  paymentMethod: string,
+  status: string,
+  total: number
 }
 export interface ApiResponse {
   accountInAdmin: Account
@@ -169,14 +185,20 @@ export interface ApiResponse {
   recordsAccount: Account[];
   detailCategory: ProductCategory;
   detailProduct: Product;
+  productById: Product;
   detailRole: Role;
   detailAccount: Account;
   detailUser: User;
   cart: Cart[];
-  cartItems:Cart
-  status:number
-  message:string;
+  cartItems: Cart
+  Orders: Order[];
+  OrderByUserId: Order[];
+  // OrderById:Order;
+  status: number
+  message: string;
+  data: DistrictResponse
 }
+
 
 
 // Define all cart action types
@@ -186,8 +208,8 @@ export const ADD_TO_CART = 'ADD_TO_CART';
 export const UPDATE_QUANTITY = 'UPDATE_QUANTITY';
 export const REMOVE_ITEM = 'REMOVE_ITEM';
 export const CLEAR_CART = 'CLEAR_CART';
-export const  SET_CART = "SET_CART";
-
+export const SET_CART = "SET_CART";
+export const REMOVE_SELECTED_PRODUCTS = 'REMOVE_SELECTED_PRODUCTS';
 export interface AddToCartAction {
   type: typeof ADD_TO_CART;
   payload: CartProduct; // Use CartProduct directly
@@ -209,11 +231,17 @@ export interface ClearCartAction {
 export interface SetCartAction {
   type: typeof SET_CART;
   payload: {
-      list: CartProduct[]; // Your expected structure
-      total: number;       // The total count
+    list: CartProduct[]; // Your expected structure
+    total: number;       // The total count
   };
+}
+export interface RemoveSelectedProductsAction {
+  type: typeof REMOVE_SELECTED_PRODUCTS;
+  payload: string[]; // Array of product IDs to remove
 }
 
 
 // Union type for all cart action types
-export type CartActionTypes = AddToCartAction | UpdateQuantityAction | RemoveItemAction | ClearCartAction|SetCartAction;
+export type CartActionTypes = AddToCartAction |
+  UpdateQuantityAction | RemoveItemAction | ClearCartAction | SetCartAction
+  | RemoveSelectedProductsAction;

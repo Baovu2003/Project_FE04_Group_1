@@ -20,4 +20,6 @@ router.delete("/remove/:userId/:productId", controller.removeProductFromCart);
 // Xóa tất cả sản phẩm khỏi giỏ hàng
 router.delete("/clear/:userId", controller.clearCart);
 
+router.post("/removeSelected/:user_id", controller.removeSelected);
+
 module.exports = router

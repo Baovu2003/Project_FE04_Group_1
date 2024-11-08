@@ -214,3 +214,38 @@ module.exports.clearCart = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+module.exports.removeSelected = async (req, res) => {
+  const { user_id } = req.params;
+  const { selectedItems } = req.body;
+
+  console.log(user_id, selectedItems);
+  console.log("selectedItems", selectedItems);
+  try {
+    // const productsInCart = await Cart.findOne(
+    //   {
+    //     user_id,
+    //     "products.product_id": { $in: selectedItems } // Check if any product_id in cart matches selectedItems
+    //   },
+    // ).lean();
+    // console.log(productsInCart);
+
+
+    // $pull là một toán tử của MongoDB, dùng để loại bỏ phần tử trong một mảng.
+    // Trong trường hợp này nó sẽ tìm và xoá tất cả các sản phẩm trong mảng products
+    //  có product_id nằm trong danh sách selectedItems.
+
+    // $in là toán tử tìm kiếm các giá trị có trong mảng.
+    //  Trong trường hợp này, nó sẽ tìm tất cả các sản phẩm có product_id nằm trong mảng selectedItems.
+    await Cart.updateOne(
+      { user_id }, // Điều kiện lọc: tìm giỏ hàng của người dùng với user_id tương ứng
+      { $pull: { products: { product_id: { $in: selectedItems } } } } // Lệnh MongoDB để xoá các sản phẩm có product_id trong danh sách selectedItems
+    );
+
+    res.status(200).send({ message: "Selected products removed from cart." });
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "Failed to remove selected products.", error });
+  }
+};

@@ -315,8 +315,13 @@ const ProductList = () => {
                     </Title>
 
                     <Text strong>{product.description}</Text>
-                    <Title level={4} className="text-white my-2">
+                    <Title level={4} className="text-white my-2 mr-2">
                       {formatPrice(product.price)}
+                      {product.discountPercentage && product.discountPercentage > 0 ? (
+                        <span className="original-price" style={{ marginLeft: '10px' }}>
+                          {formatPrice(product.price * (1 + product.discountPercentage / 100))}
+                        </span>
+                      ) : <></>}
                     </Title>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                       <Text
@@ -327,7 +332,9 @@ const ProductList = () => {
                           marginBottom: '8px',
                         }}
                       >
+
                         {`Discount: ${product.discountPercentage ?? 0}%`}
+
                       </Text>
                       <Link to={`/listProducts/detail/${product.slug}`}>
                         <Button className="purchase-button">Chọn mua</Button>

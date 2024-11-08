@@ -4,6 +4,7 @@ const ForgotPassword = require("../../models/forgot-password.model");
 const generateNumber = require("../../helpers/generateToken");
 const sendMailHelper = require("../../helpers/sendMail");
 const { OAuth2Client } = require("google-auth-library");
+const { detail } = require("./product.controller");
 const client = new OAuth2Client(process.env.GG_CLIENT_ID, process.env.GG_CLIENT_SECRET);
 console.log(client)
 module.exports.index = async (req, res) => {
@@ -11,8 +12,23 @@ module.exports.index = async (req, res) => {
     deleted: false,
   });
   res.json({
-    user: user,
+    recordUser: user,
   });
+};
+module.exports.getUserById = async (req, res) => {
+  const { userId } = req.params;
+  
+  try {
+    const user = await User.findOne({ _id: userId, deleted: false });
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found or has been deleted' });
+    }
+
+    res.json({  detailUser: user, });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching user', error });
+  }
 };
 module.exports.registerPost = async (req, res) => {
   console.log(req.body);
