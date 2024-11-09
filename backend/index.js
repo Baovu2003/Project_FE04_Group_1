@@ -4,6 +4,8 @@ const cors = require('cors'); // Thêm dòng này để import cors
 var flash = require("express-flash");
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
+const http = require("http")
+const {Server}=require("socket.io")
 // method-override là một middleware trong Express.js cho phép bạn ghi đè phương thức HTTP
 // thông qua một tham số query hoặc một header.
 // Điều này rất hữu ích khi bạn muốn gửi các phương thức HTTP
@@ -36,6 +38,24 @@ app.use(cors({
   origin: 'http://localhost:5173', // Remove the trailing slash
   credentials: true, // Allow sending cookies
 }));
+
+// Set up the HTTP and Socket.IO server
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173", // Same origin as above
+    methods: ["GET", "POST"],
+  },
+});
+
+// Set up socket events
+io.on("connection", (socket) => {
+  console.log("A user connected with id= "+socket.id);
+
+  socket.on("disconnect", () => {
+    console.log("A user disconnected with id= "+socket.id);
+  });
+});
 
 app.use(methodOverride("_method"));
 
@@ -76,6 +96,6 @@ route(app);
 
 routeAdmin(app);
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

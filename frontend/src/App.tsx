@@ -45,6 +45,8 @@ import PrivateRouter from "./pages/client/PrivateRouter/PrivateRouter";
 import Checkout from "./pages/client/Cart/Checkout";
 import OrderUser from "./pages/client/User/OrderUser";
 import HistoryOrderUser from "./pages/client/User/HistoryOrderUser";
+import Orders from "./pages/admin/Orders/Orders";
+import ListOrders from "./pages/admin/Orders/ListOrders";
 function App() {
   return (
     <Router>
@@ -63,53 +65,56 @@ function App() {
           <Route path="user" element={<PrivateRouter />}>
             <Route path="profile" element={<Profile />} />
             <Route path="listOrders" element={<OrderUser />} />
-            <Route path="historyOrder" element={<HistoryOrderUser />} />                      
+            <Route path="historyOrder" element={<HistoryOrderUser />} />
           </Route>
-         
-       
+
+
           <Route path="/user/PassResovery" element={<PassResovery />} />
           <Route path="*" element={<NotFoundClient />} />
         </Route>
         <Route path="/user/login" element={<LoginUser />} />
-          <Route path="/user/register" element={<Register />} />
-          <Route path="/user/password/forgot" element={<ForgotPassword />} />
-          <Route path="/user/password/otp/:email" element={<OTPPassword />} />
-          <Route path="/user/password/reset" element={<ResetPassword />} />
+        <Route path="/user/register" element={<Register />} />
+        <Route path="/user/password/forgot" element={<ForgotPassword />} />
+        <Route path="/user/password/otp/:email" element={<OTPPassword />} />
+        <Route path="/user/password/reset" element={<ResetPassword />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<LayoutDefaultAdmin />}>
           {/* <Route element={<ProtectedRoute />}> */}
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="products-category" element={<Allcategory />}>
-              <Route index element={<Category />} />
-              <Route path="detail/:id" element={<DetailCategory />} />
-              <Route path="edit/:id" element={<UpdateCategory />} />
-              <Route path="create" element={<CreateCategory />} />
-            </Route>
-
-            <Route path="products" element={<AllProduct />}>
-              <Route index element={<ProductAdmin />} />
-              <Route path="create" element={<CreateProduct />} />
-              <Route path="detail/:id" element={<Detailproduct />} />
-              <Route path="edit/:id" element={<UpdateProduct />} />
-            </Route>
-
-            <Route path="roles" element={<RoleGroup />}>
-              <Route index element={<RolesList />} />
-              <Route path="create" element={<CreateRole />} />
-              <Route path="edit/:id" element={<UpdateRole />} />
-            </Route>
-
-            <Route path="accounts" element={<Account />}>
-              <Route index element={<AccountList />} />
-              <Route path="create" element={<AccountCreate />} />
-              <Route path="edit/:id" element={<UpdateAccount />} />
-              <Route path="detail/:id" element={<DetailAccount />} />
-            </Route>
-
-            <Route path="permissions" element={<Permissions />} />
-            <Route path="*" element={<NotFound />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="products-category" element={<Allcategory />}>
+            <Route index element={<Category />} />
+            <Route path="detail/:id" element={<DetailCategory />} />
+            <Route path="edit/:id" element={<UpdateCategory />} />
+            <Route path="create" element={<CreateCategory />} />
           </Route>
+
+          <Route path="products" element={<AllProduct />}>
+            <Route index element={<ProductAdmin />} />
+            <Route path="create" element={<CreateProduct />} />
+            <Route path="detail/:id" element={<Detailproduct />} />
+            <Route path="edit/:id" element={<UpdateProduct />} />
+          </Route>
+          <Route path="orders" element={<Orders />}>
+            <Route index element={<ListOrders />} />
+          </Route>
+
+          <Route path="roles" element={<RoleGroup />}>
+            <Route index element={<RolesList />} />
+            <Route path="create" element={<CreateRole />} />
+            <Route path="edit/:id" element={<UpdateRole />} />
+          </Route>
+
+          <Route path="accounts" element={<Account />}>
+            <Route index element={<AccountList />} />
+            <Route path="create" element={<AccountCreate />} />
+            <Route path="edit/:id" element={<UpdateAccount />} />
+            <Route path="detail/:id" element={<DetailAccount />} />
+          </Route>
+
+          <Route path="permissions" element={<Permissions />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
         {/* </Route> */}
         <Route path="/admin/auth/login" element={<Login />} />
       </Routes>

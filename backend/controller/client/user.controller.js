@@ -238,7 +238,6 @@ module.exports.resetPassword = async (req, res) => {
 module.exports.verifyTokenByToken = async (req, res) => {
   const tokenUser = req.params.tokenUser; // Extract token from the route parameter
 
-  console.log(tokenUser);
   if (!tokenUser) {
     return res
       .status(401)

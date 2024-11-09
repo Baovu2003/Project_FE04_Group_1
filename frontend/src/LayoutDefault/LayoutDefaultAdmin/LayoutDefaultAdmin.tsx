@@ -71,6 +71,13 @@ const LayoutDefaultAdmin: React.FC = () => {
                       </NavLink>
                     </li>
                   )}
+                  {account.role.permission.includes("orders_view") && (
+                    <li>
+                      <NavLink to="orders" className={({ isActive }) => (isActive ? "active" : "")}>
+                       Quản lý đơn hàng
+                      </NavLink>
+                    </li>
+                  )}
                   {account.role.permission.includes("roles_view") && (
                     <li>
                       <NavLink to="roles" className={({ isActive }) => (isActive ? "active" : "")}>

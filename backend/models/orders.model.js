@@ -19,9 +19,18 @@ const orderSchema = new mongoose.Schema(
       },
     ],
     paymentMethod: String,
-    status: String,
+    statusPayment: String,
+    statusOrders:String,
     total: Number,
+    updatedBy: [
+      {
+        account_id: String,
+        updatedAt: Date,
+        changes: Object, // To store changes made during the update
+      },
+    ],
   },
+  
   {
     // B24 phút 44 trở đi
     timestamps: true,

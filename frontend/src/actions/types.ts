@@ -169,8 +169,10 @@ export interface Order {
     },
   ],
   paymentMethod: string,
-  status: string,
+  statusPayment: string,
+  statusOrders:string,
   total: number
+  createdAt:string
 }
 export interface ApiResponse {
   accountInAdmin: Account
@@ -191,7 +193,7 @@ export interface ApiResponse {
   detailUser: User;
   cart: Cart[];
   cartItems: Cart
-  Orders: Order[];
+  recordOrders: Order[];
   OrderByUserId: Order[];
   // OrderById:Order;
   status: number

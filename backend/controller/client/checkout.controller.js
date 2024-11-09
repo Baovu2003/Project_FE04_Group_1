@@ -3,14 +3,15 @@ module.exports.index = (req, res) => {};
 
 module.exports.order = (req, res) => {
   try {
-    const { user_id, userInfo, products,paymentMethod,status,total } = req.body;
+    const { user_id, userInfo, products,paymentMethod,statusPayment,statusOrders,total } = req.body;
     console.log({ user_id, userInfo, products });
     const order = new Order({
       user_id,
       userInfo,
       products,
       paymentMethod,
-      status,
+      statusPayment,
+      statusOrders,
       total
     });
     order.save();
