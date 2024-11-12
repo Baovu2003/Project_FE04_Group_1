@@ -1,11 +1,10 @@
 const express = require("express");
-const cors = require('cors'); // Thêm dòng này để import cors
+const cors = require("cors"); // Thêm dòng này để import cors
 // Flash
 var flash = require("express-flash");
-const cookieParser = require("cookie-parser")
-const session = require("express-session")
-const http = require("http")
-const {Server}=require("socket.io")
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+
 // method-override là một middleware trong Express.js cho phép bạn ghi đè phương thức HTTP
 // thông qua một tham số query hoặc một header.
 // Điều này rất hữu ích khi bạn muốn gửi các phương thức HTTP
@@ -13,7 +12,7 @@ const {Server}=require("socket.io")
 var methodOverride = require("method-override");
 
 // ------Multer cho phép upload file ảnh-----------
-const multer  = require('multer')
+const multer = require("multer");
 // ----------------End----------------------------
 require("dotenv").config();
 
@@ -21,7 +20,6 @@ const systemConfig = require("./config/system");
 
 // Route cho bên client
 const route = require("./routes/client/index.route");
-
 
 // Router cho bên admin
 const routeAdmin = require("./routes/admin/index.route");
@@ -34,28 +32,52 @@ app.use(express.json());
 const port = process.env.PORT;
 
 // Cấu hình CORS
-app.use(cors({
-  origin: 'http://localhost:5173', // Remove the trailing slash
-  credentials: true, // Allow sending cookies
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Remove the trailing slash
+    credentials: true, // Allow sending cookies
+  })
+);
 
 // Set up the HTTP and Socket.IO server
+const http = require("http");
+const { Server } = require("socket.io");
 const server = http.createServer(app);
+
+// Set up Socket.io with CORS configuration
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // Same origin as above
+    origin: "http://localhost:5173", // Frontend address
     methods: ["GET", "POST"],
-  },
+    credentials: true, // Allow credentials (cookies)
+  }
+});
+io.on("connection", (socket) => {
+  console.log("A user connected with id=" + socket.id);
+
+  // Handle the 'authenticate' event to pass the user data to the socket connection
+  socket.on("authenticate", (userData) => {
+    console.log("Authenticated user:", userData);
+    socket.user = userData; // Attach user data to the socket
+    socket.emit("SERVER_SENDING_DATA", "Hello from the server!");
+  });
+  // Handle incoming messages from the client and save them to the database
+  socket.on("CLIENT_SENDING_DATA", async ({message,userId}) => {
+    console.log("Message from client:", message,userId);
+    // Broadcast the message to other clients
+  //   socket.broadcast.emit("SERVER_SENDING_DATA", message);
+    io.emit("SERVER_SENDING_DATA", "Server received in controller: " + message +userId);
+  });
+
+  // Handle disconnection
+  socket.on("disconnect", () => {
+    console.log("A user disconnected with id=" + socket.id);
+  });
 });
 
 // Set up socket events
-io.on("connection", (socket) => {
-  console.log("A user connected with id= "+socket.id);
 
-  socket.on("disconnect", () => {
-    console.log("A user disconnected with id= "+socket.id);
-  });
-});
+global._io = io;
 
 app.use(methodOverride("_method"));
 
@@ -74,12 +96,13 @@ app.use(flash());
 
 /* ------New Route to the TinyMCE Node module ---------*/
 
-var path = require('path');
-app.use('/tinymce',
-   express.static(path.join(__dirname, 'node_modules', 'tinymce')));
+var path = require("path");
+app.use(
+  "/tinymce",
+  express.static(path.join(__dirname, "node_modules", "tinymce"))
+);
 
 // ------------End TinyMCE --------------------
-
 
 // App Locals Variables:
 // =>>tạo ra các biến toàn cục để ở file pug nào cũng có thể sử dụng
@@ -89,10 +112,9 @@ app.locals.prefixAdmin = systemConfig.prefixAdmin;
 app.use(express.static(`${__dirname}/public`));
 
 // app.use(express.static("public"))
-console.log("(__dirname:",__dirname);
+console.log("(__dirname:", __dirname);
 
 route(app);
-
 
 routeAdmin(app);
 

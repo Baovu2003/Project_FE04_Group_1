@@ -47,6 +47,7 @@ import OrderUser from "./pages/client/User/OrderUser";
 import HistoryOrderUser from "./pages/client/User/HistoryOrderUser";
 import Orders from "./pages/admin/Orders/Orders";
 import ListOrders from "./pages/admin/Orders/ListOrders";
+import Chat from "./LayoutDefault/LauoutDefaultClient/Chat/Chat";
 function App() {
   return (
     <Router>
@@ -62,6 +63,10 @@ function App() {
             <Route path="checkout" element={<Checkout />} />
           </Route>
 
+
+          <Route path="chat" element={<PrivateRouter />}>
+            <Route index element={<Chat />} />
+          </Route>
           <Route path="user" element={<PrivateRouter />}>
             <Route path="profile" element={<Profile />} />
             <Route path="listOrders" element={<OrderUser />} />

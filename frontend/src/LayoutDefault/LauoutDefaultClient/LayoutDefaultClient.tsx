@@ -9,7 +9,6 @@ import { RootState } from "../../store/store";
 import { get } from "../../Helpers/API.helper";
 import { userActions } from '../../actions/UserAction';
 import { useEffect } from 'react';
-import socket from "./Chat/socket";
 function LayoutDefaultClient() {
   const tokenUser = getCookie("tokenUser"); // Lấy token từ cookie
   const dispatch = useDispatch();
@@ -38,17 +37,6 @@ function LayoutDefaultClient() {
     }
   }, [tokenUser, dispatch]);
 
-  useEffect(() => {
-    // Listen for socket connection
-    socket.on("connect", () => {
-      console.log("Connected to the server");
-    });
-
-    // Clean up the socket connection on component unmount
-    return () => {
-      socket.off("connect");
-    };
-  }, []);
 
 
   return (

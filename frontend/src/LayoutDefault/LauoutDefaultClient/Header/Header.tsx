@@ -6,7 +6,6 @@ import logoWhite from '../../../assets/logo_white-7.png';
 import './Header.css';
 import { RootState } from '../../../store/store';
 import { useSelector } from 'react-redux';
-import { get } from '../../../Helpers/API.helper';
 
 const Header: React.FC = () => {
   const [isSearchVisible, setSearchVisible] = useState(false);
@@ -16,13 +15,13 @@ const Header: React.FC = () => {
   // const [total, setTotal] = useState(0); // Use state to track total quantity
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.UserReducer);
-  console.log(user?.user._id)
-  console.log("user?.user.tokenUser", user?.user.tokenUser)
+  // console.log(user?.user._id)
+  // console.log("user?.user.tokenUser", user?.user.tokenUser)
   const cart = useSelector((state: RootState) => state.cartReducer);
   // const { list = [] } = useSelector((state: RootState) => state.cartReducer || {});
   // console.log(list)
   // Thiết lập kiểu dispatch tùy chỉnh
-  console.log(cart)
+  // console.log(cart)
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleMouseEnter = () => {
@@ -33,19 +32,6 @@ const Header: React.FC = () => {
     setShowDropdown(false);
   };
 
-  useEffect(() => {
-    if (user?.user._id) {
-      const fetchUserCart = async () => {
-        const data = await get(`http://localhost:5000/cart/${user.user._id}`);
-        console.log(data.cartItems)
-        console.log(data.cartItems.products)
-        // const products = data.cartItems.products || [];
-
-      };
-
-      fetchUserCart();
-    }
-  }, [user]);
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
