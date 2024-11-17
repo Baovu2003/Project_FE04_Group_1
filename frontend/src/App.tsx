@@ -45,10 +45,18 @@ import PrivateRouter from "./pages/client/PrivateRouter/PrivateRouter";
 import Checkout from "./pages/client/Cart/Checkout";
 import OrderUser from "./pages/client/User/OrderUser";
 import HistoryOrderUser from "./pages/client/User/HistoryOrderUser";
+import BookingTable from "./pages/client/BookingTable/BookingTable"
 import Orders from "./pages/admin/Orders/Orders";
 import ListOrders from "./pages/admin/Orders/ListOrders";
 import Chat from "./LayoutDefault/LauoutDefaultClient/Chat/Chat";
 import ChatAdmin from "./LayoutDefault/LayoutDefaultAdmin/Chat/ChatAdmin";
+import Table from "./pages/admin/Table/Table";
+import ListTable from "./pages/admin/Table/ListTable";
+import CreateTable from "./pages/admin/Table/CreateTable";
+import DetailTable from "./pages/admin/Table/DetailTable";
+import Gift from "./pages/admin/Gift/Gift";
+import ListGift from "./pages/admin/Gift/ListGift";
+import CreateGift from "./pages/admin/Gift/CreateGift";
 function App() {
   return (
     <Router>
@@ -67,6 +75,9 @@ function App() {
 
           <Route path="chat" element={<PrivateRouter />}>
             <Route index element={<Chat />} />
+          </Route>
+          <Route path="bookingTable" element={<PrivateRouter />}>
+            <Route index element={<BookingTable />} />
           </Route>
           <Route path="user" element={<PrivateRouter />}>
             <Route path="profile" element={<Profile />} />
@@ -110,6 +121,17 @@ function App() {
             <Route index element={<RolesList />} />
             <Route path="create" element={<CreateRole />} />
             <Route path="edit/:id" element={<UpdateRole />} />
+          </Route>
+
+          <Route path="table" element={<Table />}>
+            <Route index element={<ListTable />} />
+            <Route path="createTable" element={<CreateTable />} />
+            <Route path="detailTable/:id" element={<DetailTable />} />
+          </Route>
+
+          <Route path="gift" element={<Gift />}>
+            <Route index element={<ListGift />} />
+            <Route path="createGift" element={<CreateGift />} />
           </Route>
 
           <Route path="accounts" element={<Account />}>

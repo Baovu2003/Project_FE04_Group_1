@@ -10,15 +10,7 @@ import { ChatV2 } from "../../../actions/types";
 import Conversation from "../../../components/Client/Conversation/Conversation";
 import ChatBox from "../../../components/Client/ChatBox/ChatBox";
 import { io, Socket } from 'socket.io-client';
-// import EmojiPicker, { SkinTones } from "emoji-picker-react";
 
-// interface EmojiClickData {
-//   activeSkinTone: SkinTones;
-//   unified: string;
-//   unifiedWithoutSkinTone: string;
-//   emoji: string;
-//   names: string[];
-// }
 interface OnlineUser {
   userId: string;  // You can add more fields if needed
   socketId: string;

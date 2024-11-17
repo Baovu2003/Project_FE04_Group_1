@@ -180,6 +180,68 @@ const Permissions: React.FC = () => {
               ))}
             </tr>
           ))}
+           <tr>
+            <td colSpan={permissions.length + 1}>
+              <b>Gift</b>
+            </td>
+          </tr>
+          {[
+            "gift_view",
+            "gift_create",
+            "gift_update",
+            "gift_delete",
+          ].map((permissionType) => (
+            <tr key={permissionType}>
+              <td>
+                {permissionType.replace("products_", "").replace("_", " ")}
+              </td>
+              {permissions.map((record, index) => (
+                <td key={record._id} className="text-center">
+                  <input
+                    type="checkbox"
+                    onChange={(e) =>
+                      handleCheckboxChange(e, permissionType, index)
+                    }
+                    checked={updatedPermissions[
+                      index
+                    ].permissionsChild.includes(permissionType)}
+                    style={{ transform: "scale(1.5)", cursor: "pointer" }}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
+            <tr>
+            <td colSpan={permissions.length + 1}>
+              <b>Table</b>
+            </td>
+          </tr>
+          {[
+            "table_view",
+            "table_create",
+            "table_update",
+            "table_delete",
+          ].map((permissionType) => (
+            <tr key={permissionType}>
+              <td>
+                {permissionType.replace("products_", "").replace("_", " ")}
+              </td>
+              {permissions.map((record, index) => (
+                <td key={record._id} className="text-center">
+                  <input
+                    type="checkbox"
+                    onChange={(e) =>
+                      handleCheckboxChange(e, permissionType, index)
+                    }
+                    checked={updatedPermissions[
+                      index
+                    ].permissionsChild.includes(permissionType)}
+                    style={{ transform: "scale(1.5)", cursor: "pointer" }}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
 
           <tr>
             <td colSpan={permissions.length + 1}>

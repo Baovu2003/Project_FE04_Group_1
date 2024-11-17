@@ -123,7 +123,7 @@ function ListOrders() {
       console.log(orders)
 
     const columns = [
-        { title: 'Id', dataIndex: [ '_id'], key: '_id' },
+        // { title: 'Id', dataIndex: [ '_id'], key: '_id' },
         { title: 'Tên', dataIndex: ['userInfo', 'fullname'], key: 'fullname' },
         { title: 'Email', dataIndex: ['userInfo', 'email'], key: 'email' },
         { title: 'Số điện thoại', dataIndex: ['userInfo', 'phone'], key: 'phone' },

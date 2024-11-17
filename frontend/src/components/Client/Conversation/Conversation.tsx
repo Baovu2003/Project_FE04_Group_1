@@ -78,7 +78,7 @@ const Conversation: React.FC<ConversationProps> = ({ data, onlineUsers, currentU
                     <div className="name" style={{ fontSize: '0.8rem', marginLeft: "10px" }}>
                         <span>{userData?.fullName}</span>
                         <br />
-                        <div>{otherMemberData?.lastActiveTime}</div>
+                        {/* <div>{otherMemberData?.lastActiveTime}</div> */}
                         <span style={{ color: isOnline ? "#51e200" : "#ccc" }}>
                             {isOnline ? "Online" : (otherMemberData?.lastActiveTime ? <>
                                Online  {moment(otherMemberData?.lastActiveTime).fromNow()}</> : "Offline")} 

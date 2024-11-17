@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { ApiResponse } from "../../actions/types";
 import { RootState } from "../../store/store";
 import { get } from "../../Helpers/API.helper";
+import { Button } from "antd";
+import { MessageOutlined } from "@ant-design/icons";
 
 const LayoutDefaultAdmin: React.FC = () => {
   const token = getCookie("token");
@@ -40,6 +42,9 @@ const LayoutDefaultAdmin: React.FC = () => {
     }
   }, [token, dispatch, navigate]);
 
+  const handleChatClick = () => {
+    navigate('/admin/chat'); // Điều hướng đến trang chat với admin
+  };
   return (
       <div id="app">
         <header>
@@ -78,6 +83,13 @@ const LayoutDefaultAdmin: React.FC = () => {
                       </NavLink>
                     </li>
                   )}
+                    {account.role.permission.includes("table_view") && (
+                  <li>
+                    <NavLink to="table" className={({ isActive }) => (isActive ? "active" : "")}>
+                      Quản lý đặt bàn
+                    </NavLink>
+                  </li>
+                )}
                   {account.role.permission.includes("roles_view") && (
                     <li>
                       <NavLink to="roles" className={({ isActive }) => (isActive ? "active" : "")}>
@@ -99,6 +111,13 @@ const LayoutDefaultAdmin: React.FC = () => {
                       </NavLink>
                     </li>
                   )}
+                   {account.role.permission.includes("gift_view") && (
+                  <li>
+                    <NavLink to="gift" className={({ isActive }) => (isActive ? "active" : "")}>
+                      Quà tặng
+                    </NavLink>
+                  </li>
+                )}
                 </ul>
               ) : (
                 <>Không có quyền</>
@@ -109,8 +128,21 @@ const LayoutDefaultAdmin: React.FC = () => {
             </div>
           </main>
         </>
+        
 
             }
+            {location.pathname !== "/admin/chat" && (
+        <div className="chat-button-admin">
+          <Button
+            type="primary"
+            shape="circle"
+            icon={<MessageOutlined />}
+            size="large"
+            onClick={handleChatClick}
+          />
+
+        </div>
+      )}
       </div>
 
   );

@@ -39,7 +39,6 @@ const Chat = () => {
 
   const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([]);
   const [showSearch, setShowSearch] = useState(false);
-  console.log(showSearch)
 
   // Lấy về 1 mảng chat theo userId 
   useEffect(() => {
@@ -82,7 +81,9 @@ const Chat = () => {
         setChats((prevChats) => [...(prevChats || []), response.ChatV3]); // Update chat list
         setCurrentChat(response.ChatV3); // Set the new chat as current
         setShowSearch(false); // Close search UI if open
+        console.log(showSearch)
       }
+      
     } catch (error) {
       console.error("Error creating chat:", error);
     }

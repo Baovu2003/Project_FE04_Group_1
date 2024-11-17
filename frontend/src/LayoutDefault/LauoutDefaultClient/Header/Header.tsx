@@ -85,8 +85,11 @@ const Header: React.FC = () => {
           <NavLink to="/about" className={({ isActive }) => isActive ? 'active' : ''}>
             About us
           </NavLink>
-          <NavLink to="/contact" className={({ isActive }) => isActive ? 'active' : ''}>
+          {/* <NavLink to="/contact" className={({ isActive }) => isActive ? 'active' : ''}>
             Contact
+          </NavLink> */}
+          <NavLink to="/bookingTable" className={({ isActive }) => isActive ? 'active' : ''}>
+            Booking Tabke
           </NavLink>
 
         </nav>
@@ -154,7 +157,8 @@ const Header: React.FC = () => {
           <NavLink to="/" onClick={toggleMobileMenu}>Home</NavLink>
           <NavLink to="/listProducts" onClick={toggleMobileMenu}>Products</NavLink>
           <NavLink to="/about" onClick={toggleMobileMenu}>About us</NavLink>
-          <NavLink to="/contact" onClick={toggleMobileMenu}>Contact</NavLink>
+          {/* <NavLink to="/contact" onClick={toggleMobileMenu}>Contact</NavLink> */}
+          <NavLink to="/bookingTable" onClick={toggleMobileMenu}>Booking Table</NavLink>
           {user && user.user._id ? (
             <>
               <div >
