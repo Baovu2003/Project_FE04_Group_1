@@ -37,12 +37,6 @@ interface User {
   createdAt: string;
 }
 
-interface ChartData {
-  name: string;
-  total: number;
-  date: string;
-}
-
 const Dashboard: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]); 
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
@@ -51,7 +45,7 @@ const Dashboard: React.FC = () => {
   const [filterType, setFilterType] = useState<'week' | 'month' | 'custom'>('week');
   const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(null);
 
-  const [users, setUsers] = useState<User[]>([]);
+  // const [users, setUsers] = useState<User[]>([]);
   const [totalUsers, setTotalUsers] = useState<number>(0);
   const [activeUsers, setActiveUsers] = useState<number>(0);
   const [inactiveUsers, setInactiveUsers] = useState<number>(0);
@@ -69,7 +63,7 @@ const Dashboard: React.FC = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get("http://localhost:5000/admin/order", { withCredentials: true });
-        const ordersData = response.data;
+        const ordersData = response.data.recordOrders;
         setOrders(ordersData);
 
         // Set initial date range to current week
@@ -182,7 +176,7 @@ const Dashboard: React.FC = () => {
     {
       title: 'Actions',
       key: 'actions',
-      render: (record: Order) => (
+      render: () => (
         <div>
           <Button type="primary" size="small">
             View Order

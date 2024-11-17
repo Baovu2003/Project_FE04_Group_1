@@ -69,13 +69,7 @@ const LayoutDefaultAdmin: React.FC = () => {
                     </NavLink>
                   </li>
                 )}
-                {account.role.permission.includes("products-category_view") && (
-                  <li>
-                    <NavLink to="products-category" className={({ isActive }) => (isActive ? "active" : "")}>
-                      Danh mục sản Phẩm
-                    </NavLink>
-                  </li>
-                )}
+             
                 {account.role.permission.includes("products_view") && (
                   <li>
                     <NavLink to="products" className={({ isActive }) => (isActive ? "active" : "")}>
@@ -122,6 +116,13 @@ const LayoutDefaultAdmin: React.FC = () => {
                   <li>
                     <NavLink to="gift" className={({ isActive }) => (isActive ? "active" : "")}>
                       Quà tặng
+                    </NavLink>
+                  </li>
+                )}
+                {account.role.permission.includes("blogs_view") && (
+                  <li>
+                    <NavLink to="blogs" className={({ isActive }) => (isActive ? "active" : "")}>
+                      Blog
                     </NavLink>
                   </li>
                 )}

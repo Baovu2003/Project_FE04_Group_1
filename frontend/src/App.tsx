@@ -108,6 +108,8 @@ function App() {
             <Route path="create" element={<CreateCategory />} />
           </Route>
 
+          <Route path="blogs" element={<BlogList />} />
+          <Route path="blogs/create" element={<BlogCreate />} />
 
           <Route path="products" element={<AllProduct />}>
             <Route index element={<ProductAdmin />} />
