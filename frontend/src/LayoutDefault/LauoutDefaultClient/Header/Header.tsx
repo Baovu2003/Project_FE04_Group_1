@@ -52,11 +52,18 @@ const Header: React.FC = () => {
   };
 
   const handleDropdownToggle = () => setShowDropdown(!showDropdown);
+
+  // const handleSearchSubmit = (values: { search: string }) => {
+  //   console.log('Searching for:', values.search);
+  //   setSearchTerm('');
+  //   setSearchVisible(false);
+  //   // Handle search logic here, e.g., redirect to a search results page
+  // };
+
   const handleSearchSubmit = (values: { search: string }) => {
-    console.log('Searching for:', values.search);
+    navigate(`/listProducts`, { state: { searchTerm: values.search } });
     setSearchTerm('');
     setSearchVisible(false);
-    // Handle search logic here, e.g., redirect to a search results page
   };
 
   const handleLogout = () => {
@@ -124,6 +131,7 @@ const Header: React.FC = () => {
                   <div className="user-dropdown">
                     <p><Link to="user/listOrders">My Orders</Link></p>
                     <p><Link to="user/historyOrder">Purchase History</Link></p>
+                    <p><Link to="user/profile">Profile</Link></p>
                     <Button onClick={handleLogout} className="logout-button">
                       Logout
                     </Button>

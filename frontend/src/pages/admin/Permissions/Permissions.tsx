@@ -243,6 +243,39 @@ const Permissions: React.FC = () => {
             </tr>
           ))}
 
+          {/* Thêm section mới cho Blog */}
+          <tr>
+            <td colSpan={permissions.length + 1}>
+              <b>Blog</b>
+            </td>
+          </tr>
+          {[
+            "blogs_view",
+            "blogs_create",
+            "blogs_update",
+            "blogs_delete",
+          ].map((permissionType) => (
+            <tr key={permissionType}>
+              <td>
+                {permissionType.replace("blogs_", "").replace("_", " ")}
+              </td>
+              {permissions.map((record, index) => (
+                <td key={record._id} className="text-center">
+                  <input
+                    type="checkbox"
+                    onChange={(e) =>
+                      handleCheckboxChange(e, permissionType, index)
+                    }
+                    checked={updatedPermissions[
+                      index
+                    ].permissionsChild.includes(permissionType)}
+                    style={{ transform: "scale(1.5)", cursor: "pointer" }}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
+
           <tr>
             <td colSpan={permissions.length + 1}>
               <b>Nhóm Quyền</b>

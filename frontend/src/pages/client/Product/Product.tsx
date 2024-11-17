@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Row, Col, Typography, Space, Select, Card, Button, Popover, Menu, Radio } from 'antd';
-import { Link } from 'react-router-dom';
+import { Layout, Row, Col, Typography, Space, Select, Card, Button, Popover, Menu, Radio, Pagination } from 'antd';
+import { Link, useLocation  } from 'react-router-dom';
 import { FilterOutlined, FolderOutlined } from '@ant-design/icons';
+import './ProductList.css';
 const { Header, Content, Sider } = Layout;
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -42,6 +43,23 @@ interface Product {
 interface ApiResponse {
   recordsProduct: Product[];
   recordsCategory: Category[];
+  discountPercentage?: number;
+  stock: number;
+  thumbnail: string;
+  status: string;
+  featured: string;
+  position: number;
+  deleted: boolean;
+  slug: string;
+  createdBy: {
+    account_id: string;
+    createdAt: string;
+  };
+}
+
+interface ApiResponse {
+  recordsProduct: Product[];
+  recordsCategory: Category[];
 }
 
 const ProductList = () => {
@@ -53,8 +71,11 @@ const ProductList = () => {
   const [selectedChildCategory, setSelectedChildCategory] = useState<string>('');
   const [priceRange, setPriceRange] = useState<string>('all');
   const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8);
 
-
+  const location = useLocation();
+  const searchTerm = location.state?.searchTerm || '';
 
 
   useEffect(() => {
@@ -75,13 +96,25 @@ const ProductList = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (searchTerm) {
+      const searchResults = originalProducts.filter(product => 
+        product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setProducts(searchResults);
+      setCurrentPage(1); // Reset về trang 1 khi có kết quả tìm kiếm mới
+    } else {
+      setProducts(originalProducts);
+    }
+  }, [searchTerm, originalProducts]);
 
   const handleSortChange = (value: string) => {
     setSortOrder(value);
     if (value === 'default') {
       setProducts(originalProducts); // Reset to original products
     } else {
-      const sortedProducts = [...products];
+      let sortedProducts = [...products];
       if (value === 'price-asc') {
         sortedProducts.sort((a, b) => a.price - b.price);
       } else if (value === 'price-desc') {
@@ -184,6 +217,7 @@ const ProductList = () => {
   const filteredProducts = products.filter(product => {
     const productCategoryId = product.product_category_id || '';
     let matchesCategory = true;
+    let matchesSearch = true;
 
     // Category filter
     if (selectedChildCategory) {
@@ -206,9 +240,26 @@ const ProductList = () => {
       matchesPrice = product.price > 30000 && product.price <= 100000;
     }
 
-    return matchesCategory && matchesPrice && !product.deleted;
+    // Search filter
+    if (searchTerm) {
+      matchesSearch = 
+        product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchTerm.toLowerCase());
+    }
+
+    return matchesCategory && matchesPrice && !product.deleted && matchesSearch;
   });
 
+  // Pagination logic
+  const indexOfLastProduct = currentPage * pageSize;
+  const indexOfFirstProduct = indexOfLastProduct - pageSize;
+  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+
+  const onPageChange = (page: number, pageSize?: number) => {
+    setCurrentPage(page);
+    if (pageSize) setPageSize(pageSize);
+    window.scrollTo(0, 0);
+  };
 
   return (
     <Layout>
@@ -264,7 +315,7 @@ const ProductList = () => {
             </Popover>
           </Space>
           <Row gutter={[16, 16]}>
-            {filteredProducts.map((product) => (
+            {currentProducts.map((product) => (
               !product.deleted && (
                 <Col key={product._id} xs={24} sm={12} md={8} lg={6}>
                   <Card
@@ -315,13 +366,8 @@ const ProductList = () => {
                     </Title>
 
                     <Text strong>{product.description}</Text>
-                    <Title level={4} className="text-white my-2 mr-2">
+                    <Title level={4} className="text-white my-2">
                       {formatPrice(product.price)}
-                      {product.discountPercentage && product.discountPercentage > 0 ? (
-                        <span className="original-price" style={{ marginLeft: '10px' }}>
-                          {formatPrice(product.price * (1 + product.discountPercentage / 100))}
-                        </span>
-                      ) : <></>}
                     </Title>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
                       <Text
@@ -332,9 +378,7 @@ const ProductList = () => {
                           marginBottom: '8px',
                         }}
                       >
-
                         {`Discount: ${product.discountPercentage ?? 0}%`}
-
                       </Text>
                       <Link to={`/listProducts/detail/${product.slug}`}>
                         <Button className="purchase-button">Chọn mua</Button>
@@ -345,6 +389,17 @@ const ProductList = () => {
               )
             ))}
           </Row>
+          <Row justify="center" style={{ marginTop: '2rem' }}>
+          <Pagination
+            current={currentPage}
+            total={filteredProducts.length}
+            pageSize={pageSize}
+            onChange={onPageChange}
+            showSizeChanger
+            showQuickJumper
+            showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+          />
+        </Row>
         </Content>
       </Layout>
     </Layout>
