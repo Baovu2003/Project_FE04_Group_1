@@ -66,7 +66,8 @@ module.exports.changeStatus = async (req, res) => {
     }
 
     // Fetch the updated product to send back to the frontend
-    const updatedProduct = await Product.findById(id);
+    // const updatedProduct = await Product.findById(id);
+    const updatedProduct = await Product.find();
 
     res.json({
       recordsProduct: updatedProduct, 
@@ -260,3 +261,6 @@ module.exports.detail = async (req, res) => {
     res.redirect(`admin/products`);
   }
 };
+
+
+

@@ -3,8 +3,8 @@ import { ApiResponse, Order, Product } from '../../../actions/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { get } from '../../../Helpers/API.helper';
-import { Button, Table } from 'react-bootstrap';
-
+import { Button } from 'react-bootstrap';
+import { Table } from 'antd';
 function OrderUser() {
     const [orders, setOrders] = React.useState<Order[]>([]); // Initialize as an empty array
     const [products, setProducts] = useState<Product[]>([]); // Store products details
@@ -15,7 +15,7 @@ function OrderUser() {
     useEffect(() => {
         const fetchApiOrderByUserId = async () => {
             try {
-                const data: ApiResponse = await get(`http://localhost:5000/orders/${user_id}`);
+                const data: ApiResponse = await get(`http://localhost:5000/orders/userOrder/${user_id}`);
                 setOrders(data.OrderByUserId);
             } catch (error) {
                 console.error('Error fetching orders:', error);
@@ -40,77 +40,106 @@ function OrderUser() {
 
         fetchProduct();
     }, []);
+    console.log(orders)
+    const columns = [
+        {
+            title: 'Tên',
+            dataIndex: ['userInfo', 'fullname'],
+            key: 'fullname',
+        },
+        {
+            title: 'Email',
+            dataIndex: ['userInfo', 'email'],
+            key: 'email',
+        },
+        {
+            title: 'Số điện thoại',
+            dataIndex: ['userInfo', 'phone'],
+            key: 'phone',
+        },
+        {
+            title: 'Địa chỉ',
+            dataIndex: ['userInfo', 'address'],
+            key: 'address',
+        },
+        {
+            title: 'Sản phẩm',
+            key: 'products',
+            render: ( order: Order) => (
+                <ul>
+                    {order.products.map((productInOrder, index) => {
+                        const productDetail = products.find((product) => product._id === productInOrder.product_id);
+                        return productDetail ? (
+                            <li key={index}>
+                                 <strong> {productDetail.title}</strong> - 
+                                 Số lượng: <strong>{productInOrder.quantity}</strong>- 
+                                 Giá: <strong>{productInOrder.price}</strong>
+                              
+                            </li>
+                        ) : (
+                            <li key={index}>Sản phẩm không tìm thấy</li>
+                        );
+                    })}
+                </ul>
+            ),
+        },
+        {
+            title: 'Phương thức thanh toán',
+            dataIndex: 'paymentMethod',
+            key: 'paymentMethod',
+            render: (paymentMethod: string) => (paymentMethod === '1' ? 'Thanh toán trực tiếp' : 'Thanh toán trên QR'),
+        },
+        {
+            title: 'Tổng tiền',
+            key: 'total',
+            render: ( order: Order) => (
+                <Button>{order.total.toLocaleString('vi-VN')}đ</Button>
+            ),
+        },
+        {
+            title: 'Trạng thái thanh toán',
+            key: 'statusPayment',
+            render: ( order: Order) => (
+                <Button variant={order.statusPayment === 'pending' ? 'danger' : 'success'}>
+                    {order.statusPayment === 'pending' ? 'Chưa thanh toán' : 'Đã thanh toán'}
+                </Button>
+            ),
+        },
+        {
+            title: 'Tình trạng đơn hàng',
+            key: 'statusOrders',
+            render: (order: Order) => (
+                <Button variant={order.statusOrders === 'Done' ? 'success' : 'danger'}>
+                    {order.statusOrders === 'Done' ? 'Đã Giao' : 'Đang giao'}
+                </Button>
+            ),
+        },
+        {
+            title: 'Thời gian',
+            dataIndex: ['createdAt'],
+            key: 'createdAt',
+            render: (createdAt: string) => new Date(createdAt).toLocaleString('vi-VN'),
+        },
+    ];
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                <Button>Đơn hàng của tôi</Button>
-            </div>
-
-
-            {orders && orders.length > 0 ? (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px' }}>
-                    <Table
-                        hover
-                        striped
-                        bordered
-                        cellPadding="5"
-                        cellSpacing="0"
-                        style={{
-                            width: '80%', // You can adjust the width of the table as needed
-                            textAlign: 'left',
-                            fontSize: '14px',  // Smaller font size for the table
-                        }}
-                    >
-                        <thead>
-                            <tr>
-                                <th>Tên</th>
-                                <th>Email</th>
-                                <th>Số điện thoại</th>
-                                <th>Địa chỉ</th>
-                                <th>Sản phẩm</th>
-                                <th>Phương thức thanh toán</th>
-                                <th>Tổng tiền</th>
-                                <th>Trạng thái</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {orders.map((order) => (
-                                <tr key={order._id}>
-                                    <td>{order.userInfo.fullname}</td>
-                                    <td>{order.userInfo.email}</td>
-                                    <td>{order.userInfo.phone}</td>
-                                    <td>{order.userInfo.address}</td>
-                                    <td>
-                                        <ul style={{ paddingLeft: "20px" }}>
-                                            {order.products.map((productInOrder, index) => {
-                                                const productDetail = products.find((product) => product._id === productInOrder.product_id);
-
-                                                return productDetail ? (
-                                                    <li key={index} style={{ marginBottom: '5px' }}>
-                                                        <p style={{ margin: '0' }}>Tên sản phẩm: {productDetail.title}</p>
-                                                        <p style={{ margin: '0' }}>Số lượng: {productInOrder.quantity}</p>
-                                                        <p style={{ margin: '0' }}>Giá: {productDetail.price.toLocaleString('vi-VN')}đ</p>
-                                                    </li>
-                                                ) : (
-                                                    <li key={index}>Sản phẩm không tìm thấy</li>
-                                                );
-                                            })}
-                                        </ul>
-                                    </td>
-                                    <td>{order.paymentMethod === '1' ? 'Thanh toán trực tiếp' : 'Thanh toán trên QR'}</td>
-                                    <td>{order.total.toLocaleString('vi-VN')}đ</td>
-                                    <td>{order.status === 'pending' ? 'Chưa thanh toán' : 'Đã thanh toán'}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </div>
-
-            ) : (
-                <p>Bạn chưa có đơn hàng nào.</p>
-            )}
+        <div style={{ textAlign: 'center', margin: '20px 0' }}>
+            <Button variant="primary">Đơn hàng của tôi</Button>
         </div>
+
+        {orders && orders.length > 0 ? (
+            <Table
+                dataSource={orders}
+                columns={columns}
+                rowKey={(record) => record._id}
+                pagination={{ pageSize: 5 }} // Add pagination
+                style={{ width: '80%', margin: '0 auto' }}
+            />
+        ) : (
+            <p style={{ textAlign: 'center' }}>Bạn chưa có đơn hàng nào.</p>
+        )}
+    </div>
     );
 }
 

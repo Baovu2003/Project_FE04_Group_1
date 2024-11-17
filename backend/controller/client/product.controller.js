@@ -125,4 +125,31 @@ module.exports.getProductByid = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+module.exports.updateProductQuantity = async (req, res) => {
+  const { productId, quantitySold } = req.body;
+
+  try {
+      // Find the product by its ID
+      const product = await Product.findById(productId);
+      if (!product) {
+          return res.status(404).json({ message: 'Product not found' });
+      }
+
+      // Check if there's enough stock
+      if (product.stock < quantitySold) {
+          return res.status(400).json({ message: 'Not enough stock available' });
+      }
+
+      // Decrease the product stock by the quantity sold
+      product.stock -= quantitySold;
+
+      // Save the updated product
+      await product.save();
+
+      res.status(200).json({ message: 'Product quantity updated successfully', product });
+  } catch (error) {
+      console.error('Error updating product quantity:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+};
 

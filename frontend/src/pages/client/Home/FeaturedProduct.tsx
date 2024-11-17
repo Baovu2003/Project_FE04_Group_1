@@ -31,15 +31,15 @@ const FeaturedProduct = () => {
         const data = await response.json();
 
         // Debug logs
-        console.log("All products:", data.recordsProduct);
+        // console.log("All products:", data.recordsProduct);
 
         // Filter featured products and log the process
         const featuredProducts = data.recordsProduct.filter((product: Product) => {
-          console.log(`Product ${product.title} - featured status:`, product.featured);
+          // console.log(`Product ${product.title} - featured status:`, product.featured);
           return product.featured === "1" && !product.deleted;
         });
 
-        console.log("Filtered featured products:", featuredProducts);
+        // console.log("Filtered featured products:", featuredProducts);
 
         setProducts(featuredProducts);
       } catch (error) {
@@ -52,7 +52,7 @@ const FeaturedProduct = () => {
 
   // Debug log when products state changes
   useEffect(() => {
-    console.log("Products state updated:", products);
+    // console.log("Products state updated:", products);
   }, [products]);
 
   const formatPrice = (price: number) => {
@@ -60,7 +60,7 @@ const FeaturedProduct = () => {
   };
 
   // Debug log before render
-  console.log("Current products length:", products.length);
+  // console.log("Current products length:", products.length);
 
   return (
     <div className="flash-sale-container">

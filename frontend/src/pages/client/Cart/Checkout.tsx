@@ -146,68 +146,6 @@ export default function Checkout() {
         setIsEditing(false);
         message.success('Thông tin giao hàng đã được lưu.');
     };
-
-    // const handleCheckout = async (paymentMethod: string) => {
-    //     if (!userData.fullName || !userData.phone || !userData.address) {
-    //         message.error('Vui lòng điền đầy đủ thông tin giao hàng trước khi đặt hàng.');
-    //         return;
-    //     }
-    //     const orderData = {
-    //         user_id: user_id,
-    //         userInfo: [
-    //             {
-    //                 email: userData.email,
-    //                 fullname: userData.fullName,
-    //                 phone: userData.phone,
-    //                 address: userData.address
-    //             },
-    //         ],
-    //         products: productsInCart.map((product) => {
-    //             const cartItem = cart.list.find((item) => item.product_id === product._id);
-    //             console.log(cartItem)
-    //             return {
-    //                 product_id: product._id,
-    //                 quantity: cartItem?.quantity,
-    //                 price: product.price,
-    //                 discountPercentage: product.discountPercentage || 0
-    //             };
-    //         }),
-    //         paymentMethod: paymentMethod,
-    //         status: paymentMethod === '2' ? 'active' : 'pending',
-    //     }
-    //     console.log(orderData)
-
-    //     // Show the QR code if QR Code payment is selected
-    //     if (paymentMethod === '2') {
-    //         setTotalAmount(totalPrice); // Set totalAmount for QR code
-    //         setShowQRCode(true); // Show QR code modal
-    //     } else {
-
-    //         try {
-    //             const responseAddOrder: ApiResponse = await post('http://localhost:5000/checkout/order', orderData);
-
-    //             console.log(responseAddOrder)
-    //             if (responseAddOrder.message) {
-    //                 message.success(responseAddOrder.message);
-    //             }
-    //             const responseRemoveItem: ApiResponse = await post(`http://localhost:5000/cart/removeSelected/${user_id}`, { selectedItems });
-    //             console.log(responseRemoveItem)
-    //             dispatch(removeSelectedProductsFromCart(selectedItems));
-    //             message.info("You will be redirected to the homepage in 3 seconds...");
-
-
-    //             setTimeout(() => {
-    //                 navigate('/');  
-    //             }, 3000);  
-
-    //         } catch (error) {
-    //             console.error("Lỗi khi xóa toàn bộ giỏ hàng:", error);
-    //         }
-    //         // Proceed with checkout for direct payment
-
-    //     }
-    // };
-
     const generateRandomText = (length: number) => {
         const allowedCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         let result = '';
@@ -217,18 +155,21 @@ export default function Checkout() {
         }
         return result;
     };
+    const generateQRCodeUrl = (amount: number, message: string) => {
+        return `https://img.vietqr.io/image/ICB-102874686355-compact2.png?amount=${amount}&addInfo=${message}`;
+    };
 
 
     const orderData = {
         user_id: user_id,
-        userInfo: 
-            {
-                email: userData.email,
-                fullname: userData.fullName,
-                phone: userData.phone,
-                address: userData.address
-            },
-        
+        userInfo:
+        {
+            email: userData.email,
+            fullname: userData.fullName,
+            phone: userData.phone,
+            address: userData.address
+        },
+
         products: productsInCart.map((product) => {
             const cartItem = cart.list.find((item) => item.product_id === product._id);
             return {
@@ -239,14 +180,83 @@ export default function Checkout() {
             };
         }),
         paymentMethod: paymentMethod,
-        status: paymentMethod === '2' ? 'active' : 'pending',
+        statusPayment: paymentMethod === '2' ? 'active' : 'pending',
+        statusOrders: "Wait",
         total: totalPrice
     };
+
+    const unitTexts = ['', 'một', 'hai', 'ba', 'bốn', 'năm', 'sáu', 'bảy', 'tám', 'chín'];
+    const hundredsTexts = ['', 'nghìn', 'triệu', 'tỷ', 'nghìn tỷ', 'triệu tỷ', 'tỷ ty'];
+    function read3Number(number: number, checkNumber = false) {
+        const absNumber = Math.abs(number);
+        const hundreds = Math.floor(absNumber / 100);
+        const remainder = absNumber % 100;
+        const tens = Math.floor(remainder / 10);
+        const units = remainder % 10;
+
+        let result = "";
+
+        if (hundreds > 0) {
+            result += unitTexts[hundreds] + " trăm ";
+        } else if (checkNumber && (tens > 0 || units > 0)) {
+            result += " không trăm ";
+        }
+
+        if (tens > 1) {
+            result += unitTexts[tens] + " mươi ";
+        } else if (tens === 1) {
+            result += "mười ";
+        } else if (checkNumber && units > 0) {
+            result += "lẻ ";
+        }
+
+        if (tens > 1 && units === 1) {
+            result += "mốt";
+        } else if (tens > 0 && units === 5) {
+            result += "lăm";
+        } else if (units > 0) {
+            result += unitTexts[units];
+        }
+        return result.trim();
+    }
+
+    function readNumber(number: number) {
+        let result = "";
+        let index = 0;
+        let absNumber = Math.abs(number);
+        const lastIndex = Math.floor(String(absNumber).length / 3);
+
+        if (!absNumber) return "Không đồng";
+
+        do {
+            const hashScale = index !== lastIndex;
+
+            const threeDigits = read3Number(absNumber % 1000, hashScale);
+
+            if (threeDigits) {
+                result = `${threeDigits} ${hundredsTexts[index]} ${result}`;
+            }
+
+            absNumber = Math.floor(absNumber / 1000);
+            index++;
+        } while (absNumber > 0);
+
+        return result.trim() + " đồng";
+    }
     const handleCheckout = async (paymentMethod: string) => {
         if (!userData.fullName || !userData.phone || !userData.address) {
             message.error('Vui lòng điền đầy đủ thông tin giao hàng trước khi đặt hàng.');
+            const utterance = new SpeechSynthesisUtterance(`Vui lòng điền đầy đủ thông tin giao hàng trước khi đặt hàng.`);
+            utterance.lang = 'vi-VN';
+            window.speechSynthesis.speak(utterance);
             return;
         }
+
+        const textToRead = readNumber(totalPrice);
+        const utterance = new SpeechSynthesisUtterance(`Số tiền cần thanh toán là:${textToRead}`);
+        utterance.lang = 'vi-VN';
+        window.speechSynthesis.speak(utterance);
+
         // Show QR Code if payment method is QR code
         if (paymentMethod === '2') {
             await handleQRCodePayment();
@@ -265,9 +275,11 @@ export default function Checkout() {
     };
     const handleOrderPlacement = async () => {
         try {
+
             const responseAddOrder: ApiResponse = await post('http://localhost:5000/checkout/order', orderData);
-            if (responseAddOrder.message) {
+            if (!responseAddOrder.message) {
                 message.success(responseAddOrder.message);
+                return;
             }
 
             // Remove selected items from the cart
@@ -288,8 +300,15 @@ export default function Checkout() {
 
     const handleDirectPayment = async () => {
         console.log(orderData)
-      
+
         try {
+            const updateResponse = await updateProductQuantities();
+
+            // Check if product quantity update was successful
+            if (!updateResponse.success) {
+                message.error(`Quá nhiều người mua cùng lúc nên số lượng hiện tại không đủ. Hãy kiểm tra lại`);
+                return; // Stop further execution if there's an error in quantity update
+            }
             const responseAddOrder: ApiResponse = await post('http://localhost:5000/checkout/order', orderData);
             if (responseAddOrder.message) {
                 message.success(responseAddOrder.message);
@@ -297,6 +316,7 @@ export default function Checkout() {
             const responseRemoveItem: ApiResponse = await post(`http://localhost:5000/cart/removeSelected/${user_id}`, { selectedItems });
             console.log(responseRemoveItem)
             dispatch(removeSelectedProductsFromCart(selectedItems));
+            // await updateProductQuantities();
             message.info("You will be redirected to the homepage in 3 seconds...");
             setTimeout(() => {
                 navigate('/');
@@ -307,9 +327,39 @@ export default function Checkout() {
             message.error('Có lỗi xảy ra trong quá trình thanh toán.');
         }
     };
-    const generateQRCodeUrl = (amount: number, message: string) => {
-        return `https://img.vietqr.io/image/ICB-102874686355-compact2.png?amount=${amount}&addInfo=${message}`;
+
+    const updateProductQuantities = async () => {
+        try {
+            const promises = productsInCart.map(async (product) => {
+                const cartItem = cart.list.find((item) => item.product_id === product._id);
+                if (cartItem) {
+                    // Prepare the data to update the product quantity
+                    const updateData = {
+                        productId: product._id,
+                        quantitySold: cartItem.quantity, // Subtract this from the stock
+                    };
+
+                    console.log(updateData)
+                    // Send an API request to update the product quantity
+                    const response = await post('http://localhost:5000/products/update-quantity', updateData);
+                    if (response.message === 'Product out of stock') {
+                        throw new Error('Product out of stock');
+                    }
+                }
+            });
+
+            // Wait for all product quantity updates to complete
+            await Promise.all(promises);
+
+          
+            return { success: true }
+        } catch (error) {
+            console.error('Error updating product quantities:', error);
+            message.error('Failed to update product quantities.');
+            return { success: false, message: error };
+        }
     };
+
 
     const handleModalClose = () => {
         setShowQRCode(false);

@@ -169,8 +169,52 @@ export interface Order {
     },
   ],
   paymentMethod: string,
-  status: string,
+  statusPayment: string,
+  statusOrders:string,
   total: number
+  createdAt:string
+}
+export interface ChatFe {
+  _id: string;
+  user_id: string,
+  room_chat_id: string,
+  content: string,
+  images: [],
+  deleted: boolean,
+  deleteAt: Date,
+  inforUser: User
+}
+export interface ChatV2 {
+
+  _id: string;
+  members: Array<string>;
+}
+
+export interface Message {
+    chatId: string,
+    senderId: string,
+    text: string,   
+    createdAt:Date
+}
+export interface TableWebsite {
+  _id: string,
+  name: string,
+  status: boolean
+}
+export interface bookingTable {
+  table_id: string,
+  user_id: string,
+  timeBook: string,
+ dateBook: string,
+  quantityUser: number,
+  gift: string,
+  status: boolean,
+}
+
+export interface Gift {
+  _id: string,
+  name: string,
+  status: boolean
 }
 export interface ApiResponse {
   accountInAdmin: Account
@@ -191,13 +235,26 @@ export interface ApiResponse {
   detailUser: User;
   cart: Cart[];
   cartItems: Cart
-  Orders: Order[];
+  recordOrders: Order[];
   OrderByUserId: Order[];
+  recordsChat: ChatFe[];
+  ChatDetail: ChatFe;
+  recordUser: User[];
   // OrderById:Order;
+  ChatV2: ChatV2[];
+  ChatV3: ChatV2;
+  Message: Message[];
+  Message123: Message;
+  recordTables: TableWebsite[];
+  detailTable: TableWebsite;
+  recordBookingTables: bookingTable[];
+  detailBookingTable: bookingTable;
+  recordGift: Gift[];
   status: number
   message: string;
   data: DistrictResponse
 }
+
 
 
 
