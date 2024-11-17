@@ -76,11 +76,11 @@ const Permissions: React.FC = () => {
 
   // Handle form submit
   const handleSubmit = async () => {
-    const isConfirmed = await showConfirmationAlert("Are you sure?", "You want to update the role ?","Yes, update it!");
+    const isConfirmed = await showConfirmationAlert("Are you sure?", "You want to update the role ?", "Yes, update it!");
     if (isConfirmed) {
       try {
         await patch("http://localhost:5000/admin/roles/permissions", updatedPermissions);
-         showSuccessAlert("Updated!", "Your permissions have been updated.");
+        showSuccessAlert("Updated!", "Your permissions have been updated.");
         setTimeout(() => {
           navigate("/admin/roles");
         }, 1500);
@@ -114,7 +114,7 @@ const Permissions: React.FC = () => {
         </thead>
         <tbody>
           {/* ID Row */}
-          <tr style={{display: "none"}}>
+          <tr style={{ display: "none" }}>
             <td>ID</td>
             {permissions.map((record) => (
               <td key={record._id} className="text-center">
@@ -163,6 +163,39 @@ const Permissions: React.FC = () => {
             <tr key={permissionType}>
               <td>
                 {permissionType.replace("products_", "").replace("_", " ")}
+              </td>
+              {permissions.map((record, index) => (
+                <td key={record._id} className="text-center">
+                  <input
+                    type="checkbox"
+                    onChange={(e) =>
+                      handleCheckboxChange(e, permissionType, index)
+                    }
+                    checked={updatedPermissions[
+                      index
+                    ].permissionsChild.includes(permissionType)}
+                    style={{ transform: "scale(1.5)", cursor: "pointer" }}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
+
+          {/* Thêm section mới cho Blog */}
+          <tr>
+            <td colSpan={permissions.length + 1}>
+              <b>Blog</b>
+            </td>
+          </tr>
+          {[
+            "blogs_view",
+            "blogs_create",
+            "blogs_update",
+            "blogs_delete",
+          ].map((permissionType) => (
+            <tr key={permissionType}>
+              <td>
+                {permissionType.replace("blogs_", "").replace("_", " ")}
               </td>
               {permissions.map((record, index) => (
                 <td key={record._id} className="text-center">

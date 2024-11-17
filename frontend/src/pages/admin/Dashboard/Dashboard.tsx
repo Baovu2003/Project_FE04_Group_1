@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Table, Statistic } from 'antd';
+import { Card, Row, Col, Table, Statistic, Button, Divider, DatePicker, Radio, Space } from 'antd';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import axios from 'axios';
+import type { RadioChangeEvent } from 'antd';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import 'dayjs/locale/vi';
+
+const { RangePicker } = DatePicker;
 
 interface Order {
   _id: string;
@@ -24,23 +30,54 @@ interface Order {
   createdAt: string;
 }
 
+interface User {
+  _id: string;
+  status: string;
+  deleted: boolean;
+  createdAt: string;
+}
+
+interface ChartData {
+  name: string;
+  total: number;
+  date: string;
+}
+
 const Dashboard: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]); 
+  const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [totalRevenue, setTotalRevenue] = useState<number>(0);
   const [pendingOrders, setPendingOrders] = useState<number>(0);
+  const [filterType, setFilterType] = useState<'week' | 'month' | 'custom'>('week');
+  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(null);
+
+  const [users, setUsers] = useState<User[]>([]);
+  const [totalUsers, setTotalUsers] = useState<number>(0);
+  const [activeUsers, setActiveUsers] = useState<number>(0);
+  const [inactiveUsers, setInactiveUsers] = useState<number>(0);
+  const [newUsers, setNewUsers] = useState<number>(0);
+  const [deletedUsers, setDeletedUsers] = useState<number>(0);
+
+  // Get current date and start of week/month
+  const getCurrentDateRange = (type: 'week' | 'month'): [Dayjs, Dayjs] => {
+    const now = dayjs();
+    const start = type === 'week' ? now.startOf('week') : now.startOf('month');
+    return [start, now];
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/admin/order", {
-          withCredentials: true, // Đảm bảo gửi cookie cùng yêu cầu
-        });
-        console.log("Fetched Orders:", response.data);
+        const response = await axios.get("http://localhost:5000/admin/order", { withCredentials: true });
         const ordersData = response.data;
-
         setOrders(ordersData);
-        
-        // Calculate total revenue and pending orders
+
+        // Set initial date range to current week
+        const [start, end] = getCurrentDateRange('week');
+        setDateRange([start, end]);
+        filterOrdersByDate(ordersData, [start, end]);
+
+        // Calculate total stats from all orders
         const totalRev = ordersData.reduce((sum: number, order: Order) => sum + order.total, 0);
         const pendingCount = ordersData.filter((order: Order) => order.status === 'pending').length;
 
@@ -51,15 +88,73 @@ const Dashboard: React.FC = () => {
       }
     };
 
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/user", { withCredentials: true });
+        const usersData = Array.isArray(response.data.recordUser) ? response.data.recordUser : [];
+        
+        if (usersData.length === 0) {
+          console.log("No users found or incorrect data structure.");
+        }
+    
+        // Calculate statistics
+        const total = usersData.filter((user: User) => !user.deleted).length;
+        const active = usersData.filter((user: User) => user.status === 'active').length;
+        const inactive = usersData.filter((user: User) => user.status === 'inactive').length;
+        const deleted = usersData.filter((user: User) => user.deleted).length;
+    
+        const currentDate = new Date();
+        const oneMonthAgo = new Date(currentDate.setMonth(currentDate.getMonth() - 1));
+        const newUsersCount = usersData.filter((user: User) => new Date(user.createdAt) > oneMonthAgo).length;
+    
+        setTotalUsers(total);
+        setActiveUsers(active);
+        setInactiveUsers(inactive);
+        setDeletedUsers(deleted);
+        setNewUsers(newUsersCount);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+    
     fetchOrders();
+    fetchUsers();
   }, []);
 
+  const filterOrdersByDate = (ordersData: Order[], range: [Dayjs, Dayjs]) => {
+    const filteredData = ordersData.filter(order => {
+      const orderDate = dayjs(order.createdAt);
+      return orderDate.isAfter(range[0]) && orderDate.isBefore(range[1]);
+    });
+    setFilteredOrders(filteredData);
+  };
+
+  const handleFilterChange = (e: RadioChangeEvent) => {
+    const type = e.target.value as 'week' | 'month' | 'custom';
+    setFilterType(type);
+    
+    if (type !== 'custom') {
+      const range = getCurrentDateRange(type);
+      setDateRange(range);
+      filterOrdersByDate(orders, range);
+    }
+  };
+
+  const handleDateRangeChange = (range: [Dayjs, Dayjs] | null) => {
+    if (range) {
+      setDateRange(range);
+      filterOrdersByDate(orders, range);
+    }
+  };
+
+  // Transform filtered orders data for the chart
+  const chartData = filteredOrders.map(order => ({
+    name: order.userInfo.fullname,
+    total: order.total,
+    date: dayjs(order.createdAt).format('YYYY-MM-DD')
+  }));
+
   const columns = [
-    {
-      title: 'Order ID',
-      dataIndex: '_id',
-      key: '_id',
-    },
     {
       title: 'Customer Name',
       dataIndex: ['userInfo', 'fullname'],
@@ -75,36 +170,101 @@ const Dashboard: React.FC = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      render: (status: string) => (
+        <span style={{ 
+          color: status === 'pending' ? 'red' : 'green',
+          textTransform: 'capitalize'
+        }}>
+          {status || 'Done'}
+        </span>
+      ),
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (record: Order) => (
+        <div>
+          <Button type="primary" size="small">
+            View Order
+          </Button>
+          <Divider type="vertical" />
+        </div>
+      ),
     },
   ];
 
   return (
     <div>
       <Row gutter={16}>
-        <Col span={8}>
+        <Col span={6}>
           <Card>
             <Statistic title="Total Revenue" value={totalRevenue} prefix="$" />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={6}>
           <Card>
             <Statistic title="Total Orders" value={orders.length} />
           </Card>
         </Col>
-        <Col span={8}>
+        <Col span={6}>
           <Card>
             <Statistic title="Pending Orders" value={pendingOrders} />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic title="Total Users" value={totalUsers} />
+          </Card>
+        </Col>
+      </Row>
+
+      <Row gutter={16} style={{ marginTop: 16 }}>
+        <Col span={6}>
+          <Card>
+            <Statistic title="Active Users" value={activeUsers} />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic title="Inactive Users" value={inactiveUsers} />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic title="New Users (Last Month)" value={newUsers} />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic title="Deleted Users" value={deletedUsers} />
           </Card>
         </Col>
       </Row>
 
       <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={12}>
-          <Card title="Revenue Chart">
+          <Card 
+            title="Revenue Chart"
+            extra={
+              <Space>
+                <Radio.Group value={filterType} onChange={handleFilterChange}>
+                  <Radio.Button value="week">Tuần này</Radio.Button>
+                  <Radio.Button value="month">Tháng này</Radio.Button>
+                  <Radio.Button value="custom">Tùy chọn</Radio.Button>
+                </Radio.Group>
+                {filterType === 'custom' && (
+                  <RangePicker
+                    value={dateRange}
+                    onChange={handleDateRangeChange}
+                  />
+                )}
+              </Space>
+            }
+          >
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={orders}>
+              <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="_id" />
+                <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
@@ -116,11 +276,14 @@ const Dashboard: React.FC = () => {
         <Col span={12}>
           <Card title="Recent Orders">
             <Table
-              dataSource={orders.slice(-5)} // Display the 5 most recent orders
+              dataSource={orders.slice(-5)}
               columns={columns}
               rowKey="_id"
               pagination={false}
             />
+            <div style={{ textAlign: 'right', marginTop: 16 }}>
+              <Button type="primary">View All Orders</Button>
+            </div>
           </Card>
         </Col>
       </Row>

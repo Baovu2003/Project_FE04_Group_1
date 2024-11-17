@@ -22,6 +22,8 @@ import ProductAdmin from "./pages/admin/Product/ProductAdmin";
 import CreateProduct from "./pages/admin/Product/CreateProduct";
 import Detailproduct from "./pages/admin/Product/Detailproduct";
 import UpdateProduct from "./pages/admin/Product/UpdateProduct";
+import BlogList from "./pages/admin/Blog/BlogList";
+import BlogCreate from "./pages/admin/Blog/BlogCreate";
 import RoleGroup from "./pages/admin/RoleGroup/RoleGroup";
 import RolesList from "./pages/admin/RoleGroup/RolesList";
 import CreateRole from "./pages/admin/RoleGroup/CreateRole";
@@ -93,6 +95,10 @@ function App() {
               <Route path="detail/:id" element={<Detailproduct />} />
               <Route path="edit/:id" element={<UpdateProduct />} />
             </Route>
+
+            <Route path="blogs" element={<BlogList />} />
+              <Route path="blogs/create" element={<BlogCreate />} />
+            
 
             <Route path="roles" element={<RoleGroup />}>
               <Route index element={<RolesList />} />
