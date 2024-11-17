@@ -69,7 +69,9 @@ const Dashboard: React.FC = () => {
     const fetchOrders = async () => {
       try {
         const response = await axios.get("http://localhost:5000/admin/order", { withCredentials: true });
-        const ordersData = response.data;
+        console.log(response.data.recordOrders
+        );
+        const ordersData = response.data.recordOrders;
         setOrders(ordersData);
 
         // Set initial date range to current week
