@@ -174,6 +174,18 @@ export interface Order {
   total: number
   createdAt:string
 }
+export interface ChatV2 {
+
+  _id: string;
+  members: Array<string>;
+}
+
+export interface Message {
+    chatId: string,
+    senderId: string,
+    text: string,   
+    createdAt:Date
+}
 export interface ApiResponse {
   accountInAdmin: Account
   user: User;
@@ -196,6 +208,10 @@ export interface ApiResponse {
   recordOrders: Order[];
   OrderByUserId: Order[];
   // OrderById:Order;
+  ChatV2: ChatV2[];
+  ChatV3: ChatV2;
+  Message: Message[];
+  Message123: Message;
   status: number
   message: string;
   data: DistrictResponse

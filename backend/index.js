@@ -40,6 +40,7 @@ app.use(
 );
 
 // Set up the HTTP and Socket.IO server
+const MessageModel = require("./models/message.model");
 const http = require("http");
 const { Server } = require("socket.io");
 const server = http.createServer(app);
@@ -50,32 +51,98 @@ const io = new Server(server, {
     origin: "http://localhost:5173", // Frontend address
     methods: ["GET", "POST"],
     credentials: true, // Allow credentials (cookies)
-  }
+  },
 });
+
+let activeUsers = [];
+
 io.on("connection", (socket) => {
-  console.log("A user connected with id=" + socket.id);
+  // add new User
+  socket.on("new-user-add", (newUserId) => {
+    // if user is not added previously
+    // if (!activeUsers.some((user) => user.userId === newUserId)) {
+    //   activeUsers.push({ userId: newUserId, socketId: socket.id });
+    //   console.log("New User Connected", activeUsers);
+    // }
+    const existingUser = activeUsers.find((user) => user.userId === newUserId);
 
-  // Handle the 'authenticate' event to pass the user data to the socket connection
-  socket.on("authenticate", (userData) => {
-    console.log("Authenticated user:", userData);
-    socket.user = userData; // Attach user data to the socket
-    socket.emit("SERVER_SENDING_DATA", "Hello from the server!");
-  });
-  // Handle incoming messages from the client and save them to the database
-  socket.on("CLIENT_SENDING_DATA", async ({message,userId}) => {
-    console.log("Message from client:", message,userId);
-    // Broadcast the message to other clients
-  //   socket.broadcast.emit("SERVER_SENDING_DATA", message);
-    io.emit("SERVER_SENDING_DATA", "Server received in controller: " + message +userId);
+    if (!existingUser) {
+      // Add new user to active users
+      activeUsers.push({ userId: newUserId, socketId: socket.id });
+      console.log("New User Connected", activeUsers);
+    } else {
+      // If user already exists, update the socketId and remove lastActiveTime
+      existingUser.socketId = socket.id;
+      delete existingUser.lastActiveTime; // Remove lastActiveTime when user reconnects
+      console.log("User Reconnected", activeUsers);
+    }
+    // send all active users to new user
+    io.emit("get-users", activeUsers);
   });
 
-  // Handle disconnection
+  socket.on("create-chat", (newChat) => {
+    io.emit("new-chat", newChat); // Notify all clients about the new chat
+    io.emit("new-chat-for-admin", newChat);
+  });
+
+  // socket.on("disconnect", () => {
+  //   // remove user from active users
+
+  //   activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
+  //   console.log("User Disconnected", activeUsers);
+  //   // send all active users to all users
+  //   io.emit("get-users", activeUsers);
+  // });
   socket.on("disconnect", () => {
-    console.log("A user disconnected with id=" + socket.id);
+    // Tạo thời gian người dùng disconnect
+    const lastActiveTime = new Date().toISOString();
+
+    // Cập nhật người dùng với thời gian lastActiveTime
+    activeUsers = activeUsers.map((user) =>
+      user.socketId === socket.id ? { ...user, lastActiveTime } : user
+    );
+    console.log("activeUsers1: ", activeUsers);
+    // Lọc người dùng đã rời đi
+    activeUsers2 = activeUsers.filter((user) => user.socketId !== socket.id);
+    console.log("activeUsers2: ", activeUsers);
+    console.log("User Disconnected", activeUsers2);
+
+    // Gửi danh sách người dùng trực tuyến với lastActiveTime cho tất cả các client
+    io.emit("get-users", activeUsers);
+  });
+
+  // send message to a specific user
+  socket.on("send-message", async (data) => {
+    console.log("activeUsers: ", activeUsers);
+    console.log("data nhận từ clients: ", data);
+
+    const message = new MessageModel({
+      chatId: data.chatId,
+      senderId: data.senderId,
+      text: data.text,
+    });
+    console.log(message);
+    await message.save();
+    io.emit("recieve-message", {
+      _id: message._id,
+      chatId: data.chatId,
+      senderId: data.senderId,
+      text: data.text,
+      createdAt: message.createdAt,
+    });
+  });
+  var timeout;
+  socket.on("client-typing", (data) => {
+    console.log(data);
+    socket.broadcast.emit("server-typing", data, "show");
+    // console.log("data", data);
+     clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      socket.broadcast.emit("server-typing", data, "hidden");
+    }, 2000);
+
   });
 });
-
-// Set up socket events
 
 global._io = io;
 

@@ -48,6 +48,7 @@ import HistoryOrderUser from "./pages/client/User/HistoryOrderUser";
 import Orders from "./pages/admin/Orders/Orders";
 import ListOrders from "./pages/admin/Orders/ListOrders";
 import Chat from "./LayoutDefault/LauoutDefaultClient/Chat/Chat";
+import ChatAdmin from "./LayoutDefault/LayoutDefaultAdmin/Chat/ChatAdmin";
 function App() {
   return (
     <Router>
@@ -94,6 +95,7 @@ function App() {
             <Route path="create" element={<CreateCategory />} />
           </Route>
 
+
           <Route path="products" element={<AllProduct />}>
             <Route index element={<ProductAdmin />} />
             <Route path="create" element={<CreateProduct />} />
@@ -118,6 +120,7 @@ function App() {
           </Route>
 
           <Route path="permissions" element={<Permissions />} />
+          <Route path="chat" element={<ChatAdmin />} />
           <Route path="*" element={<NotFound />} />
         </Route>
         {/* </Route> */}
