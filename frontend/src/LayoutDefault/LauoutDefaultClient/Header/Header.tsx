@@ -96,7 +96,7 @@ const Header: React.FC = () => {
             Contact
           </NavLink> */}
           <NavLink to="/bookingTable" className={({ isActive }) => isActive ? 'active' : ''}>
-            Booking Tabke
+            Booking Table
           </NavLink>
 
         </nav>
