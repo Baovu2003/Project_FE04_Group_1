@@ -3,6 +3,7 @@ import { Form, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { get, post } from "../../../Helpers/API.helper";
 import { ProductCategory } from "../../../actions/types";
+import { showSuccessAlert } from "../../../Helpers/alerts";
 
 const UpdateCategory: React.FC = () => {
   const [title, setTitle] = useState<string>("");
@@ -93,8 +94,11 @@ const UpdateCategory: React.FC = () => {
 
     try {
       await post(`http://localhost:5000/admin/products-category/edit/${id}`, formData);
+      showSuccessAlert("Success!", "Category updated successfully!");
       // Quay lại danh sách danh mục
-      navigate('/admin/products-category');
+      setTimeout(() => {
+        navigate("/admin/products-category");
+      }, 1500);
     } catch (error) {
       console.error("Error updating category:", error);
     }

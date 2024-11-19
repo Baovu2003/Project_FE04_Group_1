@@ -25,6 +25,7 @@
 .actions {
   display: flex;
   align-items: center;
+  margin-right: 50px;
 }
 
 .cart-icon {
@@ -128,12 +129,45 @@
   }
 }
 
+.user-greeting-container {
+  position: relative;
+  display: inline-block;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  left: -90px;
+  background-color: white;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 4px;
+  z-index: 100;
+  min-width: 200px;
+}
+
+.user-dropdown p {
+  margin: 10px;
+}
+
+.user-dropdown p a {
+  color: #333;
+  text-decoration: none;
+}
+
+.user-dropdown p a:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 1200px) {
   .header {
     padding: 15px 30px;
-    /* Adjust padding if needed */
   }
 
+  .actions {
+
+  margin-right: 0px;
+}
   .logo {
     width: 25%;
   }

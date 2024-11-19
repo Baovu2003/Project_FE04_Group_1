@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { UserOutlined } from '@ant-design/icons'; // Importing the UserOutlined icon from Ant Design
 import "./Header.css"; // Ensure your CSS is imported for styling
+import { RootState } from "../../../store/store";
+import { useSelector } from "react-redux";
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
@@ -15,6 +17,8 @@ const Header: React.FC = () => {
     navigate("auth/login");
   };
 
+  const account = useSelector((state: RootState) => state.AccountReducer);
+  
   return (
     <header className="header">
       <div className="container-fluid">
@@ -34,9 +38,8 @@ const Header: React.FC = () => {
                   title="User Profile"
                 />
                 <span className="admin-name ms-2">
-                  Admin
-                  {/* You can uncomment the following line to display dynamic data */}
-                  {/* {account.user.fullName} - {account.role.title} */}
+                {account?.accountInAdmin.fullName}-{account?.role.title}
+                
                 </span>
               </div>
 

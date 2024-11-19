@@ -4,7 +4,7 @@ const ProductCategory = require("../../models/product-category.model");
 const createTreeHelper = require("../../helpers/createTree");
 const Account = require("../../models/account.model");
 
-// [GET]: /admin/products
+// [GET]: /admin/products-
 module.exports.index = async (req, res) => {
   // const products = await Product.find();
   const products = await Product.find();
@@ -30,16 +30,26 @@ module.exports.index = async (req, res) => {
 
 // --------------------------/admin/change-status/:status/:id-------------------------------------------
 module.exports.changeStatus = async (req, res) => {
-  const status = req.params.status;
-  const id = req.params.id;
+  const { status, id } = req.params;
 
-  console.log(id)
+  console.log(id);
   const updatedBy = {
     account_id: res.locals.user.id,
     updatedAt: new Date(),
   };
 
   try {
+    // Find the product first to check if it is deleted
+    const product = await Product.findById(id);
+
+    // If the product does not exist or is deleted, return an error response
+    if (!product || product.deleted) {
+      return res
+        .status(400)
+        .json({ message: "Product not found or has been deleted. Status cannot be changed." });
+    }
+
+    // Proceed with updating the status
     const result = await Product.updateOne(
       { _id: id },
       {
@@ -55,12 +65,12 @@ module.exports.changeStatus = async (req, res) => {
         .json({ message: "Product not found or status unchanged." });
     }
 
-    // Optionally, you can fetch the updated product to send back to the frontend
-    const updatedProduct = await Product.findById(id);
+    // Fetch the updated product to send back to the frontend
+    // const updatedProduct = await Product.findById(id);
+    const updatedProduct = await Product.find();
 
     res.json({
-      message: "Cập nhật trạng thái thành công!",
-      recordsProduct: updatedProduct, // Send the updated product details
+      recordsProduct: updatedProduct, 
     });
   } catch (error) {
     console.error("Error updating status:", error);
@@ -104,6 +114,7 @@ module.exports.deleteItem = async (req, res) => {
       { _id: id },
       {
         deleted: !product.deleted, // Đảo trạng thái deleted
+        status: "inactive",
         deletedBy: {
           account_id: res.locals.user.id,
           deletedAt: new Date(),
@@ -140,7 +151,7 @@ module.exports.createUsePost = async (req, res) => {
     req.body.thumbnail = `/uploads/${req.file.filename}`; // Lưu trữ đường dẫn vào req.body
   }
 
-  console.log("res.locals.user",res.locals.user);
+  console.log("res.locals.user", res.locals.user);
 
   req.body.createdBy = {
     account_id: res.locals.user.id,
@@ -155,7 +166,6 @@ module.exports.createUsePost = async (req, res) => {
   req.flash("success", "Create products successfully");
   res.redirect(`${systemconfig.prefixAdmin}/products-category`);
 };
-
 
 // -------------------------[PATCH]/admin/producs/edit/:id----------------
 
@@ -215,8 +225,6 @@ module.exports.editPatch = async (req, res) => {
       }
     }
 
-    
-
     await Product.updateOne(
       { _id: req.params.id },
       {
@@ -233,8 +241,6 @@ module.exports.editPatch = async (req, res) => {
   }
 };
 
-
-
 // --------------[GET]: /admin/producs/detail/:id-----------
 module.exports.detail = async (req, res) => {
   try {
@@ -249,9 +255,12 @@ module.exports.detail = async (req, res) => {
     //  res.send("ok")
     res.json({
       pageTitle: "Detail sản phẩm",
-      recordsProduct: product,
+      detailProduct: product,
     });
   } catch (error) {
     res.redirect(`admin/products`);
   }
 };
+
+
+

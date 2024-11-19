@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Avatar,
   Button,
@@ -10,8 +10,8 @@ import {
   Row,
   Space,
   Tabs,
-  Tag,
-  Typography
+  Typography,
+  message
 } from 'antd'
 import {
   EditOutlined,
@@ -20,76 +20,73 @@ import {
   PhoneOutlined,
   UserOutlined,
   CalendarOutlined,
-  ShoppingOutlined,
-  HeartOutlined,
   SettingOutlined
 } from '@ant-design/icons'
+import { useNavigate } from 'react-router-dom'
+import { getCookie } from '../../../Helpers/Cookie.helper'
+import { get } from '../../../Helpers/API.helper'
+import moment from 'moment'
 import './profile.css'
 
 const { Title, Text } = Typography
 const { TabPane } = Tabs
 
-interface UserProfile {
-  name: string
+interface User {
+  _id: string
+  fullName: string
   email: string
   phone: string
-  address: string
-  joinDate: string
-  avatar?: string
-  orders: number
-  wishlist: number
+  status: string
+  createdAt: string
+  tokenUser: string
 }
 
-interface OrderHistory {
-  id: string
-  date: string
-  total: number
-  status: 'completed' | 'processing' | 'cancelled'
+interface ApiResponse {
+  user: User
 }
 
 function Profile() {
-  const userProfile: UserProfile = {
-    name: 'Nguyễn Văn A',
-    email: 'nguyenvana@example.com',
-    phone: '0123456789',
-    address: 'Hà Nội, Việt Nam',
-    joinDate: '01/01/2023',
-    orders: 12,
-    wishlist: 5
+  const [userData, setUserData] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
+  const tokenUser = getCookie('tokenUser')
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        if (!tokenUser) {
+          navigate('/user/login')
+          return
+        }
+
+        const response: ApiResponse = await get(`http://localhost:5000/user/${tokenUser}`)
+        if (response && response.user) {
+          setUserData(response.user)
+        } else {
+          throw new Error('User data not found')
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+        message.error('Failed to load user profile')
+        navigate('/user/login')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUserData()
+  }, [tokenUser, navigate])
+
+  if (loading) {
+    return <div>Loading...</div>
   }
 
-  const orderHistory: OrderHistory[] = [
-    {
-      id: 'ORD001',
-      date: '2023-10-25',
-      total: 1250000,
-      status: 'completed'
-    },
-    {
-      id: 'ORD002',
-      date: '2023-10-20',
-      total: 750000,
-      status: 'processing'
-    },
-    {
-      id: 'ORD003',
-      date: '2023-10-15',
-      total: 500000,
-      status: 'cancelled'
-    }
-  ]
+  if (!userData) {
+    return <div>No user data available</div>
+  }
 
-  const getStatusColor = (status: OrderHistory['status']) => {
-    switch (status) {
-      case 'completed':
-        return 'success'
-      case 'processing':
-        return 'processing'
-      case 'cancelled':
-        return 'error'
-      default:
-        return 'default'
-    }
+  const formatDate = (date: string) => {
+    return moment(date).format('DD/MM/YYYY')
   }
 
   return (
@@ -101,22 +98,18 @@ function Profile() {
             <Avatar
               size={120}
               icon={<UserOutlined />}
-              src={userProfile.avatar}
               className="profile-avatar"
             />
           </Col>
           <Col xs={24} sm={16} md={18}>
             <Space direction="vertical" size="small" className="profile-info">
-              <Title level={2}>{userProfile.name}</Title>
+              <Title level={2}>{userData.fullName}</Title>
               <Space split={<Divider type="vertical" />}>
                 <Text>
-                  <ShoppingOutlined /> {userProfile.orders} Đơn hàng
+                  <CalendarOutlined /> Tham gia {formatDate(userData.createdAt)}
                 </Text>
                 <Text>
-                  <HeartOutlined /> {userProfile.wishlist} Yêu thích
-                </Text>
-                <Text>
-                  <CalendarOutlined /> Tham gia {userProfile.joinDate}
+                  Trạng thái: {userData.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
                 </Text>
               </Space>
               <Button type="primary" icon={<EditOutlined />}>
@@ -133,52 +126,18 @@ function Profile() {
           <TabPane tab="Thông tin cá nhân" key="info">
             <Descriptions bordered column={{ xs: 1, sm: 2, md: 2 }}>
               <Descriptions.Item label="Họ tên">
-                {userProfile.name}
+                {userData.fullName}
               </Descriptions.Item>
               <Descriptions.Item label="Email">
-                <MailOutlined /> {userProfile.email}
+                <MailOutlined /> {userData.email}
               </Descriptions.Item>
               <Descriptions.Item label="Số điện thoại">
-                <PhoneOutlined /> {userProfile.phone}
+                <PhoneOutlined /> {userData.phone}
               </Descriptions.Item>
-              <Descriptions.Item label="Địa chỉ">
-                <EnvironmentOutlined /> {userProfile.address}
+              <Descriptions.Item label="Ngày tạo">
+                <CalendarOutlined /> {formatDate(userData.createdAt)}
               </Descriptions.Item>
             </Descriptions>
-          </TabPane>
-
-          <TabPane tab="Lịch sử đơn hàng" key="orders">
-            <List
-              itemLayout="horizontal"
-              dataSource={orderHistory}
-              renderItem={(order) => (
-                <List.Item
-                  actions={[
-                    <Button key="view" type="link">
-                      Xem chi tiết
-                    </Button>
-                  ]}
-                >
-                  <List.Item.Meta
-                    title={`Đơn hàng #${order.id}`}
-                    description={`Ngày đặt: ${order.date}`}
-                  />
-                  <div className="order-info">
-                    <Text strong>
-                      {new Intl.NumberFormat('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND'
-                      }).format(order.total)}
-                    </Text>
-                    <Tag color={getStatusColor(order.status)}>
-                      {order.status === 'completed' && 'Hoàn thành'}
-                      {order.status === 'processing' && 'Đang xử lý'}
-                      {order.status === 'cancelled' && 'Đã hủy'}
-                    </Tag>
-                  </div>
-                </List.Item>
-              )}
-            />
           </TabPane>
 
           <TabPane tab="Cài đặt" key="settings">

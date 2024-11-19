@@ -45,3 +45,22 @@
   padding: 20px; /* Padding for content area */
   background-color: #f4f4f4; /* Background color for content area */
 }
+
+
+.chat-button-admin {
+  position: fixed;
+   bottom: 80%;
+  right: 20px; 
+  z-index: 1000;
+}
+
+.chat-button-admin .ant-btn {
+  background-color: #1890ff;
+  border-color: #1890ff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.chat-button-admin .ant-btn:hover {
+  background-color: #40a9ff;
+  border-color: #40a9ff;
+}

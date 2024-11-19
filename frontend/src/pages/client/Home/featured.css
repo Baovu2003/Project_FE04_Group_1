@@ -31,23 +31,6 @@
     gap: 8px;
   }
   
-  /* Countdown styles */
-  .countdown-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #f5222d;
-  }
-  
-  .countdown-number {
-    background-color: #f5222d;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    min-width: 32px;
-    text-align: center;
-  }
-  
   /* Carousel styles */
   .carousel-container {
     position: relative;
@@ -147,7 +130,6 @@
   
   .sale-price {
     color: #ff4d4f;
-    font-weight: bold;
     font-size: 16px;
   }
   
@@ -157,15 +139,6 @@
     font-size: 14px;
   }
   
-  .product-rating {
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-  }
-  
-  .rating-stars {
-    font-size: 14px;
-  }
   
   .review-count {
     color: #999;
@@ -173,15 +146,6 @@
     margin-left: 8px;
   }
   
-  .product-countdown {
-    text-align: center;
-    color: #ff4d4f;
-    font-size: 14px;
-    margin: 8px 0;
-    padding: 4px;
-    background-color: #fff1f0;
-    border-radius: 4px;
-  }
   
   .buy-button {
     width: 100%;
@@ -251,11 +215,7 @@
     }
   }
   
-  /* Animation for countdown numbers */
-  .countdown-number {
-    transition: all 0.3s ease;
-  }
-  
+
   /* Hover effects */
   .product-card:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -277,15 +237,6 @@
   
   .ant-card-cover {
     margin: 0;
-  }
-  
-  /* Fix for Rate component alignment */
-  .ant-rate {
-    color: #fadb14;
-  }
-  
-  .ant-rate-star {
-    margin-right: 2px;
   }
 
   .flash-sale-container {
