@@ -1,27 +1,36 @@
-
 const mongoose = require("mongoose");
 
 const orderSchema = new mongoose.Schema(
   {
-    user_id:String,
-    cart_id: String,
-    userInfo: [
+    user_id: String,
+    userInfo: {
+      email: String,
+      fullname: String,
+      phone: String,
+      address: String,
+    },
+
+    products: [
       {
-        fullname: String,
-        phone: String,
-        address: String
+        product_id: String,
+        quantity: Number,
+        price: Number,
+        discountPercentage: Number,
       },
     ],
-      products: [
-        {
-            product_id: String,
-            quantity: Number,
-            price: Number,
-            discountPercentage: Number
-        }
-      ]
-    
+    paymentMethod: String,
+    statusPayment: String,
+    statusOrders:String,
+    total: Number,
+    updatedBy: [
+      {
+        account_id: String,
+        updatedAt: Date,
+        changes: Object, // To store changes made during the update
+      },
+    ],
   },
+  
   {
     // B24 phút 44 trở đi
     timestamps: true,

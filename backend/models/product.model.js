@@ -44,6 +44,8 @@ const productSchema = new mongoose.Schema(
         changes: Object, // To store changes made during the update
       },
     ],
+    flashSaleStart: String,
+    flashSaleEnd: String,
   },
 
 );
