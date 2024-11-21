@@ -6,6 +6,7 @@ const accountRoutes = require("./account.route");
 const authRoutes = require("./auth.route")
 const orderRoutes = require("./order.route")
 const blogRoutes = require("./blog.route")
+const managerUserRoutes = require("./managerUser.route")
 
 
 const orderRoute = require("./order.route")
@@ -35,6 +36,7 @@ module.exports = (app) => {
   app.use(PATH_ADMIN+"/auth", authRoutes);
   app.use(PATH_ADMIN+"/order", authMiddleware.requireAuth,orderRoutes);
   app.use(PATH_ADMIN+"/blog",blogRoutes);
+  app.use(PATH_ADMIN+"/managerUser",managerUserRoutes);
 
 
 };

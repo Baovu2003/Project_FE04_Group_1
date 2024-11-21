@@ -20,6 +20,8 @@ export interface Product {
   position: number;
   deleted: boolean;
   slug: string;
+  flashSaleStart?: string;
+  flashSaleEnd?: string;
   createdBy: {
     account_id: string;
     createdAt: Date;

@@ -2,6 +2,7 @@
 import { Carousel } from 'antd';
 import slider from '../../../assets/images/home/slider.png';
 import FeaturedProduct from './FeaturedProduct';
+import FlashSale from './FlashSale';
 import './home.css';
 import DealerSection from './Dealer';
 
@@ -21,7 +22,11 @@ function Home() {
         </div>
       </Carousel>
 
+      
       {/* Flash Sale Section */}
+      <FlashSale />
+
+      {/* Featured Product Section */}
       <FeaturedProduct />
 
       <DealerSection />

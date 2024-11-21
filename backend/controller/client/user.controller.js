@@ -88,7 +88,7 @@ module.exports.loginPost = async (req, res) => {
       return;
     }
   }
-  if (!user.status == "active") {
+  if (user.status !== "active") {
     {
       res.status(500).json({
         message: "Tài khoản đã bị khóa",

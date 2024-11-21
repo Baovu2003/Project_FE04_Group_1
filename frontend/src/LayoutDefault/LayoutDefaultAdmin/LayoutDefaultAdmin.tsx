@@ -87,7 +87,7 @@ const LayoutDefaultAdmin: React.FC = () => {
                 {account.role.permission.includes("blogs_view") && (
                   <li>
                     <NavLink to="blogs" className={({ isActive }) => (isActive ? "active" : "")}>
-                      Blog
+                      Quản lí Blog
                     </NavLink>
                   </li>
                 )}
@@ -116,6 +116,13 @@ const LayoutDefaultAdmin: React.FC = () => {
                   <li>
                     <NavLink to="accounts" className={({ isActive }) => (isActive ? "active" : "")}>
                       Danh sách tài khoản
+                    </NavLink>
+                  </li>
+                )}
+                {account.role.permission.includes("managerUsers_view") && (
+                  <li>
+                    <NavLink to="managerUsers" className={({ isActive }) => (isActive ? "active" : "")}>
+                      Quản lí Khách Hàng
                     </NavLink>
                   </li>
                 )}

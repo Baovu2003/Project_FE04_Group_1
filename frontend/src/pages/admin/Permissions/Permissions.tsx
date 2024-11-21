@@ -180,7 +180,7 @@ const Permissions: React.FC = () => {
               ))}
             </tr>
           ))}
-           <tr>
+          <tr>
             <td colSpan={permissions.length + 1}>
               <b>Gift</b>
             </td>
@@ -211,7 +211,7 @@ const Permissions: React.FC = () => {
               ))}
             </tr>
           ))}
-            <tr>
+          <tr>
             <td colSpan={permissions.length + 1}>
               <b>Table</b>
             </td>
@@ -258,6 +258,38 @@ const Permissions: React.FC = () => {
             <tr key={permissionType}>
               <td>
                 {permissionType.replace("blogs_", "").replace("_", " ")}
+              </td>
+              {permissions.map((record, index) => (
+                <td key={record._id} className="text-center">
+                  <input
+                    type="checkbox"
+                    onChange={(e) =>
+                      handleCheckboxChange(e, permissionType, index)
+                    }
+                    checked={updatedPermissions[
+                      index
+                    ].permissionsChild.includes(permissionType)}
+                    style={{ transform: "scale(1.5)", cursor: "pointer" }}
+                  />
+                </td>
+              ))}
+            </tr>
+          ))}
+
+          <tr>
+            <td colSpan={permissions.length + 1}>
+              <b>Quản lí khách hàng</b>
+            </td>
+          </tr>
+          {[
+            "managerUsers_view",
+            "managerUsers_create",
+            "managerUsers_update",
+            "managerUsers_delete",
+          ].map((permissionType) => (
+            <tr key={permissionType}>
+              <td>
+                {permissionType.replace("managerUsers_", "").replace("_", " ")}
               </td>
               {permissions.map((record, index) => (
                 <td key={record._id} className="text-center">

@@ -192,6 +192,31 @@ function UpdateProduct() {
                 onChange={(e) => setProduct({ ...product, discountPercentage: +e.target.value })}
               />
             </div>
+            {/* Flash Sale Start */}
+            <div className="form-group mb-3">
+              <label htmlFor="flashSaleStart">Flash Sale Start</label>
+              <input
+                type="datetime-local"
+                className="form-control"
+                id="flashSaleStart"
+                name="flashSaleStart"
+                value={product.flashSaleStart || ''}
+                onChange={(e) => setProduct({ ...product, flashSaleStart: e.target.value })}
+              />
+            </div>
+
+            {/* Flash Sale End */}
+            <div className="form-group mb-3">
+              <label htmlFor="flashSaleEnd">Flash Sale End</label>
+              <input
+                type="datetime-local"
+                className="form-control"
+                id="flashSaleEnd"
+                name="flashSaleEnd"
+                value={product.flashSaleEnd || ''}
+                onChange={(e) => setProduct({ ...product, flashSaleEnd: e.target.value })}
+              />
+            </div>
 
             {/* Stock */}
             <div className="form-group mb-3">
