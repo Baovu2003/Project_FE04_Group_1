@@ -7,6 +7,7 @@ import placeholder from "./placeholder.svg";
 import { ApiResponse } from "../../../actions/types";
 import axios from "axios";
 import { showSuccessAlert } from "../../../Helpers/alerts";
+import Header from "../../../LayoutDefault/LauoutDefaultClient/Header/Header";
 
 const { TabPane } = Tabs;
 
@@ -61,7 +62,9 @@ function Register() {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <>
+    <Header/>
+      <div className="container mx-auto p-6">
       <Row gutter={32} className="max-w-5xl mx-auto">
         <Col xs={24} md={12}>
           <div className="mb-8">
@@ -179,6 +182,7 @@ function Register() {
         `}
       </style>
     </div>
+    </>
   );
 }
 

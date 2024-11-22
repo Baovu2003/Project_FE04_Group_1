@@ -45,6 +45,16 @@ module.exports.loginPost = async (req, res) => {
     });
 };
 
+module.exports.getAccountById = async (req, res) => {
+
+  const accountId = req.params.accountId;
+  console.log(accountId);
+  const accountInAdmin = await Account.findById(accountId).select(
+    "fullName _id"
+  );
+  // console.log(accountInAdmin);
+  res.json({ detailAccount: accountInAdmin });
+};
 module.exports.verifyToken = async (req, res) => {
   const token = req.headers.authorization;
 

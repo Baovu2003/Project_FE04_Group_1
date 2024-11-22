@@ -66,7 +66,8 @@ module.exports.changeStatus = async (req, res) => {
     }
 
     // Fetch the updated product to send back to the frontend
-    const updatedProduct = await Product.findById(id);
+    // const updatedProduct = await Product.findById(id);
+    const updatedProduct = await Product.find();
 
     res.json({
       recordsProduct: updatedProduct, 
@@ -168,77 +169,77 @@ module.exports.createUsePost = async (req, res) => {
 
 // -------------------------[PATCH]/admin/producs/edit/:id----------------
 
-module.exports.editPatch = async (req, res) => {
-  console.log("req.body:", req.body);
+// module.exports.editPatch = async (req, res) => {
+//   console.log("req.body:", req.body);
 
-  // Convert necessary fields to numbers
-  const {
-    price,
-    discountPercentage,
-    stock,
-    position,
-    title,
-    description,
-    product_category_id,
-    slug,
-    status,
-    featured,
-  } = req.body;
+//   // Convert necessary fields to numbers
+//   const {
+//     price,
+//     discountPercentage,
+//     stock,
+//     position,
+//     title,
+//     description,
+//     product_category_id,
+//     slug,
+//     status,
+//     featured,
+//   } = req.body;
 
-  const updatedData = {
-    price: Number(price),
-    discountPercentage: Number(discountPercentage),
-    stock: Number(stock),
-    position:
-      position === "" ? (await Product.countDocuments()) + 1 : Number(position),
-    title,
-    description,
-    product_category_id,
-    slug,
-    status,
-    featured,
-  };
+//   const updatedData = {
+//     price: Number(price),
+//     discountPercentage: Number(discountPercentage),
+//     stock: Number(stock),
+//     position:
+//       position === "" ? (await Product.countDocuments()) + 1 : Number(position),
+//     title,
+//     description,
+//     product_category_id,
+//     slug,
+//     status,
+//     featured,
+//   };
 
-  try {
-    const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ message: "Product not found" });
+//   try {
+//     const product = await Product.findById(req.params.id);
+//     if (!product) return res.status(404).json({ message: "Product not found" });
 
-    // Prepare the updatedBy object
-    const updatedBy = {
-      account_id: res.locals.user.id,
-      updatedAt: new Date(), // Current timestamp
-      changes: {}, // To track the specific changes
-    };
+//     // Prepare the updatedBy object
+//     const updatedBy = {
+//       account_id: res.locals.user.id,
+//       updatedAt: new Date(), // Current timestamp
+//       changes: {}, // To track the specific changes
+//     };
 
-    // Check and assign thumbnail only if a new file is uploaded
-    if (req.file) {
-      updatedData.thumbnail = `/uploads/${req.file.filename}`;
-    } else {
-      updatedData.thumbnail = product.thumbnail; // Retain the existing thumbnail if no new file is uploaded
-    }
+//     // Check and assign thumbnail only if a new file is uploaded
+//     if (req.file) {
+//       updatedData.thumbnail = `/uploads/${req.file.filename}`;
+//     } else {
+//       updatedData.thumbnail = product.thumbnail; // Retain the existing thumbnail if no new file is uploaded
+//     }
 
-    // Track changes
-    for (const key in updatedData) {
-      if (updatedData[key] !== product[key]) {
-        updatedBy.changes[key] = { from: product[key], to: updatedData[key] };
-      }
-    }
+//     // Track changes
+//     for (const key in updatedData) {
+//       if (updatedData[key] !== product[key]) {
+//         updatedBy.changes[key] = { from: product[key], to: updatedData[key] };
+//       }
+//     }
 
-    await Product.updateOne(
-      { _id: req.params.id },
-      {
-        $set: { ...updatedData, createdBy: product.createdBy }, // Keep original createdBy
-        $push: { updatedBy: updatedBy }, // Push the update details
-      }
-    );
+//     await Product.updateOne(
+//       { _id: req.params.id },
+//       {
+//         $set: { ...updatedData, createdBy: product.createdBy }, // Keep original createdBy
+//         $push: { updatedBy: updatedBy }, // Push the update details
+//       }
+//     );
 
-    req.flash("success", "Update products successfully");
-    return res.status(200).json({ message: "Product updated successfully" });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Error updating product" });
-  }
-};
+//     req.flash("success", "Update products successfully");
+//     return res.status(200).json({ message: "Product updated successfully" });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({ message: "Error updating product" });
+//   }
+// };
 
 // --------------[GET]: /admin/producs/detail/:id-----------
 module.exports.detail = async (req, res) => {
@@ -260,3 +261,74 @@ module.exports.detail = async (req, res) => {
     res.redirect(`admin/products`);
   }
 };
+
+module.exports.editPatch = async (req, res) => {
+  const {
+    price,
+    discountPercentage,
+    stock,
+    position,
+    title,
+    description,
+    product_category_id,
+    slug,
+    status,
+    featured,
+    flashSaleStart,
+    flashSaleEnd
+  } = req.body;
+
+  const updatedData = {
+    price: Number(price),
+    discountPercentage: Number(discountPercentage),
+    stock: Number(stock),
+    position: position === "" ? (await Product.countDocuments()) + 1 : Number(position),
+    title,
+    description,
+    product_category_id,
+    slug,
+    status,
+    featured,
+    flashSaleStart,
+    flashSaleEnd
+  };
+
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ message: "Product not found" });
+
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date(),
+      changes: {},
+    };
+
+    if (req.file) {
+      updatedData.thumbnail = `/uploads/${req.file.filename}`;
+    } else {
+      updatedData.thumbnail = product.thumbnail;
+    }
+
+    // Track changes
+    for (const key in updatedData) {
+      if (updatedData[key] !== product[key]) {
+        updatedBy.changes[key] = { from: product[key], to: updatedData[key] };
+      }
+    }
+
+    await Product.updateOne(
+      { _id: req.params.id },
+      {
+        $set: { ...updatedData, createdBy: product.createdBy },
+        $push: { updatedBy: updatedBy },
+      }
+    );
+
+    req.flash("success", "Update products successfully");
+    return res.status(200).json({ message: "Product updated successfully" });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error updating product" });
+  }
+};
+
