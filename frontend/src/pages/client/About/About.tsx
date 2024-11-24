@@ -26,7 +26,7 @@ const About: React.FC = () => {
         </ol>
       </nav>
       <div style={{ padding: '40px' }}>
-        <Row gutter={[16, 32]} align="middle" style={{ marginBottom: '40px'}}>
+        <Row gutter={[16, 32]} align="middle" style={{ marginBottom: '40px' }}>
           <Col xs={24} md={16}>
             <Text style={{ color: '#D9A953', fontSize: '16px' }}>Who we are</Text>
             <Title level={1} style={{ fontSize: 'clamp(24px, 5vw, 32px)', margin: '0' }}>
@@ -37,8 +37,19 @@ const About: React.FC = () => {
               aliquet ultricies. Praesent gravida hendrerit ex, nec eleifend sem convallis vitae.
             </Text>
             <div style={{ marginTop: '20px' }}>
-              <Button style={{ marginRight: '8px', backgroundColor: '#D9A953', color: '#fff' }}>View products</Button>
-              <Button>View products</Button>
+              <Button
+                style={{ marginRight: '8px', backgroundColor: '#D9A953', color: '#fff' }}
+                onClick={() => window.location.href = '/listProducts'}
+              >
+                View products
+              </Button>
+
+              <Button
+                onClick={() => window.location.href = '/listProducts'}
+              >
+                View products
+              </Button>
+
             </div>
           </Col>
           <Col xs={24} md={8} style={{ textAlign: 'center' }}>
