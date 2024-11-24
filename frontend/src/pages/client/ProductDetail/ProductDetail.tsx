@@ -155,12 +155,8 @@ const ProductDetail: React.FC = () => {
               <Text type="secondary"> -{product.discountPercentage}%</Text>
 
               <Divider />
-
-              <Title level={5}>Thông tin vận chuyển</Title>
-              <Text>Giao đến Q. Hoàn Kiếm, P. Hàng Trống, Hà Nội</Text>
-              <Button type="link" style={{ padding: 0 }}>
-                Đổi
-              </Button>
+              <Title level={5}>{product.description}</Title>
+              
               <br />
               <Text type="success">
                 <ThunderboltOutlined /> Giao siêu tốc 2h

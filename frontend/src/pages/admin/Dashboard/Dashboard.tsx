@@ -6,6 +6,7 @@ import type { RadioChangeEvent } from 'antd';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
+import { Link } from 'react-router-dom';
 
 const { RangePicker } = DatePicker;
 
@@ -191,7 +192,7 @@ const Dashboard: React.FC = () => {
       title: 'Total',
       dataIndex: 'total',
       key: 'total',
-      render: (total: number) => `$${total.toFixed(2)}`,
+      render: (total: number) => `${total} VND`,
     },
     {
       title: 'Status',
@@ -206,18 +207,18 @@ const Dashboard: React.FC = () => {
         </span>
       ),
     },
-    {
-      title: 'Actions',
-      key: 'actions',
-      render: () => (
-        <div>
-          <Button type="primary" size="small">
-            View Order
-          </Button>
-          <Divider type="vertical" />
-        </div>
-      ),
-    },
+    // {
+    //   title: 'Actions',
+    //   key: 'actions',
+    //   render: () => (
+    //     <div>
+    //       <Button type="primary" size="small">
+    //         View Order
+    //       </Button>
+    //       <Divider type="vertical" />
+    //     </div>
+    //   ),
+    // },
   ];
 
   return (
@@ -225,7 +226,7 @@ const Dashboard: React.FC = () => {
       <Row gutter={16}>
         <Col span={6}>
           <Card>
-            <Statistic title="Total Revenue" value={totalRevenue} prefix="$" />
+            <Statistic title="Total Revenue" value={totalRevenue} prefix="VND" />
           </Card>
         </Col>
         <Col span={6}>
@@ -277,7 +278,7 @@ const Dashboard: React.FC = () => {
                 <Radio.Group value={filterType} onChange={handleFilterChange}>
                   <Radio.Button value="week">Tuần này</Radio.Button>
                   <Radio.Button value="month">Tháng này</Radio.Button>
-                  <Radio.Button value="custom">Tùy chọn</Radio.Button>
+                  {/* <Radio.Button value="custom">Tùy chọn</Radio.Button> */}
                 </Radio.Group>
                 {filterType === 'custom' && (
                   <RangePicker
@@ -300,7 +301,7 @@ const Dashboard: React.FC = () => {
                       return (
                         <div style={{ backgroundColor: '#fff', border: '1px solid #ccc', padding: '10px', borderRadius: '4px' }}>
                           <p style={{ margin: 0, fontWeight: 'bold' }}>Customer: {data.name}</p>
-                          <p style={{ margin: 0 }}>Total: ${data.total.toFixed(2)}</p>
+                          <p style={{ margin: 0 }}>Total: {data.total.toFixed(2)} VND</p>
                           <p style={{ margin: 0 }}>Date: {data.date}</p>
                         </div>
                       );
@@ -324,7 +325,8 @@ const Dashboard: React.FC = () => {
               pagination={false}
             />
             <div style={{ textAlign: 'right', marginTop: 16 }}>
-              <Button type="primary">View All Orders</Button>
+              {/* <Button type="primary" >View All Orders</Button> */}
+              <Link to="/admin/orders" className="btn btn-primary">View All Orders</Link>
             </div>
           </Card>
         </Col>

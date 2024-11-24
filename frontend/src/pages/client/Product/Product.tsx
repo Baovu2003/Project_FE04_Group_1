@@ -298,9 +298,9 @@ const ProductList = () => {
       <Header className="bg-white px-5">
         <Row justify="space-between" align="middle">
           <Col>
-            <Title level={2} className="m-0">
+            {/* <Title level={2} className="m-0">
               Products
-            </Title>
+            </Title> */}
           </Col>
           <Col>
             <Space>
@@ -429,9 +429,9 @@ const ProductList = () => {
                                   marginBottom: "8px",
                                 }}
                               >
-                                {`Discount: ${
+                                {/* {`Discount: ${
                                   product.discountPercentage ?? 0
-                                }%`}
+                                }%`} */}
                               </Text>
                             ) : null
                           ) : null}

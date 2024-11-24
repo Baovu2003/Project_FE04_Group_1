@@ -13,7 +13,7 @@ function CreateGift() {
       const values = await form.validateFields();
       await post('http://localhost:5000/admin/gift/create', values);
       message.success('Gift created successfully');
-      navigate('/admin/listGift'); // Navigate to the gift list after creation
+      navigate('/admin/gift'); // Navigate to the gift list after creation
     } catch (error) {
       console.error("Error creating gift:", error);
       message.error('Failed to create gift');
