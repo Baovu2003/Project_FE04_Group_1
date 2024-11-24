@@ -44,9 +44,10 @@ module.exports.changeStatus = async (req, res) => {
 
     // If the product does not exist or is deleted, return an error response
     if (!product || product.deleted) {
-      return res
-        .status(400)
-        .json({ message: "Product not found or has been deleted. Status cannot be changed." });
+      return res.status(400).json({
+        message:
+          "Product not found or has been deleted. Status cannot be changed.",
+      });
     }
 
     // Proceed with updating the status
@@ -70,7 +71,7 @@ module.exports.changeStatus = async (req, res) => {
     const updatedProduct = await Product.find();
 
     res.json({
-      recordsProduct: updatedProduct, 
+      recordsProduct: updatedProduct,
     });
   } catch (error) {
     console.error("Error updating status:", error);
@@ -275,14 +276,15 @@ module.exports.editPatch = async (req, res) => {
     status,
     featured,
     flashSaleStart,
-    flashSaleEnd
+    flashSaleEnd,
   } = req.body;
 
   const updatedData = {
     price: Number(price),
     discountPercentage: Number(discountPercentage),
     stock: Number(stock),
-    position: position === "" ? (await Product.countDocuments()) + 1 : Number(position),
+    position:
+      position === "" ? (await Product.countDocuments()) + 1 : Number(position),
     title,
     description,
     product_category_id,
@@ -290,7 +292,7 @@ module.exports.editPatch = async (req, res) => {
     status,
     featured,
     flashSaleStart,
-    flashSaleEnd
+    flashSaleEnd,
   };
 
   try {
@@ -331,4 +333,3 @@ module.exports.editPatch = async (req, res) => {
     return res.status(500).json({ message: "Error updating product" });
   }
 };
-
