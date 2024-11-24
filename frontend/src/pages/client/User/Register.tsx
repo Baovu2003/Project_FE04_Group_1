@@ -184,8 +184,6 @@ function Register() {
     </div>
     </>
   );
-};
-
-export default App;
+}
 
 export default Register;
