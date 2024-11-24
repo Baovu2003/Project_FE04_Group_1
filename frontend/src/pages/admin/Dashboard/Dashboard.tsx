@@ -210,7 +210,6 @@ const Dashboard: React.FC = () => {
       title: 'Actions',
       key: 'actions',
       render: () => (
-      render: () => (
         <div>
           <Button type="primary" size="small">
             View Order
