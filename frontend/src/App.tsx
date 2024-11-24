@@ -8,7 +8,6 @@ import Contact from "./pages/client/Contact/Contact";
 import About from "./pages/client/About/About";
 import Cart from "./pages/client/Cart/Cart";
 
-import Checkout from "./pages/client/Cart/Checkout";
 import OrderDetails from "./pages/client/Cart/OrderDetails";
 import CustomerDetailsPage from "./pages/client/Cart/CustomerDetail";
 
