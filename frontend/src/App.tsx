@@ -5,6 +5,8 @@ import Home from "./pages/client/Home/Home";
 import Product from "./pages/client/Product/Product";
 import ProductDetail from "./pages/client/ProductDetail/ProductDetail";
 import Contact from "./pages/client/Contact/Contact";
+import News from "./pages/client/News/News";
+import Reservation from "./pages/client/Reservation/Reservation";
 import About from "./pages/client/About/About";
 import Cart from "./pages/client/Cart/Cart";
 import LoginUser from "./pages/client/User/LoginUser";
@@ -71,6 +73,8 @@ function App() {
           <Route path="listProducts" element={<Product />} />
           <Route path="listProducts/detail/:slug" element={<ProductDetail />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="news" element={<News />} />
+          <Route path="reservation" element={<Reservation />} />
           <Route path="about" element={<About />} />
           <Route path="blog" element={<Blog />} />
           <Route path="cart" element={<PrivateRouter />}>
