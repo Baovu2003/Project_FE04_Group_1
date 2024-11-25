@@ -11,6 +11,7 @@ import { userActions } from "../../../actions/UserAction";
 import { AppDispatch } from "../../../store/store";
 import { setCart } from "../../../actions/CartAction";
 import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import axios from "axios";
 
 interface LoginResponse {
   tokenUser: string;
@@ -99,11 +100,17 @@ const LoginUser: React.FC = () => {
         throw new Error("Token not received. Login failed.");
       }
     } catch (error) {
-      if (error instanceof Error) {
+      if (axios.isAxiosError(error)) {
+        // Handle errors from the backend
+        const backendMessage = error.response?.data?.message || "An error occurred. Please try again later.";
+        message.error(backendMessage); // Display error message from the backend
+      } else if (error instanceof Error) {
+
         message.error(error.message);
       } else {
-        message.error("An error occurred. Please try again later.");
+        message.error("An unknown error occurred.");
       }
+    
     }
   };
 

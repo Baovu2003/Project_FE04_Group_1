@@ -88,7 +88,8 @@ module.exports.loginPost = async (req, res) => {
       return;
     }
   }
-  if (!user.status == "active") {
+  console.log(user.status);
+  if (user.status !== "active") {
     {
       res.status(500).json({
         message: "Tài khoản đã bị khóa",
@@ -96,6 +97,7 @@ module.exports.loginPost = async (req, res) => {
       return;
     }
   }
+  
 
   console.log(user);
   console.log(user.tokenUser);
