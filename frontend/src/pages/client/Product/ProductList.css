@@ -380,3 +380,30 @@
 .purchase-container .purchase-button:focus {
   background: linear-gradient(135deg, #ff4d4f, #ff8989) !important;
 }
+
+
+
+ /* thái sửa */
+
+
+.card-container .ant-card .ant-typography strong {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 44px; 
+  line-height: 22px; 
+}
+
+.card-container .ant-card .ant-typography {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* height: 66px;  */
+  line-height: 22px; 
+} 
+
+

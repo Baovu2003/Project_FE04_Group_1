@@ -189,11 +189,6 @@ const ProductDetail: React.FC = () => {
 
               <Row gutter={16} style={{ marginTop: 16 }}>
                 <Col span={12}>
-                  <Button type="primary" block size="large">
-                    Mua ngay
-                  </Button>
-                </Col>
-                <Col span={12}>
                   <Button
                     block
                     size="large"

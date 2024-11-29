@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Avatar,
-  Button,
   Card,
   Col,
   Descriptions,
   Divider,
-  List,
   Row,
   Space,
   Tabs,
@@ -14,19 +12,17 @@ import {
   message
 } from 'antd'
 import {
-  EditOutlined,
-  EnvironmentOutlined,
   MailOutlined,
   PhoneOutlined,
   UserOutlined,
   CalendarOutlined,
-  SettingOutlined
 } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { getCookie } from '../../../Helpers/Cookie.helper'
 import { get } from '../../../Helpers/API.helper'
 import moment from 'moment'
 import './profile.css'
+
 
 const { Title, Text } = Typography
 const { TabPane } = Tabs
@@ -112,9 +108,6 @@ function Profile() {
                   Trạng thái: {userData.status === 'active' ? 'Hoạt động' : 'Không hoạt động'}
                 </Text>
               </Space>
-              <Button type="primary" icon={<EditOutlined />}>
-                Chỉnh sửa thông tin
-              </Button>
             </Space>
           </Col>
         </Row>
@@ -140,7 +133,7 @@ function Profile() {
             </Descriptions>
           </TabPane>
 
-          <TabPane tab="Cài đặt" key="settings">
+          {/* <TabPane tab="Cài đặt" key="settings">
             <List>
               <List.Item
                 actions={[<Button key="change">Thay đổi</Button>]}
@@ -170,7 +163,7 @@ function Profile() {
                 />
               </List.Item>
             </List>
-          </TabPane>
+          </TabPane> */}
         </Tabs>
       </Card>
     </div>

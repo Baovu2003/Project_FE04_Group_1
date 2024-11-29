@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  Layout,
-  Row,
-  Col,
-  Typography,
-  Space,
-  Select,
-  Card,
-  Button,
-  Popover,
-  Menu,
-  Radio,
-  Pagination,
+  Layout, Row, Col, Typography, Space, Select, Card, Button, Popover, Menu, Radio, Pagination,
 } from "antd";
 import { Link, useLocation } from "react-router-dom";
 import { FilterOutlined, FolderOutlined } from "@ant-design/icons";
@@ -350,108 +339,116 @@ const ProductList = () => {
               <Button>Lọc giá {priceRange !== "all" && "✓"} ▼</Button>
             </Popover>
           </Space>
-          <Row gutter={[16, 16]}>
-            {currentProducts.map(
-              (product) =>
-                !product.deleted && (
-                  <Col key={product._id} xs={24} sm={12} md={8} lg={6}>
-                    <div className="card-container">
-                      <Card
-                        style={{ position: "relative" }}
-                        cover={
-                          <div
-                            style={{
-                              position: "relative",
-                              height: 200,
-                              overflow: "hidden",
-                            }}
-                          >
-                            <img
-                              alt={product.title}
-                              src={
-                                product.thumbnail
-                                  ? product.thumbnail.startsWith("http")
-                                    ? product.thumbnail
-                                    : `http://localhost:5000${product.thumbnail}`
-                                  : "http://localhost:5000/path-to-placeholder-image.png"
-                              }
+          {filteredProducts.length > 0 ? (
+            <Row gutter={[16, 16]}>
+              {currentProducts.map(
+                (product) =>
+                  !product.deleted && (
+                    <Col key={product._id} xs={24} sm={12} md={8} lg={6}>
+                      <div className="card-container">
+                        <Card
+                          style={{ position: "relative" }}
+                          cover={
+                            <div
                               style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                              }}
-                            />
-                            <Text
-                              type="secondary"
-                              style={{
-                                position: "absolute",
-                                top: "8px",
-                                right: "8px",
-                                fontSize: "14px",
-                                fontWeight: "bold",
-                                color: "white",
-                                backgroundColor: "#ff4d4f",
-                                padding: "4px 8px",
-                                borderRadius: "8px",
+                                position: "relative",
+                                height: 200,
+                                overflow: "hidden",
                               }}
                             >
-                              -{product.discountPercentage}%
-                            </Text>
-                          </div>
-                        }
-                        bodyStyle={{
-                          padding: "20px",
-                          backgroundColor: "white",
-                          textAlign: "center",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "space-between",
-                          height: "100%",
-                        }}
-                      >
-                        <Text strong style={{ fontSize: "20px" }}>
-                          {product.title}
-                        </Text>
-                        <Text strong>
-                          {product.description.length > 50
-                            ? product.description.slice(0, 80) + "..."
-                            : product.description}
-                        </Text>
-                        <div className="purchase-container">
-                          {product.flashSaleStart && product.flashSaleEnd ? (
-                            new Date(product.flashSaleStart) <= new Date() &&
-                            new Date(product.flashSaleEnd) >= new Date() ? (
-                              <Text
+                              <img
+                                alt={product.title}
+                                src={
+                                  product.thumbnail
+                                    ? product.thumbnail.startsWith("http")
+                                      ? product.thumbnail
+                                      : `http://localhost:5000${product.thumbnail}`
+                                    : "http://localhost:5000/path-to-placeholder-image.png"
+                                }
                                 style={{
-                                  color: "#ff4d4f",
-                                  fontWeight: "bold",
-                                  fontSize: "14px",
-                                  marginBottom: "8px",
+                                  width: "100%",
+                                  height: "100%",
+                                  objectFit: "cover",
                                 }}
-                              >
-                                {/* {`Discount: ${
-                                  product.discountPercentage ?? 0
-                                }%`} */}
-                              </Text>
-                            ) : null
-                          ) : null}
-                          <Link to={`/listProducts/detail/${product.slug}`}>
-                            <Button className="purchase-button">
-                              Chọn mua
-                              <span className="price">
-                                {formatPrice(product.price)}
-                              </span>
-                            </Button>
-                          </Link>
-                        </div>
-                      </Card>
-                      {/* Lớp phủ */}
-                      <div className="card-overlay"></div>
-                    </div>
-                  </Col>
-                )
-            )}
-          </Row>
+                              />
+                              {product.discountPercentage && product.discountPercentage > 0 && (
+                                <Text
+                                  type="secondary"
+                                  style={{
+                                    position: "absolute",
+                                    top: "8px",
+                                    right: "8px",
+                                    fontSize: "14px",
+                                    fontWeight: "bold",
+                                    color: "white",
+                                    backgroundColor: "#ff4d4f",
+                                    padding: "4px 8px",
+                                    borderRadius: "8px",
+                                  }}
+                                >
+                                  -{product.discountPercentage}%
+                                </Text>
+                              )}
+
+                            </div>
+                          }
+                          bodyStyle={{
+                            padding: "20px",
+                            backgroundColor: "white",
+                            textAlign: "center",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "space-between",
+                            height: "100%",
+                          }}
+                        >
+                          <span className="price">
+                            {formatPrice(product.price)}
+                          </span>
+                          <Text strong style={{ fontSize: "20px" }}>
+                            {product.title}
+                          </Text>
+                          <Text strong>
+                            {product.description.length > 50
+                              ? product.description.slice(0, 80) + "..."
+                              : product.description}
+                          </Text>
+                          <div className="purchase-container">
+                            {product.flashSaleStart && product.flashSaleEnd ? (
+                              new Date(product.flashSaleStart) <= new Date() &&
+                                new Date(product.flashSaleEnd) >= new Date() ? (
+                                <Text
+                                  style={{
+                                    color: "#ff4d4f",
+                                    fontWeight: "bold",
+                                    fontSize: "14px",
+                                    marginBottom: "8px",
+                                  }}
+                                >
+                                </Text>
+                              ) : null
+                            ) : null}
+                            <Link to={`/listProducts/detail/${product.slug}`}>
+                              <Button className="purchase-button">
+                                Chọn mua
+                              </Button>
+                            </Link>
+                          </div>
+                        </Card>
+                        {/* Lớp phủ */}
+                        <div className="card-overlay"></div>
+                      </div>
+                    </Col>
+                  )
+              )}
+            </Row>
+          ) : (
+            <div style={{ textAlign: "center", marginTop: "2rem" }}>
+              <Text type="danger" strong style={{ fontSize: "18px" }}>
+                Sản phẩm này hiện chưa có!
+              </Text>
+            </div>
+          )}
 
           <Row justify="center" style={{ marginTop: "2rem" }}>
             <Pagination
