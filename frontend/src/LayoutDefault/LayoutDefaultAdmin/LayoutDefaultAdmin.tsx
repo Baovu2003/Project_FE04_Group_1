@@ -69,7 +69,6 @@ const LayoutDefaultAdmin: React.FC = () => {
                     </NavLink>
                   </li>
                 )}
-             
                 {account.role.permission.includes("products_view") && (
                   <li>
                     <NavLink to="products" className={({ isActive }) => (isActive ? "active" : "")}>
@@ -81,6 +80,14 @@ const LayoutDefaultAdmin: React.FC = () => {
                   <li>
                     <NavLink to="orders" className={({ isActive }) => (isActive ? "active" : "")}>
                       Quản lý đơn hàng
+                    </NavLink>
+                  </li>
+                )}
+                {/* Thêm mục Blog mới */}
+                {account.role.permission.includes("blogs_view") && (
+                  <li>
+                    <NavLink to="blogs" className={({ isActive }) => (isActive ? "active" : "")}>
+                      Quản lí Blog
                     </NavLink>
                   </li>
                 )}
@@ -112,17 +119,17 @@ const LayoutDefaultAdmin: React.FC = () => {
                     </NavLink>
                   </li>
                 )}
+                {account.role.permission.includes("managerUsers_view") && (
+                  <li>
+                    <NavLink to="managerUsers" className={({ isActive }) => (isActive ? "active" : "")}>
+                      Quản lí Khách Hàng
+                    </NavLink>
+                  </li>
+                )}
                 {account.role.permission.includes("gift_view") && (
                   <li>
                     <NavLink to="gift" className={({ isActive }) => (isActive ? "active" : "")}>
                       Quà tặng
-                    </NavLink>
-                  </li>
-                )}
-                {account.role.permission.includes("blogs_view") && (
-                  <li>
-                    <NavLink to="blogs" className={({ isActive }) => (isActive ? "active" : "")}>
-                      Blog
                     </NavLink>
                   </li>
                 )}
@@ -136,6 +143,8 @@ const LayoutDefaultAdmin: React.FC = () => {
           </div>
         </main>
       </>
+
+
       }
       {location.pathname !== "/admin/chat" && (
         <div className="chat-button-admin">
@@ -150,6 +159,7 @@ const LayoutDefaultAdmin: React.FC = () => {
         </div>
       )}
     </div>
+
   );
 };
 

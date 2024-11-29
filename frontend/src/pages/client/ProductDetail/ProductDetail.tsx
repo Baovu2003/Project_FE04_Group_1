@@ -1,13 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Card, Typography, Button, Layout, Breadcrumb, Row, Col, Tag, Divider, InputNumber, Image } from 'antd';
-import { ThunderboltOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { useDispatch, useSelector } from 'react-redux';
-import { CartActionTypes, Product } from '../../../actions/types';
-import { RootState } from '../../../store/store';
-import { post } from '../../../Helpers/API.helper';
-import { addToCart } from '../../../actions/CartAction';
-import { Dispatch } from 'redux';
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import {
+  Card,
+  Typography,
+  Button,
+  Layout,
+  Breadcrumb,
+  Row,
+  Col,
+  Tag,
+  Divider,
+  InputNumber,
+  Image,
+} from "antd";
+import { ThunderboltOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { CartActionTypes, Product } from "../../../actions/types";
+import { RootState } from "../../../store/store";
+import { post } from "../../../Helpers/API.helper";
+import { addToCart } from "../../../actions/CartAction";
+import { Dispatch } from "redux";
 
 const { Title, Text } = Typography;
 const { Content } = Layout;
@@ -24,49 +36,56 @@ const ProductDetail: React.FC = () => {
 
   const handleAddToCart = async () => {
     if (!product) return;
-     // Lấy giỏ hàng từ localStorage
-     const cartData = localStorage.getItem('cart');
-     const cart = cartData ? JSON.parse(cartData) : { list: [] };
- 
-     // Tìm sản phẩm trong giỏ hàng
-     const existingProduct = cart.list.find((item: { product_id: string }) => item.product_id === product._id);
-     console.log(existingProduct)
-     const existingQuantity = existingProduct ? existingProduct.quantity : 0;
- 
-     console.log(existingQuantity)
-     // Tính số lượng sau khi thêm
-     const totalQuantity = existingQuantity + quantity;
-     console.log(product.stock)
-     if (totalQuantity > product.stock) {
-      alert(`Không thể thêm sản phẩm. Chỉ còn ${product.stock} sản phẩm trong kho.`);
+    // Lấy giỏ hàng từ localStorage
+    const cartData = localStorage.getItem("cart");
+    const cart = cartData ? JSON.parse(cartData) : { list: [] };
+
+    // Tìm sản phẩm trong giỏ hàng
+    const existingProduct = cart.list.find(
+      (item: { product_id: string }) => item.product_id === product._id
+    );
+    console.log(existingProduct);
+    const existingQuantity = existingProduct ? existingProduct.quantity : 0;
+
+    console.log(existingQuantity);
+    // Tính số lượng sau khi thêm
+    const totalQuantity = existingQuantity + quantity;
+    console.log(product.stock);
+    if (totalQuantity > product.stock) {
+      alert(
+        `Không thể thêm sản phẩm. Chỉ còn ${product.stock} sản phẩm trong kho.`
+      );
       return;
-  }
+    }
     try {
-      const data = await post(`http://localhost:5000/cart/add/${user?.user._id}`, {
-        productId: product._id,
-        quantity: quantity,
-      });
+      const data = await post(
+        `http://localhost:5000/cart/add/${user?.user._id}`,
+        {
+          productId: product._id,
+          quantity: quantity,
+        }
+      );
 
       if (data.message) {
-        console.log('Product ID:', product._id, 'Quantity:', quantity);
-        console.log('Cart updated:', data.cartItems);
+        console.log("Product ID:", product._id, "Quantity:", quantity);
+        console.log("Cart updated:", data.cartItems);
         dispatch(addToCart({ product_id: product._id, quantity }));
-
       } else {
-        console.error('Failed to add item to cart');
+        console.error("Failed to add item to cart");
       }
     } catch (error) {
-      console.error('Error adding to cart:', error);
+      console.error("Error adding to cart:", error);
     }
   };
 
   // Helper function to save cart to local storage
 
-
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/products/detail/${slug}`);
+        const response = await fetch(
+          `http://localhost:5000/products/detail/${slug}`
+        );
         const data = await response.json();
         setProduct(data.products);
       } catch (error) {
@@ -82,7 +101,8 @@ const ProductDetail: React.FC = () => {
   if (loading) return <div>Loading...</div>;
   if (!product) return <div>Product not found.</div>;
 
-  const originalPrice = product.price / (1 - (product.discountPercentage || 0) / 100);
+  const originalPrice =
+    product.price / (1 - (product.discountPercentage || 0) / 100);
 
   return (
     <Layout>
@@ -121,27 +141,32 @@ const ProductDetail: React.FC = () => {
               <Text type="secondary">Đã bán 10</Text>
 
               <Title level={2} style={{ color: "#ff424e" }}>
-                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price)}
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(product.price)}
               </Title>
               <Text delete type="secondary">
-                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(originalPrice)}
+                {new Intl.NumberFormat("vi-VN", {
+                  style: "currency",
+                  currency: "VND",
+                }).format(originalPrice)}
               </Text>
               <Text type="secondary"> -{product.discountPercentage}%</Text>
 
               <Divider />
-
-              <Title level={5}>Thông tin vận chuyển</Title>
-              <Text>Giao đến Q. Hoàn Kiếm, P. Hàng Trống, Hà Nội</Text>
-              <Button type="link" style={{ padding: 0 }}>
-                Đổi
-              </Button>
+              <Title level={5}>{product.description}</Title>
+              
               <br />
               <Text type="success">
                 <ThunderboltOutlined /> Giao siêu tốc 2h
               </Text>
               <br />
               <Text type="success">Trước 10h ngày mai: Miễn phí</Text>
-              <Text delete type="secondary"> 25.000đ</Text>
+              <Text delete type="secondary">
+                {" "}
+                25.000đ
+              </Text>
 
               <Divider />
 
@@ -169,7 +194,12 @@ const ProductDetail: React.FC = () => {
                   </Button>
                 </Col>
                 <Col span={12}>
-                  <Button block size="large" icon={<ShoppingCartOutlined />} onClick={handleAddToCart}>
+                  <Button
+                    block
+                    size="large"
+                    icon={<ShoppingCartOutlined />}
+                    onClick={handleAddToCart}
+                  >
                     Thêm vào giỏ
                   </Button>
                 </Col>
@@ -183,4 +213,3 @@ const ProductDetail: React.FC = () => {
 };
 
 export default ProductDetail;
-

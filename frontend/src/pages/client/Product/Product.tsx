@@ -1,8 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Layout, Row, Col, Typography, Space, Select, Card, Button, Popover, Menu, Radio, Pagination } from 'antd';
-import { Link, useLocation  } from 'react-router-dom';
-import { FilterOutlined, FolderOutlined } from '@ant-design/icons';
-import './ProductList.css';
+import React, { useState, useEffect } from "react";
+import {
+  Layout,
+  Row,
+  Col,
+  Typography,
+  Space,
+  Select,
+  Card,
+  Button,
+  Popover,
+  Menu,
+  Radio,
+  Pagination,
+} from "antd";
+import { Link, useLocation } from "react-router-dom";
+import { FilterOutlined, FolderOutlined } from "@ant-design/icons";
+import { CoffeeOutlined } from "@ant-design/icons";
+import "./ProductList.css";
 const { Header, Content, Sider } = Layout;
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -38,6 +52,8 @@ interface Product {
     account_id: string;
     createdAt: string;
   };
+  flashSaleStart?: string;
+  flashSaleEnd?: string;
 }
 
 interface ApiResponse {
@@ -65,23 +81,23 @@ interface ApiResponse {
 const ProductList = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [sortOrder, setSortOrder] = useState<string>('default');
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [sortOrder, setSortOrder] = useState<string>("default");
   const [openKeys, setOpenKeys] = useState<string[]>([]);
-  const [selectedChildCategory, setSelectedChildCategory] = useState<string>('');
-  const [priceRange, setPriceRange] = useState<string>('all');
+  const [selectedChildCategory, setSelectedChildCategory] =
+    useState<string>("");
+  const [priceRange, setPriceRange] = useState<string>("all");
   const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
 
   const location = useLocation();
-  const searchTerm = location.state?.searchTerm || '';
-
+  const searchTerm = location.state?.searchTerm || "";
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/products');
+        const response = await fetch("http://localhost:5000/products");
         const data: ApiResponse = await response.json();
         console.log("Categories:", data.recordsCategory); // kiểm tra danh mục
         console.log("Products:", data.recordsProduct);
@@ -98,9 +114,10 @@ const ProductList = () => {
 
   useEffect(() => {
     if (searchTerm) {
-      const searchResults = originalProducts.filter(product => 
-        product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchTerm.toLowerCase())
+      const searchResults = originalProducts.filter(
+        (product) =>
+          product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          product.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setProducts(searchResults);
       setCurrentPage(1); // Reset về trang 1 khi có kết quả tìm kiếm mới
@@ -111,13 +128,13 @@ const ProductList = () => {
 
   const handleSortChange = (value: string) => {
     setSortOrder(value);
-    if (value === 'default') {
+    if (value === "default") {
       setProducts(originalProducts); // Reset to original products
     } else {
       let sortedProducts = [...products];
-      if (value === 'price-asc') {
+      if (value === "price-asc") {
         sortedProducts.sort((a, b) => a.price - b.price);
-      } else if (value === 'price-desc') {
+      } else if (value === "price-desc") {
         sortedProducts.sort((a, b) => b.price - a.price);
       }
       setProducts(sortedProducts);
@@ -125,7 +142,10 @@ const ProductList = () => {
   };
 
   const formatPrice = (price: number) =>
-    new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+    new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(price);
 
   const PriceFilterContent = () => (
     <Radio.Group
@@ -144,10 +164,12 @@ const ProductList = () => {
       const hasChildren = category.children && category.children.length > 0;
       const menuItem = (
         <span className="flex items-center">
-          <FolderOutlined className="mr-2" />
+          <CoffeeOutlined className="mr-2" />
           <span>{category.title}</span>
-          {category.status === 'inactive' && (
-            <span className="ml-2 text-xs px-1 py-0.5 bg-gray-200 rounded">Inactive</span>
+          {category.status === "inactive" && (
+            <span className="ml-2 text-xs px-1 py-0.5 bg-gray-200 rounded">
+              Inactive
+            </span>
           )}
         </span>
       );
@@ -155,7 +177,8 @@ const ProductList = () => {
       if (hasChildren) {
         return (
           <Menu.SubMenu key={category._id} title={menuItem}>
-            {renderCategoryMenu(category.children)} {/* Recursively render child categories */}
+            {renderCategoryMenu(category.children)}{" "}
+            {/* Recursively render child categories */}
           </Menu.SubMenu>
         );
       }
@@ -166,7 +189,7 @@ const ProductList = () => {
           onClick={() => {
             console.log("Clicked Category ID:", category._id); // Log ID danh mục đã chọn
             setSelectedCategory(category._id);
-            setSelectedChildCategory('');
+            setSelectedChildCategory("");
           }}
         >
           {menuItem}
@@ -177,22 +200,25 @@ const ProductList = () => {
 
   useEffect(() => {
     if (selectedChildCategory) {
-      const selectedProduct = products.find(product => product._id === selectedChildCategory);
+      const selectedProduct = products.find(
+        (product) => product._id === selectedChildCategory
+      );
       if (selectedProduct) {
         console.log("Selected Product:", selectedProduct);
       } else {
-        console.log("No product found for selectedChildCategory:", selectedChildCategory);
+        console.log(
+          "No product found for selectedChildCategory:",
+          selectedChildCategory
+        );
       }
     }
   }, [selectedChildCategory, products]); // Theo dõi khi selectedChildCategory hoặc products thay đổi
-
-
 
   // Helper function to get all category IDs including children
   const getAllCategoryIds = (category: Category): string[] => {
     let ids = [category._id];
     if (category.children) {
-      category.children.forEach(child => {
+      category.children.forEach((child) => {
         ids = [...ids, ...getAllCategoryIds(child)];
       });
     }
@@ -200,7 +226,10 @@ const ProductList = () => {
   };
 
   // Helper function to find a category and its children by ID
-  const findCategoryById = (categories: Category[], categoryId: string): Category | null => {
+  const findCategoryById = (
+    categories: Category[],
+    categoryId: string
+  ): Category | null => {
     for (const category of categories) {
       if (category._id === categoryId) {
         return category;
@@ -214,8 +243,8 @@ const ProductList = () => {
   };
 
   // Filter products
-  const filteredProducts = products.filter(product => {
-    const productCategoryId = product.product_category_id || '';
+  const filteredProducts = products.filter((product) => {
+    const productCategoryId = product.product_category_id || "";
     let matchesCategory = true;
     let matchesSearch = true;
 
@@ -234,15 +263,15 @@ const ProductList = () => {
 
     // Price filter
     let matchesPrice = true;
-    if (priceRange === '0-30000') {
+    if (priceRange === "0-30000") {
       matchesPrice = product.price >= 0 && product.price <= 30000;
-    } else if (priceRange === '30000-100000') {
+    } else if (priceRange === "30000-100000") {
       matchesPrice = product.price > 30000 && product.price <= 100000;
     }
 
     // Search filter
     if (searchTerm) {
-      matchesSearch = 
+      matchesSearch =
         product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.description.toLowerCase().includes(searchTerm.toLowerCase());
     }
@@ -253,7 +282,10 @@ const ProductList = () => {
   // Pagination logic
   const indexOfLastProduct = currentPage * pageSize;
   const indexOfFirstProduct = indexOfLastProduct - pageSize;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
 
   const onPageChange = (page: number, pageSize?: number) => {
     setCurrentPage(page);
@@ -266,12 +298,18 @@ const ProductList = () => {
       <Header className="bg-white px-5">
         <Row justify="space-between" align="middle">
           <Col>
-            <Title level={2} className="m-0">Products</Title>
+            {/* <Title level={2} className="m-0">
+              Products
+            </Title> */}
           </Col>
           <Col>
             <Space>
               <Text>Sắp xếp:</Text>
-              <Select defaultValue="default" style={{ width: 160 }} onChange={handleSortChange}>
+              <Select
+                defaultValue="default"
+                style={{ width: 160 }}
+                onChange={handleSortChange}
+              >
                 <Option value="default">Mặc định</Option>
                 <Option value="price-asc">Giá tăng dần</Option>
                 <Option value="price-desc">Giá giảm dần</Option>
@@ -293,7 +331,7 @@ const ProductList = () => {
           >
             <Menu.Item key="">
               <span className="flex items-center">
-                <FolderOutlined className="mr-2" />
+                <CoffeeOutlined className="mr-2" />
                 Tất cả sản phẩm
               </span>
             </Menu.Item>
@@ -309,97 +347,125 @@ const ProductList = () => {
               title="Lọc giá"
               trigger="click"
             >
-              <Button>
-                Lọc giá {priceRange !== 'all' && '✓'} ▼
-              </Button>
+              <Button>Lọc giá {priceRange !== "all" && "✓"} ▼</Button>
             </Popover>
           </Space>
           <Row gutter={[16, 16]}>
-            {currentProducts.map((product) => (
-              !product.deleted && (
-                <Col key={product._id} xs={24} sm={12} md={8} lg={6}>
-                  <Card
-                    cover={
-                      <div style={{ height: 200, overflow: 'hidden' }}>
-                        <img
-                          alt={product.title}
-                          src={
-                            product.thumbnail
-                              ? product.thumbnail.startsWith("http")
-                                ? product.thumbnail
-                                : `http://localhost:5000${product.thumbnail}`
-                              : "http://localhost:5000/path-to-placeholder-image.png" // Placeholder image URL
-                          }
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                          }}
-                        />
-                      </div>
-                    }
-                    bodyStyle={{
-                      padding: "20px",
-                      backgroundColor: "#FDB813",
-                      textAlign: "center",
-                      color: "white",
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between',
-                      height: '100%',
-                    }}
-                  >
-                    <Title
-                      level={3}
-                      className="text-white my-2"
-                      style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                        whiteSpace: 'normal',
-                        height: '48px',
-                      }}
-                    >
-                      {product.title}
-                    </Title>
-
-                    <Text strong>{product.description}</Text>
-                    <Title level={4} className="text-white my-2">
-                      {formatPrice(product.price)}
-                    </Title>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                      <Text
-                        style={{
-                          color: product.discountPercentage ? '#ff4d4f' : '#888',
-                          fontWeight: 'bold',
-                          fontSize: '14px',
-                          marginBottom: '8px',
+            {currentProducts.map(
+              (product) =>
+                !product.deleted && (
+                  <Col key={product._id} xs={24} sm={12} md={8} lg={6}>
+                    <div className="card-container">
+                      <Card
+                        style={{ position: "relative" }}
+                        cover={
+                          <div
+                            style={{
+                              position: "relative",
+                              height: 200,
+                              overflow: "hidden",
+                            }}
+                          >
+                            <img
+                              alt={product.title}
+                              src={
+                                product.thumbnail
+                                  ? product.thumbnail.startsWith("http")
+                                    ? product.thumbnail
+                                    : `http://localhost:5000${product.thumbnail}`
+                                  : "http://localhost:5000/path-to-placeholder-image.png"
+                              }
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                objectFit: "cover",
+                              }}
+                            />
+                            <Text
+                              type="secondary"
+                              style={{
+                                position: "absolute",
+                                top: "8px",
+                                right: "8px",
+                                fontSize: "14px",
+                                fontWeight: "bold",
+                                color: "white",
+                                backgroundColor: "#ff4d4f",
+                                padding: "4px 8px",
+                                borderRadius: "8px",
+                              }}
+                            >
+                              -{product.discountPercentage}%
+                            </Text>
+                          </div>
+                        }
+                        bodyStyle={{
+                          padding: "20px",
+                          backgroundColor: "white",
+                          textAlign: "center",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "space-between",
+                          height: "100%",
                         }}
                       >
-                        {`Discount: ${product.discountPercentage ?? 0}%`}
-                      </Text>
-                      <Link to={`/listProducts/detail/${product.slug}`}>
-                        <Button className="purchase-button">Chọn mua</Button>
-                      </Link>
+                        <Text strong style={{ fontSize: "20px" }}>
+                          {product.title}
+                        </Text>
+                        <Text strong>
+                          {product.description.length > 50
+                            ? product.description.slice(0, 80) + "..."
+                            : product.description}
+                        </Text>
+                        <div className="purchase-container">
+                          {product.flashSaleStart && product.flashSaleEnd ? (
+                            new Date(product.flashSaleStart) <= new Date() &&
+                            new Date(product.flashSaleEnd) >= new Date() ? (
+                              <Text
+                                style={{
+                                  color: "#ff4d4f",
+                                  fontWeight: "bold",
+                                  fontSize: "14px",
+                                  marginBottom: "8px",
+                                }}
+                              >
+                                {/* {`Discount: ${
+                                  product.discountPercentage ?? 0
+                                }%`} */}
+                              </Text>
+                            ) : null
+                          ) : null}
+                          <Link to={`/listProducts/detail/${product.slug}`}>
+                            <Button className="purchase-button">
+                              Chọn mua
+                              <span className="price">
+                                {formatPrice(product.price)}
+                              </span>
+                            </Button>
+                          </Link>
+                        </div>
+                      </Card>
+                      {/* Lớp phủ */}
+                      <div className="card-overlay"></div>
                     </div>
-                  </Card>
-                </Col>
-              )
-            ))}
+                  </Col>
+                )
+            )}
           </Row>
-          <Row justify="center" style={{ marginTop: '2rem' }}>
-          <Pagination
-            current={currentPage}
-            total={filteredProducts.length}
-            pageSize={pageSize}
-            onChange={onPageChange}
-            showSizeChanger
-            showQuickJumper
-            showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-          />
-        </Row>
+
+          <Row justify="center" style={{ marginTop: "2rem" }}>
+            <Pagination
+              current={currentPage}
+              total={filteredProducts.length}
+              pageSize={pageSize}
+              onChange={onPageChange}
+              showSizeChanger
+              showQuickJumper
+              showTotal={(total, range) =>
+                `${range[0]}-${range[1]} of ${total} items`
+              }
+            />
+          </Row>
         </Content>
       </Layout>
     </Layout>

@@ -184,7 +184,7 @@ const BlogCreate: React.FC = () => {
                   <button
                     type="button"
                     className="btn btn-secondary"
-                    onClick={() => navigate('/admin/blog')}
+                    onClick={() => navigate('/admin/blogs')}
                   >
                     Hủy
                   </button>

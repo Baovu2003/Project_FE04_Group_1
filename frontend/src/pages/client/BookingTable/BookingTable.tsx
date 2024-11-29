@@ -228,9 +228,9 @@ function BookRoom() {
                                 />
                             </Form.Item>
                         </Col>
-                    
-                   
-                    
+
+
+
 
 
 
@@ -261,6 +261,48 @@ function BookRoom() {
                     </Row>
                 </Form>
             </div>
+            <div className="coffeeking-info">
+                <h2>Đặt chỗ tại CoffeKing:</h2>
+                <ul className="custom-list">
+                    <li>
+                        <span className="icon-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <polyline points="15 10 20 15 15 20"></polyline>
+                                <path d="M4 4v7a4 4 0 0 0 4 4h12"></path>
+                            </svg>
+                        </span>
+                        <span className="text">Gọi điện: Tìm số điện thoại của chi nhánh CoffeKing gần bạn và xem trang cửa hàng của chúng tôi.</span>
+                    </li>
+                    <li>
+                        <span className="icon-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <polyline points="15 10 20 15 15 20"></polyline>
+                                <path d="M4 4v7a4 4 0 0 0 4 4h12"></path>
+                            </svg>
+                        </span>
+                        <span className="text">Sử dụng biểu mẫu được cung cấp ở trên để đặt chỗ.</span>
+                    </li>
+                    <li>
+                        <span className="icon-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <polyline points="15 10 20 15 15 20"></polyline>
+                                <path d="M4 4v7a4 4 0 0 0 4 4h12"></path>
+                            </svg>
+                        </span>
+                        <span className="text">Đến trực tiếp: Đến trực tiếp nhà hàng CoffeKing và yêu cầu nhân viên giúp bạn đặt chỗ.</span>
+                    </li>
+                    <li>
+                        <span className="icon-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <polyline points="15 10 20 15 15 20"></polyline>
+                                <path d="M4 4v7a4 4 0 0 0 4 4h12"></path>
+                            </svg>
+                        </span>
+                        <span className="text">Ứng dụng đặt chỗ: Sử dụng ứng dụng địa phương nếu CoffeKing có trong danh sách ở đó.</span>
+                    </li>
+                </ul>
+            </div>
+
         </div>
     );
 }

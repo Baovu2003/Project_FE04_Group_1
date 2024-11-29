@@ -1,6 +1,6 @@
 // redux/actions/types.ts
 export interface ApiLoginAdmin {
-  accountInAdmin: Account
+  accountInAdmin: Account;
   role: Role;
 }
 export interface ApiLoginUser {
@@ -20,6 +20,8 @@ export interface Product {
   position: number;
   deleted: boolean;
   slug: string;
+  flashSaleStart?: string;
+  flashSaleEnd?: string;
   createdBy: {
     account_id: string;
     createdAt: Date;
@@ -95,14 +97,13 @@ export interface User {
   tokenUser?: string;
   phone?: string;
   avatar?: string;
-  address: string,
+  address: string;
   status: string;
   deleted: boolean;
   deleteAt?: Date;
   createdAt?: Date;
   updatedAt?: Date;
 }
-
 
 export interface PermissionRecord {
   _id: string;
@@ -150,74 +151,72 @@ interface DistrictResponse {
 }
 
 export interface Order {
-  _id: string,
-  user_id: string,
-  userInfo:
-  {
-    email: string,
-    fullname: string,
-    phone: string,
-    address: string,
-  },
+  _id: string;
+  user_id: string;
+  userInfo: {
+    email: string;
+    fullname: string;
+    phone: string;
+    address: string;
+  };
 
   products: [
     {
-      product_id: string,
-      quantity: number,
-      price: number,
-      discountPercentage: number,
-    },
-  ],
-  paymentMethod: string,
-  statusPayment: string,
-  statusOrders:string,
-  total: number
-  createdAt:string
+      product_id: string;
+      quantity: number;
+      price: number;
+      discountPercentage: number;
+    }
+  ];
+  paymentMethod: string;
+  statusPayment: string;
+  statusOrders: string;
+  total: number;
+  createdAt: string;
 }
 export interface ChatFe {
   _id: string;
-  user_id: string,
-  room_chat_id: string,
-  content: string,
-  images: [],
-  deleted: boolean,
-  deleteAt: Date,
-  inforUser: User
+  user_id: string;
+  room_chat_id: string;
+  content: string;
+  images: [];
+  deleted: boolean;
+  deleteAt: Date;
+  inforUser: User;
 }
 export interface ChatV2 {
-
   _id: string;
   members: Array<string>;
 }
 
 export interface Message {
-    chatId: string,
-    senderId: string,
-    text: string,   
-    createdAt:Date
+  chatId: string;
+  senderId: string;
+  text: string;
+  createdAt: Date;
 }
 export interface TableWebsite {
-  _id: string,
-  name: string,
-  status: boolean
+  _id: string;
+  name: string;
+  status: boolean;
 }
 export interface bookingTable {
-  table_id: string,
-  user_id: string,
-  timeBook: string,
- dateBook: string,
-  quantityUser: number,
-  gift: string,
-  status: boolean,
+  table_id: string;
+  user_id: string;
+  timeBook: string;
+  dateBook: string;
+  quantityUser: number;
+  gift: string;
+  status: boolean;
 }
 
 export interface Gift {
-  _id: string,
-  name: string,
-  status: boolean
+  _id: string;
+  name: string;
+  status: boolean;
 }
 export interface ApiResponse {
-  accountInAdmin: Account
+  accountInAdmin: Account;
   user: User;
   role: Role;
   token: string;
@@ -234,7 +233,7 @@ export interface ApiResponse {
   detailAccount: Account;
   detailUser: User;
   cart: Cart[];
-  cartItems: Cart
+  cartItems: Cart;
   recordOrders: Order[];
   OrderByUserId: Order[];
   recordsChat: ChatFe[];
@@ -250,23 +249,20 @@ export interface ApiResponse {
   recordBookingTables: bookingTable[];
   detailBookingTable: bookingTable;
   recordGift: Gift[];
-  status: number
+  status: number;
   message: string;
-  data: DistrictResponse
+  data: DistrictResponse;
 }
 
-
-
-
 // Define all cart action types
 
 // Define all cart action types
-export const ADD_TO_CART = 'ADD_TO_CART';
-export const UPDATE_QUANTITY = 'UPDATE_QUANTITY';
-export const REMOVE_ITEM = 'REMOVE_ITEM';
-export const CLEAR_CART = 'CLEAR_CART';
+export const ADD_TO_CART = "ADD_TO_CART";
+export const UPDATE_QUANTITY = "UPDATE_QUANTITY";
+export const REMOVE_ITEM = "REMOVE_ITEM";
+export const CLEAR_CART = "CLEAR_CART";
 export const SET_CART = "SET_CART";
-export const REMOVE_SELECTED_PRODUCTS = 'REMOVE_SELECTED_PRODUCTS';
+export const REMOVE_SELECTED_PRODUCTS = "REMOVE_SELECTED_PRODUCTS";
 export interface AddToCartAction {
   type: typeof ADD_TO_CART;
   payload: CartProduct; // Use CartProduct directly
@@ -289,7 +285,7 @@ export interface SetCartAction {
   type: typeof SET_CART;
   payload: {
     list: CartProduct[]; // Your expected structure
-    total: number;       // The total count
+    total: number; // The total count
   };
 }
 export interface RemoveSelectedProductsAction {
@@ -297,8 +293,11 @@ export interface RemoveSelectedProductsAction {
   payload: string[]; // Array of product IDs to remove
 }
 
-
 // Union type for all cart action types
-export type CartActionTypes = AddToCartAction |
-  UpdateQuantityAction | RemoveItemAction | ClearCartAction | SetCartAction
+export type CartActionTypes =
+  | AddToCartAction
+  | UpdateQuantityAction
+  | RemoveItemAction
+  | ClearCartAction
+  | SetCartAction
   | RemoveSelectedProductsAction;
