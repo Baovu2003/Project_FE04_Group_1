@@ -194,7 +194,7 @@ function BookRoom() {
                         </div>
                         <div className="text-content">
                             <h4>Địa chỉ</h4>
-                            <p>Unit C3, Network Enterprise Park, Kilcoole, Co Wicklow</p>
+                            <p>Thach Hoa, Thach That, Ha Noi</p>
                         </div>
                     </div>
                     <div className="info-group">
