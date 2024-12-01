@@ -1,81 +1,146 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap');
-
 .reservation-container {
+  padding: 20px;
+}
+
+.map-container {
+  margin-bottom: 20px;
+}
+
+.contents {
+  display: flex;
+  gap: 20px;
+  
+}
+
+.contact-info {
+  flex: 1;
+  max-width: 25%;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.reservation-form h2,
+.section-title {
+  font-weight: bold;
+  padding-bottom: 30px;
+  text-align: center;
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.info-group {
+  padding-top: 20px;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  gap: 10px;
+}
+
+.icon-wrapper {
+  background-color: #0078d7;
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #EEE6D2;
+  font-size: 20px;
+  min-width: 40px;
+  height: 40px;
 }
+
+.text-content h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.text-content p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #555;
+}
+
+
 
 .reservation-form {
-  width: 700px;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  font-family: "Kanit", sans-serif;
-  margin-left: 100px;
+  flex: 3;
+  max-width: 75%;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.reservation-form h2 {
-  text-align: center;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-  background: linear-gradient(to right, #2563eb, #22c55e, #818cf8);
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  display: inline-block;
-  color: transparent;
-  background-clip: text;
-}
-
-.reservation-form .ant-input,
-.reservation-form .ant-select,
-.reservation-form .ant-picker {
-  width: 100%;
-  border-radius: 5px;
-  font-family: "Kanit", sans-serif;
-}
 
 .coffeeking-info {
-  margin-bottom: 180px;
-  padding: 20px;
-  font-family: 'Kanit', sans-serif;
-  font-size: 17px;
-  line-height: 1.5;
-  max-width: 700px;
-  text-align: left;
+  background-color: #f9f9f9;
+  padding: 20px 30px;
+  margin-top: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.custom-list {
+.coffeeking-info h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.coffeeking-info .custom-list {
   list-style: none;
+  /* Loại bỏ kiểu danh sách mặc định */
   padding: 0;
   margin: 0;
 }
 
-.custom-list li {
+.coffeeking-info .custom-list li {
   display: flex;
-  align-items: flex-start;
-  margin-bottom: 10px;
+  align-items: center;
+  margin-bottom: 15px;
+  /* Khoảng cách giữa các mục */
 }
 
-.icon-wrap {
-  margin-right: 10px;
+.coffeeking-info .icon-wrap {
+  width: 40px;
+  height: 40px;
+  /* background-color: #fff;  */
+  /* Màu cam tạo điểm nhấn */
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
+  /* Tạo hình tròn */
+  margin-right: 15px;
+  /* Khoảng cách giữa icon và văn bản */
+  color: #0b0000;
+  /* Màu trắng cho biểu tượng */
 }
 
-.icon-wrap svg {
-  width: 16px; /* Smaller size */
-  height: 16px;
-  color: #444;
+.coffeeking-info .text {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.5;
+  /* Dễ đọc hơn khi có khoảng cách dòng */
 }
 
-.text {
-  flex: 1;
-  font-size: 17px; /* Slightly smaller text */
+.coffeeking-info .text span {
+  font-weight: bold;
+  /* In đậm những thông tin quan trọng */
   color: #333;
+}
+
+.coffeeking-info ul li:last-child {
+  margin-bottom: 0;
+}
+
+
+.section-title {
+  font-size: 1.5em;
+  margin-bottom: 10px;
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Card,
   Typography,
@@ -33,8 +33,13 @@ const ProductDetail: React.FC = () => {
   const user = useSelector((state: RootState) => state.UserReducer);
 
   const dispatch = useDispatch<Dispatch<CartActionTypes>>(); // Explicitly type the dispatch
+  const navigate = useNavigate();
 
   const handleAddToCart = async () => {
+    if (!user) {
+      // Nếu chưa đăng nhập, điều hướng đến trang login
+      navigate("/user/login");
+    }
     if (!product) return;
     // Lấy giỏ hàng từ localStorage
     const cartData = localStorage.getItem("cart");
@@ -187,6 +192,8 @@ const ProductDetail: React.FC = () => {
                 </Col>
               </Row>
 
+
+             
               <Row gutter={16} style={{ marginTop: 16 }}>
                 <Col span={12}>
                   <Button
@@ -195,6 +202,7 @@ const ProductDetail: React.FC = () => {
                     icon={<ShoppingCartOutlined />}
                     onClick={handleAddToCart}
                   >
+                    
                     Thêm vào giỏ
                   </Button>
                 </Col>
