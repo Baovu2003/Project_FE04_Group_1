@@ -185,7 +185,7 @@ function BookRoom() {
                 ></iframe>
             </div>
 
-            <div className="content">
+            <div className="contents">
                 <div className="contact-info">
                     <h2 className="section-title">Thông Tin Liên Hệ</h2>
                     <div className="info-group">
