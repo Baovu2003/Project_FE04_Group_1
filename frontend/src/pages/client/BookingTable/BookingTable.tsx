@@ -1,4 +1,4 @@
-import { CheckOutlined } from "@ant-design/icons";
+import { CheckOutlined, EnvironmentOutlined, PhoneOutlined } from "@ant-design/icons";
 import { Button, Col, DatePicker, Select, Row, message, Form, DatePickerProps } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -174,122 +174,158 @@ function BookRoom() {
 
     return (
         <div className="reservation-container">
-            <div className="reservation-form">
-                <h2>Đặt Bàn</h2>
-                <Form form={form} layout="vertical" onFinish={handleSubmit}>
-                    <Row gutter={[20, 20]}>
-                        <Col span={12}>
-                            <Form.Item
-                                label="Chọn bàn"
-                                name="table_id"
 
-                                rules={[{ required: true, message: 'Vui lòng chọn bàn' }]}
-                            >
-                                <Select
-                                    placeholder="Chọn bàn"
-                                    onChange={handleTableSelect}
-                                    style={{ width: "100%" }}
-                                >
-                                    {tables.map(table => (
-                                        <Select.Option key={table._id} value={table._id}>
-                                            {table.name}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item
-                                label="Số lượng người"
-                                name="quantityUser"
-                                rules={[{ required: true, message: 'Vui lòng chọn số lượng người' }]}
-                            >
-                                <Select
-                                    placeholder="Số lượng người"
-                                    style={{ width: "100%" }}
-                                    onChange={(value) => setData(prevData => ({
-                                        ...prevData,
-                                        quantityUser: value
-                                    }))}
-                                >
-                                    {[2, 3, 4, 5, 6].map((num) => (
-                                        <Select.Option key={num} value={num}>
-                                            {num} người
-                                        </Select.Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            {giftUser ? (
-                                <>
-                                    <p>Quà của bạn là:<strong>{giftUser}</strong></p>
-
-                                </>
-                            ) : (
-                                <p>Click để nhận ngẫu nhiên quà:</p>
-                            )}
-                            <div style={{ marginTop: '10px' }}>  {/* Add margin or div for spacing */}
-                                <Button
-                                    type="primary"
-                                    onClick={handleLuckyWheel}
-                                    disabled={spinCount >= 1}  // Disable after 1 spin
-                                >
-                                    Quay may mắn
-                                </Button>
-                            </div>
-                        </Col>
-
-
-                        <Col span={12}>
-                            <Form.Item
-                                label="Chọn ngày"
-                                name="dateBook"
-                                rules={[{ required: true, message: 'Vui lòng chọn ngày' }]}
-                            >
-                                <DatePicker
-                                    placeholder="Chọn ngày"
-                                    format="DD-MM-YYYY"
-                                    onChange={handleChangeDate}
-                                    style={{ width: "100%" }}
-                                    disabledDate={(current) => {
-                                        return current && current < moment().startOf('day');
-                                    }}
-                                />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={12}>
-                            <Form.Item
-                                label="Chọn giờ"
-                                name="timeBook"
-                                rules={[{ required: true, message: 'Vui lòng chọn giờ' }]}
-                            >
-                                <Select
-                                    onChange={handleChangeHours}
-                                    style={{ width: 120 }}
-                                    options={generateTimeOptions()}
-                                    placeholder="Chọn giờ"
-                                    disabled={!data.dateBook}
-                                />
-                            </Form.Item>
-                        </Col>
-
-                        <Col span={24} style={{ display: "flex", justifyContent: "center" }}>
-                            <Button
-                                style={{ width: "200px" }}
-                                type="primary"
-                                icon={<CheckOutlined />}
-                                htmlType="submit"
-                            >
-                                Đặt bàn
-                            </Button>
-                        </Col>
-                    </Row>
-                </Form>
+            <div className="map-container">
+                <iframe
+                    title="Google Map"
+                    src="https://www.google.com/maps/embed?pb=!1m18..."
+                    style={{ border: 0, width: "100%", height: "300px" }}
+                    allowFullScreen=""
+                    loading="lazy"
+                ></iframe>
             </div>
+
+            <div className="content">
+                <div className="contact-info">
+                    <h2 className="section-title">Thông Tin Liên Hệ</h2>
+                    <div className="info-group">
+                        <div className="icon-wrapper">
+                            <EnvironmentOutlined className="info-icon" />
+                        </div>
+                        <div className="text-content">
+                            <h4>Địa chỉ</h4>
+                            <p>Thach Hoa, Thach That, Ha Noi</p>
+                        </div>
+                    </div>
+                    <div className="info-group">
+                        <div className="icon-wrapper">
+                            <PhoneOutlined className="info-icon" />
+                        </div>
+                        <div className="text-content">
+                            <h4>Liên hệ</h4>
+                            <p>Tel: 01201 1016</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="reservation-form">
+                    <h2>Đặt Bàn</h2>
+                    <Form form={form} layout="vertical" onFinish={handleSubmit}>
+                        <Row gutter={[20, 20]}>
+                            <Col span={12}>
+                                <Form.Item
+                                    label="Chọn bàn"
+                                    name="table_id"
+
+                                    rules={[{ required: true, message: 'Vui lòng chọn bàn' }]}
+                                >
+                                    <Select
+                                        placeholder="Chọn bàn"
+                                        onChange={handleTableSelect}
+                                        style={{ width: "100%" }}
+                                    >
+                                        {tables.map(table => (
+                                            <Select.Option key={table._id} value={table._id}>
+                                                {table.name}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={12}>
+                                <Form.Item
+                                    label="Số lượng người"
+                                    name="quantityUser"
+                                    rules={[{ required: true, message: 'Vui lòng chọn số lượng người' }]}
+                                >
+                                    <Select
+                                        placeholder="Số lượng người"
+                                        style={{ width: "100%" }}
+                                        onChange={(value) => setData(prevData => ({
+                                            ...prevData,
+                                            quantityUser: value
+                                        }))}
+                                    >
+                                        {[2, 3, 4, 5, 6].map((num) => (
+                                            <Select.Option key={num} value={num}>
+                                                {num} người
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={12}>
+                                {giftUser ? (
+                                    <>
+                                        <p>Quà của bạn là:<strong>{giftUser}</strong></p>
+
+                                    </>
+                                ) : (
+                                    <p>Click để nhận ngẫu nhiên quà:</p>
+                                )}
+                                <div style={{ marginTop: '10px' }}>  {/* Add margin or div for spacing */}
+                                    <Button
+                                        type="primary"
+                                        onClick={handleLuckyWheel}
+                                        disabled={spinCount >= 1}  // Disable after 1 spin
+                                    >
+                                        Quay may mắn
+                                    </Button>
+                                </div>
+                            </Col>
+
+
+                            <Col span={12}>
+                                <Form.Item
+                                    label="Chọn ngày"
+                                    name="dateBook"
+                                    rules={[{ required: true, message: 'Vui lòng chọn ngày' }]}
+                                >
+                                    <DatePicker
+                                        placeholder="Chọn ngày"
+                                        format="DD-MM-YYYY"
+                                        onChange={handleChangeDate}
+                                        style={{ width: "100%" }}
+                                        disabledDate={(current) => {
+                                            return current && current < moment().startOf('day');
+                                        }}
+                                    />
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={12}>
+                                <Form.Item
+                                    label="Chọn giờ"
+                                    name="timeBook"
+                                    rules={[{ required: true, message: 'Vui lòng chọn giờ' }]}
+                                >
+                                    <Select
+                                        onChange={handleChangeHours}
+                                        style={{ width: 120 }}
+                                        options={generateTimeOptions()}
+                                        placeholder="Chọn giờ"
+                                        disabled={!data.dateBook}
+                                    />
+                                </Form.Item>
+                            </Col>
+
+                            <Col span={24} style={{ display: "flex", justifyContent: "center" }}>
+                                <Button
+                                    style={{ width: "200px" }}
+                                    type="primary"
+                                    icon={<CheckOutlined />}
+                                    htmlType="submit"
+                                >
+                                    Đặt bàn
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Form>
+                </div>
+            </div>
+
             <div className="coffeeking-info">
                 <h2>Đặt chỗ tại CoffeKing:</h2>
                 <ul className="custom-list">
