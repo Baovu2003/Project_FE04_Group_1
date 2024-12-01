@@ -362,7 +362,7 @@ const ProductList = () => {
                           <div
                             style={{
                               position: "relative",
-                              height: 200,
+                              height: 350,
                               overflow: "hidden",
                             }}
                           >
@@ -375,11 +375,7 @@ const ProductList = () => {
                                     : `http://localhost:5000${product.thumbnail}`
                                   : "http://localhost:5000/path-to-placeholder-image.png"
                               }
-                              style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "cover",
-                              }}
+                             
                             />
                             <Text
                               type="secondary"
