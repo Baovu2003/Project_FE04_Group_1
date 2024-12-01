@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { ShoppingCartOutlined, SearchOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import logoWhite from '../../../assets/logo_white-7.png';
 import './Header.css';
 import { RootState } from '../../../store/store';
@@ -18,10 +18,7 @@ const Header: React.FC = () => {
   // console.log(user?.user._id)
   // console.log("user?.user.tokenUser", user?.user.tokenUser)
   const cart = useSelector((state: RootState) => state.cartReducer);
-  // const { list = [] } = useSelector((state: RootState) => state.cartReducer || {});
-  // console.log(list)
-  // Thiết lập kiểu dispatch tùy chỉnh
-  // console.log(cart)
+
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleMouseEnter = () => {
@@ -53,18 +50,21 @@ const Header: React.FC = () => {
 
   const handleDropdownToggle = () => setShowDropdown(!showDropdown);
 
-  // const handleSearchSubmit = (values: { search: string }) => {
-  //   console.log('Searching for:', values.search);
-  //   setSearchTerm('');
-  //   setSearchVisible(false);
-  //   // Handle search logic here, e.g., redirect to a search results page
-  // };
-
   const handleSearchSubmit = (values: { search: string }) => {
-    navigate(`/listProducts`, { state: { searchTerm: values.search } });
+    const trimmedSearchTerm = values.search.trim();
+
+    // Kiểm tra nếu người dùng không nhập gì
+    if (!trimmedSearchTerm) {
+      // Có thể dùng thông báo từ Ant Design
+      message.error('Please enter a valid search term!');
+      return;
+    }
+
+    navigate(`/listProducts`, { state: { searchTerm: trimmedSearchTerm } });
     setSearchTerm('');
     setSearchVisible(false);
   };
+
 
   const handleLogout = () => {
     document.cookie = "tokenUser=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
@@ -198,13 +198,25 @@ const Header: React.FC = () => {
       {/* Search Form */}
       {isSearchVisible && (
         <Form onFinish={handleSearchSubmit} className="search-form">
-          <Form.Item name="search">
+          <Form.Item
+            name="search"
+            rules={[
+              { required: true, message: 'Please enter a search term!' },
+              {
+                validator: (_, value) =>
+                  value && value.trim() !== ''
+                    ? Promise.resolve()
+                    : Promise.reject(new Error('Search term cannot be empty or whitespace!')),
+              },
+            ]}
+          >
             <Input
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </Form.Item>
+
           <Button type="primary" htmlType="submit">
             Search
           </Button>

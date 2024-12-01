@@ -8,6 +8,7 @@ import { RootState } from "../../../store/store";
 import './BookingTable.css';
 import { showSuccessAlert } from "../../../Helpers/alerts";
 import { useNavigate } from "react-router-dom";
+import moment from 'moment';
 
 
 function BookRoom() {
@@ -63,17 +64,45 @@ function BookRoom() {
         });
     }
 
+    const getCurrentHour = () => {
+        return moment().hour();
+    };
+
+    const generateTimeOptions = () => {
+        const currentHour = getCurrentHour();
+        const optionsTime = [];
+
+        for (let i = 7; i <= 22; i++) {
+            // If the selected date is today, only show future hours
+            if (data.dateBook && moment(data.dateBook, 'DD-MM-YYYY').isSame(moment(), 'day')) {
+                if (i > currentHour) {
+                    optionsTime.push({
+                        value: i > 9 ? `${i} giờ` : `0${i} giờ`,
+                        label: i > 9 ? `${i} giờ` : `0${i} giờ`,
+                    });
+                }
+            } else {
+                // For future dates, show all hours
+                optionsTime.push({
+                    value: i > 9 ? `${i} giờ` : `0${i} giờ`,
+                    label: i > 9 ? `${i} giờ` : `0${i} giờ`,
+                });
+            }
+        }
+
+        return optionsTime;
+    };
+
     const handleChangeDate: DatePickerProps['onChange'] = (date, dateString) => {
-        console.log(date)
-        console.log(dateString)
         if (date) {
             setData(prevData => ({
                 ...prevData,
-                dateBook: dateString as string
+                dateBook: dateString as string,
+                timeBook: '' // Reset time when date changes
             }));
+            form.setFieldsValue({ timeBook: undefined }); // Clear time selection in form
         }
     };
-
 
     const handleChangeHours = (value: string) => {
         setData(prevData => ({
@@ -225,14 +254,12 @@ function BookRoom() {
                                     format="DD-MM-YYYY"
                                     onChange={handleChangeDate}
                                     style={{ width: "100%" }}
+                                    disabledDate={(current) => {
+                                        return current && current < moment().startOf('day');
+                                    }}
                                 />
                             </Form.Item>
                         </Col>
-
-
-
-
-
 
                         <Col span={12}>
                             <Form.Item
@@ -243,7 +270,9 @@ function BookRoom() {
                                 <Select
                                     onChange={handleChangeHours}
                                     style={{ width: 120 }}
-                                    options={optionsTime}
+                                    options={generateTimeOptions()}
+                                    placeholder="Chọn giờ"
+                                    disabled={!data.dateBook}
                                 />
                             </Form.Item>
                         </Col>
