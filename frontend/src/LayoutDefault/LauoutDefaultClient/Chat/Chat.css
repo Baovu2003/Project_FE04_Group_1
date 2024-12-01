@@ -131,6 +131,8 @@
     padding: 1.5rem;
     overflow-y: scroll;
     overflow-x: hidden;
+    background-color: #80808029;
+
 }
 
 
@@ -178,11 +180,11 @@
     background: white;
     display: flex;
     justify-content: space-between;
-    height: 5.5rem;
+    height: 6.2rem;
     align-items: center;
     gap: 1rem;
     padding: 0.8rem;
-    border: 1px solid var(--borderColor);
+   
     border-radius: 1rem;
     align-self: end;
 }

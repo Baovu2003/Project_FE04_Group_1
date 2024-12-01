@@ -1,5 +1,7 @@
 const express = require("express");
-const cors = require("cors"); // Thêm dòng này để import cors
+
+// Import CORS để xử lý các yêu cầu từ các nguồn gốc khác nhau
+const cors = require("cors"); 
 // Flash
 var flash = require("express-flash");
 const cookieParser = require("cookie-parser");
@@ -11,11 +13,12 @@ const session = require("express-session");
 // Vì form html chỉ hỗ trợ phương thức GET và POST.
 var methodOverride = require("method-override");
 
-// ------Multer cho phép upload file ảnh-----------
-const multer = require("multer");
 // ----------------End----------------------------
+
+
 require("dotenv").config();
 
+// Chứa các cấu hình hệ thống chung, ví dụ như tiền tố URL cho admin.
 const systemConfig = require("./config/system");
 
 // Route cho bên client
@@ -28,7 +31,10 @@ const database = require("./config/database");
 database.connect();
 
 const app = express();
+// Cho phép đọc dữ liệu json
 app.use(express.json());
+
+// Đọc số cổng từ biến môi trường .env.
 const port = process.env.PORT;
 
 // Cấu hình CORS
@@ -57,13 +63,8 @@ const io = new Server(server, {
 let activeUsers = [];
 
 io.on("connection", (socket) => {
-  // add new User
+  // new-user-add: Khi người dùng mới kết nối, ID của họ sẽ được thêm vào danh sách người dùng hoạt động.
   socket.on("new-user-add", (newUserId) => {
-    // if user is not added previously
-    // if (!activeUsers.some((user) => user.userId === newUserId)) {
-    //   activeUsers.push({ userId: newUserId, socketId: socket.id });
-    //   console.log("New User Connected", activeUsers);
-    // }
     const existingUser = activeUsers.find((user) => user.userId === newUserId);
 
     if (!existingUser) {
@@ -80,19 +81,12 @@ io.on("connection", (socket) => {
     io.emit("get-users", activeUsers);
   });
 
+  // create-chat: Gửi thông báo về cuộc trò chuyện mới cho tất cả các client.
   socket.on("create-chat", (newChat) => {
     io.emit("new-chat", newChat); // Notify all clients about the new chat
     io.emit("new-chat-for-admin", newChat);
   });
 
-  // socket.on("disconnect", () => {
-  //   // remove user from active users
-
-  //   activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
-  //   console.log("User Disconnected", activeUsers);
-  //   // send all active users to all users
-  //   io.emit("get-users", activeUsers);
-  // });
   socket.on("disconnect", () => {
     // Tạo thời gian người dùng disconnect
     const lastActiveTime = new Date().toISOString();
@@ -131,6 +125,7 @@ io.on("connection", (socket) => {
       createdAt: message.createdAt,
     });
   });
+  // Client-typing: Thông báo cho các người dùng khác khi một người dùng đang gõ tin nhắn.
   var timeout;
   socket.on("client-typing", (data) => {
     console.log(data);
@@ -144,8 +139,7 @@ io.on("connection", (socket) => {
   });
 });
 
-global._io = io;
-
+// Cho phép ghi đè phương thức HTTP, ví dụ từ POST thành DELETE hoặc PUT
 app.use(methodOverride("_method"));
 
 // express đã tích hợp sẵn cái body-parser cho rồi
@@ -185,6 +179,7 @@ route(app);
 
 routeAdmin(app);
 
+// Khởi động server tại cổng được chỉ định.
 server.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

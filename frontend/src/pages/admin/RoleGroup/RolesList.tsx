@@ -42,7 +42,7 @@ const RolesList: React.FC = () => {
     <div>
 
       <h1 className="mb-4">Nhóm quyền</h1>
-      <div className="card mb-3 mt-4">
+      <div className="">
         <div className="card-header">Danh sách</div>
         <div className="card-body">
           <div className="row mb-5">

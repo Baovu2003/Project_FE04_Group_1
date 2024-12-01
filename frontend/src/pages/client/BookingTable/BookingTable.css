@@ -9,7 +9,7 @@
 .contents {
   display: flex;
   gap: 20px;
-  /* Khoảng cách giữa contact-info và reservation-form */
+  
 }
 
 .contact-info {

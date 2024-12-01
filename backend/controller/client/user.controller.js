@@ -88,6 +88,7 @@ module.exports.loginPost = async (req, res) => {
       return;
     }
   }
+  console.log(user.status);
   if (user.status !== "active") {
     {
       res.status(500).json({
@@ -96,6 +97,7 @@ module.exports.loginPost = async (req, res) => {
       return;
     }
   }
+  
 
   console.log(user);
   console.log(user.tokenUser);
