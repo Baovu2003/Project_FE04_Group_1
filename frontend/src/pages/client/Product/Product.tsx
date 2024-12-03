@@ -352,7 +352,7 @@ const ProductList = () => {
                             <div
                               style={{
                                 position: "relative",
-                                height: 400,
+                                height: 300,
                                 overflow: "hidden",
                               }}
                             >
