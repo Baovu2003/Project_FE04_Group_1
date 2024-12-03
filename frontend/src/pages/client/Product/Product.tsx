@@ -166,7 +166,7 @@ const ProductList = () => {
       if (hasChildren) {
         return (
           <Menu.SubMenu key={category._id} title={menuItem}>
-            {renderCategoryMenu(category.children)}{" "}
+            {renderCategoryMenu(category.children??[])}{" "}
             {/* Recursively render child categories */}
           </Menu.SubMenu>
         );
@@ -352,7 +352,7 @@ const ProductList = () => {
                             <div
                               style={{
                                 position: "relative",
-                                height: 200,
+                                height: 400,
                                 overflow: "hidden",
                               }}
                             >

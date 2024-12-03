@@ -221,13 +221,18 @@ export interface ApiResponse {
   role: Role;
   token: string;
   tokenUser: string;
+
   recordsProduct: Product[];
+
   recordsCategory: ProductCategory[];
   recordsPermission: PermissionRecord[];
   recordsRole: Role[];
   recordsAccount: Account[];
   detailCategory: ProductCategory;
+
+
   detailProduct: Product;
+
   productById: Product;
   detailRole: Role;
   detailAccount: Account;

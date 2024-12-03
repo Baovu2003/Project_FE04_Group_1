@@ -76,7 +76,7 @@ const Chat = () => {
   const handleStartChat = async () => {
     try {
       const response = await post('http://localhost:5000/chat', { userId });
-      // console.log(response);
+      console.log(response);
       if (response.ChatV3) {
         setChats((prevChats) => [...(prevChats || []), response.ChatV3]); // Update chat list
         setCurrentChat(response.ChatV3); // Set the new chat as current

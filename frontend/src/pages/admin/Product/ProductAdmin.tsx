@@ -44,9 +44,17 @@ const ProductList: React.FC = () => {
 
   const fetchProducts = async () => {
     try {
+
+
       const data = await get("http://localhost:5000/admin/products");
+
+      console.log("data từ products bên admin: ",data);
+      console.log("data.recordsProduct: ",data.recordsProduct)
+
       setProducts(data.recordsProduct);
+
       setFilteredProducts(data.recordsProduct);
+      
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -316,6 +324,7 @@ const ProductList: React.FC = () => {
                   </td>
 
                   <td>
+
                     <Link
                       to={`detail/${product._id}`}
                       className={`btn btn-primary me-2 ${
