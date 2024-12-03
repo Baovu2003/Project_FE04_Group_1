@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Row, Col, Typography, Space, Select, Card, Button, Popover, Menu, Radio, Pagination } from 'antd';
-import { Link, useLocation  } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FilterOutlined, FolderOutlined } from '@ant-design/icons';
 import './ProductList.css';
 const { Header, Content, Sider } = Layout;
@@ -18,6 +18,7 @@ interface Category {
   deleted: boolean;
   slug: string;
   children?: Category[];
+
 }
 
 interface Product {
@@ -38,6 +39,8 @@ interface Product {
     account_id: string;
     createdAt: string;
   };
+  flashSaleStart?: string;
+  flashSaleEnd?: string;
 }
 
 interface ApiResponse {
@@ -98,7 +101,7 @@ const ProductList = () => {
 
   useEffect(() => {
     if (searchTerm) {
-      const searchResults = originalProducts.filter(product => 
+      const searchResults = originalProducts.filter(product =>
         product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -242,7 +245,7 @@ const ProductList = () => {
 
     // Search filter
     if (searchTerm) {
-      matchesSearch = 
+      matchesSearch =
         product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.description.toLowerCase().includes(searchTerm.toLowerCase());
     }
@@ -370,36 +373,63 @@ const ProductList = () => {
                       {formatPrice(product.price)}
                     </Title>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
-                      <Text
-                        style={{
-                          color: product.discountPercentage ? '#ff4d4f' : '#888',
-                          fontWeight: 'bold',
-                          fontSize: '14px',
-                          marginBottom: '8px',
-                        }}
-                      >
-                        {`Discount: ${product.discountPercentage ?? 0}%`}
-                      </Text>
+                      {product.flashSaleStart && product.flashSaleEnd ? (
+                        new Date(product.flashSaleStart) <= new Date() && new Date(product.flashSaleEnd) >= new Date() ? (
+                          <Text
+                            style={{
+                              color: '#ff4d4f',
+                              fontWeight: 'bold',
+                              fontSize: '14px',
+                              marginBottom: '8px',
+                            }}
+                          >
+                            {`Discount: ${product.discountPercentage ?? 0}%`}
+                          </Text>
+                        ) : (
+                          <Text
+                            style={{
+                              color: '#888',
+                              fontWeight: 'bold',
+                              fontSize: '14px',
+                              marginBottom: '8px',
+                            }}
+                          >
+                            Discount: 0%
+                          </Text>
+                        )
+                      ) : (
+                        <Text
+                          style={{
+                            color: '#888',
+                            fontWeight: 'bold',
+                            fontSize: '14px',
+                            marginBottom: '8px',
+                          }}
+                        >
+                          Discount: 0%
+                        </Text>
+                      )}
                       <Link to={`/listProducts/detail/${product.slug}`}>
                         <Button className="purchase-button">Chọn mua</Button>
                       </Link>
                     </div>
+
                   </Card>
                 </Col>
               )
             ))}
           </Row>
           <Row justify="center" style={{ marginTop: '2rem' }}>
-          <Pagination
-            current={currentPage}
-            total={filteredProducts.length}
-            pageSize={pageSize}
-            onChange={onPageChange}
-            showSizeChanger
-            showQuickJumper
-            showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-          />
-        </Row>
+            <Pagination
+              current={currentPage}
+              total={filteredProducts.length}
+              pageSize={pageSize}
+              onChange={onPageChange}
+              showSizeChanger
+              showQuickJumper
+              showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+            />
+          </Row>
         </Content>
       </Layout>
     </Layout>

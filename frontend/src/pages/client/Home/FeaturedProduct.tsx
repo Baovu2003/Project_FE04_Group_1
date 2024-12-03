@@ -36,7 +36,7 @@ const FeaturedProduct = () => {
         // Filter featured products and log the process
         const featuredProducts = data.recordsProduct.filter((product: Product) => {
           // console.log(`Product ${product.title} - featured status:`, product.featured);
-          return product.featured === "1" && !product.deleted;
+          return product.featured === "1" && !product.deleted && !product.discountPercentage;
         });
 
         // console.log("Filtered featured products:", featuredProducts);
@@ -120,11 +120,11 @@ const FeaturedProduct = () => {
                     <span className="sale-price">
                       {formatPrice(product.price)}
                     </span>
-                    {product.discountPercentage && product.discountPercentage > 0 ? (
+                    {/* {product.discountPercentage && product.discountPercentage > 0 ? (
                       <span className="original-price">
                         {formatPrice(product.price * (1 + product.discountPercentage / 100))}
                       </span>
-                    ):<></>}
+                    ):<></>} */}
                   </div>
                   <div className="stock-status text-center">
                     Còn lại: {product.stock}

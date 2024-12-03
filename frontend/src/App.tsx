@@ -24,6 +24,8 @@ import Detailproduct from "./pages/admin/Product/Detailproduct";
 import UpdateProduct from "./pages/admin/Product/UpdateProduct";
 import BlogList from "./pages/admin/Blog/BlogList";
 import BlogCreate from "./pages/admin/Blog/BlogCreate";
+import BlogEdit from "./pages/admin/Blog/BlogEdit";
+import UserManagement from "./pages/admin/ManagerUser/ManagerUser";
 import RoleGroup from "./pages/admin/RoleGroup/RoleGroup";
 import RolesList from "./pages/admin/RoleGroup/RolesList";
 import CreateRole from "./pages/admin/RoleGroup/CreateRole";
@@ -36,6 +38,7 @@ import Login from "./pages/admin/Auth/Login";
 import NotFound from "./pages/admin/404NotFound/404NotFound/NotFound";
 import 'antd/dist/reset.css';
 import Profile from "./pages/client/User/UserProfile";
+import Blog from "./pages/client/Blog/Blog";
 import DetailCategory from "./pages/admin/Category/DetailCategory";
 import UpdateCategory from "./pages/admin/Category/UpdateCategory";
 import UpdateAccount from "./pages/admin/Accounts/UpdateAccount";
@@ -69,6 +72,7 @@ function App() {
           <Route path="listProducts/detail/:slug" element={<ProductDetail />} />
           <Route path="contact" element={<Contact />} />
           <Route path="about" element={<About />} />
+          <Route path="blog" element={<Blog />} />
           <Route path="cart" element={<PrivateRouter />}>
             <Route path="" element={<Cart />} />
             <Route path="checkout" element={<Checkout />} />
@@ -100,6 +104,42 @@ function App() {
         {/* Admin Routes */}
         <Route path="/admin" element={<LayoutDefaultAdmin />}>
           {/* <Route element={<ProtectedRoute />}> */}
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="products-category" element={<Allcategory />}>
+              <Route index element={<Category />} />
+              <Route path="detail/:id" element={<DetailCategory />} />
+              <Route path="edit/:id" element={<UpdateCategory />} />
+              <Route path="create" element={<CreateCategory />} />
+            </Route>
+
+            <Route path="products" element={<AllProduct />}>
+              <Route index element={<ProductAdmin />} />
+              <Route path="create" element={<CreateProduct />} />
+              <Route path="detail/:id" element={<Detailproduct />} />
+              <Route path="edit/:id" element={<UpdateProduct />} />
+            </Route>
+
+            <Route path="blogs" element={<BlogList />} />
+              <Route path="blogs/create" element={<BlogCreate />} />
+              <Route path="blogs/edit/:id" element={<BlogEdit />} />            
+
+            <Route path="managerUsers" element={<UserManagement />}></Route>
+
+            <Route path="roles" element={<RoleGroup />}>
+              <Route index element={<RolesList />} />
+              <Route path="create" element={<CreateRole />} />
+              <Route path="edit/:id" element={<UpdateRole />} />
+            </Route>
+
+            <Route path="accounts" element={<Account />}>
+              <Route index element={<AccountList />} />
+              <Route path="create" element={<AccountCreate />} />
+              <Route path="edit/:id" element={<UpdateAccount />} />
+              <Route path="detail/:id" element={<DetailAccount />} />
+            </Route>
+
+            <Route path="permissions" element={<Permissions />} />
+            <Route path="*" element={<NotFound />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="products-category" element={<Allcategory />}>
             <Route index element={<Category />} />
@@ -108,8 +148,6 @@ function App() {
             <Route path="create" element={<CreateCategory />} />
           </Route>
 
-          <Route path="blogs" element={<BlogList />} />
-          <Route path="blogs/create" element={<BlogCreate />} />
 
           <Route path="products" element={<AllProduct />}>
             <Route index element={<ProductAdmin />} />

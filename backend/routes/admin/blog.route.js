@@ -10,9 +10,9 @@ const controller = require("../../controller/admin/blog.controller")
 
 router.get("/listBlog",controller.listBlog);
 
-// router.patch("/change-status/:status/:id", controller.changeStatus);
+router.patch("/change-status/:status/:id", controller.changeStatusBlog);
 
-// router.delete("/delete/:id", controller.deleteItem);
+router.delete("/delete/:id", controller.deleteItem);
 
 
 router.post(
@@ -22,11 +22,11 @@ router.post(
   controller.createBlog
 );
 
-// router.patch(
-//   "/edit/:id",
-//   upload.single("thumbnail"),
-//   validate.createPost,
-//   controller.editPatch
-// );
+router.patch(
+  "/edit/:id",
+  upload.single("thumbnail"),
+  validate.createPost,
+  controller.editPatch
+);
 
 module.exports = router

@@ -98,9 +98,9 @@ const LoginUser: React.FC = () => {
       } else {
         throw new Error("Token not received. Login failed.");
       }
-    } catch (error) {
-      if (error instanceof Error) {
-        message.error(error.message);
+    } catch (error: any) {
+      if (error.response && error.response.data && error.response.data.message) {
+        message.error(error.response.data.message);
       } else {
         message.error("An error occurred. Please try again later.");
       }
