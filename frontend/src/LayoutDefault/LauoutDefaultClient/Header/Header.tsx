@@ -134,6 +134,7 @@ const Header: React.FC = () => {
                   <div className="user-dropdown">
                     <p><Link to="user/listOrders">My Orders</Link></p>
                     <p><Link to="user/historyOrder">Purchase History</Link></p>
+                    <p><Link to="user/historyBookingTable">Booking Table History</Link></p>
                     <p><Link to="user/profile">Profile</Link></p>
                     <Button onClick={handleLogout} className="logout-button">
                       Logout
@@ -175,6 +176,7 @@ const Header: React.FC = () => {
               <div >
                 <p><Link to="user/listOrders">My Orders</Link></p>
                 <p><Link to="user/historyOrder">Purchase History</Link></p>
+                <p><Link to="user/historyBookingTable">Booking Table History</Link></p>
 
                 <NavLink to="" onClick={handleLogout}>
                   Logout

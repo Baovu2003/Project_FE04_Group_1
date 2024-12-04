@@ -310,10 +310,10 @@
 }
 
 /* Hiển thị lớp phủ khi hover */
-.card-container:hover .card-overlay {
+/* .card-container:hover .card-overlay {
   opacity: 1;
   visibility: visible;
-}
+} */
 
 .purchase-container {
   visibility: hidden;

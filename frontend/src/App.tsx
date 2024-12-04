@@ -68,6 +68,7 @@ import DetailTable from "./pages/admin/Table/DetailTable";
 import Gift from "./pages/admin/Gift/Gift";
 import ListGift from "./pages/admin/Gift/ListGift";
 import CreateGift from "./pages/admin/Gift/CreateGift";
+import HistoryBooking from "./pages/client/BookingTable/HistoryBooking";
 function App() {
   return (
     <Router>
@@ -96,6 +97,7 @@ function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="listOrders" element={<OrderUser />} />
             <Route path="historyOrder" element={<HistoryOrderUser />} />
+            <Route path="historyBookingTable" element={<HistoryBooking />} />
           </Route>
 
           <Route path="/user/PassResovery" element={<PassResovery />} />

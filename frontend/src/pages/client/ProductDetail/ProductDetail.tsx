@@ -141,7 +141,7 @@ const ProductDetail: React.FC = () => {
               <Tag color="blue">30 NGÀY ĐỔI TRẢ</Tag>
               <Tag color="blue">CHÍNH HÃNG</Tag>
 
-              <Text type="secondary">Thương hiệu: {product.featured}</Text>
+              {/* <Text type="secondary">Thương hiệu: {product.product_category_id}</Text> */}
               <Title level={3}>{product.title}</Title>
               <Text type="secondary">Đã bán 10</Text>
 

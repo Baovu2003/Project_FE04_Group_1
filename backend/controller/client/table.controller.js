@@ -1,5 +1,6 @@
 const  Table =require('../../models/table.model')
-const bookingTable = require('../../models/bookTable.model')
+const bookingTable = require('../../models/bookTable.model');
+const bookTable = require('../../models/bookTable.model');
 // Lấy danh sách tất cả các bàn
 module.exports.getTables = async (req, res) => {
   try {
@@ -8,6 +9,31 @@ module.exports.getTables = async (req, res) => {
     });
     res.json({
         recordTables: tables
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+module.exports.getTables1= async (req, res) => {
+  try {
+    const tables = await Table.find({
+    });
+    res.json({
+        recordTables: tables
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+module.exports.getBookingTable = async (req, res) => {
+  const id = req.params.id
+  console.log(id);
+  try {
+    const tables = await bookTable.find({
+      user_id: id
+    });
+    res.json({
+      recordBookingTables: tables
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
