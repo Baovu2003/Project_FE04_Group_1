@@ -166,7 +166,7 @@ const ProductList = () => {
       if (hasChildren) {
         return (
           <Menu.SubMenu key={category._id} title={menuItem}>
-            {renderCategoryMenu(category.children)}{" "}
+            {renderCategoryMenu(category.children ?? [])}{" "}
             {/* Recursively render child categories */}
           </Menu.SubMenu>
         );
@@ -345,7 +345,9 @@ const ProductList = () => {
                 (product) =>
                   !product.deleted && (
                     <Col key={product._id} xs={24} sm={12} md={8} lg={6}>
-                      <div className="card-container">
+                     <div className="card-container" style={{ position: "relative" }}>
+                        <div className="card-overlay" ></div>
+                        {/* Lớp phủ */}                      
                         <Card
                           style={{ position: "relative" }}
                           cover={
@@ -369,8 +371,17 @@ const ProductList = () => {
                                   width: "100%",
                                   height: "100%",
                                   objectFit: "cover",
+                                  transition: "transform 0.3s ease", // Smooth transition for zoom effect
+                                }}
+                                onMouseEnter={(e) => {
+                                  e.currentTarget.style.transform = "scale(1.2)"; // Enlarge the image
+                                }}
+                                onMouseLeave={(e) => {
+                                  e.currentTarget.style.transform = "scale(1)"; // Reset to original size
                                 }}
                               />
+
+
                               {product.discountPercentage && product.discountPercentage > 0 && (
                                 <Text
                                   type="secondary"
@@ -435,8 +446,7 @@ const ProductList = () => {
                             </Link>
                           </div>
                         </Card>
-                        {/* Lớp phủ */}
-                        <div className="card-overlay"></div>
+
                       </div>
                     </Col>
                   )
@@ -448,7 +458,8 @@ const ProductList = () => {
                 Sản phẩm này hiện chưa có!
               </Text>
             </div>
-          )}
+          )
+          }
 
           <Row justify="center" style={{ marginTop: "2rem" }}>
             <Pagination
@@ -463,9 +474,9 @@ const ProductList = () => {
               }
             />
           </Row>
-        </Content>
-      </Layout>
-    </Layout>
+        </Content >
+      </Layout >
+    </Layout >
   );
 };
 

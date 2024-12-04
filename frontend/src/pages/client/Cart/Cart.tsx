@@ -144,8 +144,10 @@ export default function Cart() {
                   Delete All
                 </Button>
               </> : <>
-                <Button onClick={removeAllItems} icon={<ShoppingCartOutlined />} style={{ marginBottom: 10 }}>
-                  Tiếp tục mua sắm
+                <Button  icon={<ShoppingCartOutlined />} style={{ marginBottom: 10 }}>
+                 <Link to="/listProducts">
+                 Tiếp tục mua sắm
+                 </Link>
                 </Button>
               </>}
 

@@ -134,11 +134,7 @@ const UserManagement: React.FC = () => {
   return (
     <Card
       title="User Management"
-      extra={
-        <Button type="primary" icon={<UserAddOutlined />}>
-          Add New User
-        </Button>
-      }
+
     >
       <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
         <Col span={12}>

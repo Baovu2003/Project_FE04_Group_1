@@ -47,7 +47,6 @@ const productSchema = new mongoose.Schema(
     flashSaleStart: String,
     flashSaleEnd: String,
   },
-
 );
 // Tham số thứ 3 trongt phần này là tên của collection trong database product-management
 const Product = mongoose.model("Product", productSchema, "products");

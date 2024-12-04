@@ -67,19 +67,19 @@ function DetailTable() {
         return `${date.toLocaleDateString('en-GB')} ${date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
       },
     },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: boolean) => (
-          <Switch
-              checked={status}
-              checkedChildren="Hoàn thành"
-              unCheckedChildren="Đang dùng"
-              // onChange={() => handleStatusChange(record)} 
-          />
-      ),
-  },
+  //   {
+  //     title: 'Status',
+  //     dataIndex: 'status',
+  //     key: 'status',
+  //     render: (status: boolean) => (
+  //         <Switch
+  //             checked={status}
+  //             checkedChildren="Hoàn thành"
+  //             unCheckedChildren="Đang dùng"
+  //             // onChange={() => handleStatusChange(record)} 
+  //         />
+  //     ),
+  // },
     
     
 

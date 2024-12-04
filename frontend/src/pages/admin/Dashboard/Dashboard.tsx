@@ -324,10 +324,9 @@ const Dashboard: React.FC = () => {
               rowKey="_id"
               pagination={false}
             />
-            <div style={{ textAlign: 'right', marginTop: 16 }}>
-              {/* <Button type="primary" >View All Orders</Button> */}
+            {/* <div style={{ textAlign: 'right', marginTop: 16 }}>
               <Link to="/admin/orders" className="btn btn-primary">View All Orders</Link>
-            </div>
+            </div> */}
           </Card>
         </Col>
       </Row>

@@ -4,10 +4,12 @@ const ProductCategory = require("../../models/product-category.model");
 const createTreeHelper = require("../../helpers/createTree");
 const Account = require("../../models/account.model");
 
-// [GET]: /admin/products-
+// [GET]: /admin/products-Lấy ra tất cả các sản phẩm bên admin
 module.exports.index = async (req, res) => {
   // const products = await Product.find();
   const products = await Product.find();
+
+
 
   console.log(products);
 
@@ -102,7 +104,6 @@ module.exports.deleteItem = async (req, res) => {
   try {
     // Tìm sản phẩm trước để lấy trạng thái hiện tại
     const product = await Product.findById(id);
-
     console.log(product);
     console.log(product.deleted);
     if (!product) {

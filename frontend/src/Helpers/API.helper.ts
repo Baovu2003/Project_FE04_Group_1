@@ -8,7 +8,8 @@ const axiosInstance = axios.create({
   // },
 });
 
-// Define the GET function
+// Define the GET function: Lấy dữ liệu từ API CỦA BACKEND LẤY XUỐNG CHO fe VÀ vẽ ra giao diện
+//Dùng cho khi lấy ra dữ liệu của tất cả sản phẩm hoặc lấy ra detail sản phẩm,...
 export const get = async (url: string): Promise<ApiResponse> => {
   try {
     const response: AxiosResponse<ApiResponse> = await axiosInstance.get(url);
@@ -18,7 +19,6 @@ export const get = async (url: string): Promise<ApiResponse> => {
     throw error;
   }
 };
-
 
 // Define the POST function
 export const post = async (url: string, data: object): Promise<ApiResponse> => {
