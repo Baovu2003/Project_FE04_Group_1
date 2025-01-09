@@ -18,6 +18,7 @@ interface BlogResponse {
     recordBlog: Blog[];
 }
 
+
 const Blog: React.FC = () => {
     const [blogs, setBlogs] = useState<Blog[]>([]);
 
